@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100vh;
+  width: 100vw;
+}
+
+html {
+  font-family: "Lato", "Arial", sans-serif;
+  font-size: 20px;
+  text-rendering: optimizeLegibility;
+  overflow-y: hidden;
+}
+
+body {
+  background-color: #1c2732;
+}
+
+body div {
+  display: grid;
+  grid-row-gap: 1.4px;
+  grid-column-gap: 2px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-70%, -70%);
+  color: #cfd9e4;
+  /* margin-top: auto;
+  margin-bottom: auto; */
+}
+body div h2 {
+  grid-area: 1/1;
+  margin-bottom: 10px;
+}
+body div h3 {
+  font-size: 16px;
+  margin-top: 2px;
+  padding-top: 4px;
+}
+body div input {
+  resize: none;
+  height: 25px;
+}
+body div button {
+  grid-area: 4/3;
+  margin-left: 8px;
+  width: 25px;
+  height: 4vh;
+  color: #2e4153;
+}
+body div .username {
+  grid-area: 2/1;
+}
+body div .password00 {
+  grid-area: 3/1;
+}
+body div .password01 {
+  grid-area: 4/1;
+}
+body div .e-name {
+  grid-area: 2/2;
+}
+body div .pass0 {
+  grid-area: 3/2;
+}
+body div .pass1 {
+  grid-area: 4/2;
+}
+
+/*# sourceMappingURL=sign-up.css.map */

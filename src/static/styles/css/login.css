@@ -1,0 +1,74 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100vh;
+  width: 100vw;
+}
+
+html {
+  font-family: "Lato", "Arial", sans-serif;
+  font-size: 20px;
+  text-rendering: optimizeLegibility;
+  overflow-y: hidden;
+}
+
+body {
+  background-color: #1c2732;
+}
+
+body form {
+  display: grid;
+  grid-template-columns: 90px 200px 30px;
+  grid-column-gap: 3px;
+  grid-row-gap: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-70%, -70%);
+  /* margin-top: auto;
+  margin-bottom: auto; */
+}
+body form a {
+  text-decoration: none;
+  grid-area: 4/2;
+}
+body form h2 {
+  font-size: 20px;
+  grid-area: 1/1;
+  margin-bottom: 10px;
+}
+body form h3 {
+  font-size: 17px;
+  grid-column: 1;
+}
+body form .username {
+  grid-row: 2;
+  margin-top: 2px;
+}
+body form .password {
+  grid-row: 3;
+  margin-top: 4px;
+}
+body form input {
+  resize: none;
+  color: black;
+  width: 200px;
+}
+body form button {
+  grid-area: 3/3;
+  margin-left: 8px;
+  color: #2e4153;
+}
+body form .e-name {
+  grid-area: 2/2;
+}
+body form .e-pass {
+  grid-area: 3/2;
+}
+
+/*# sourceMappingURL=login.css.map */

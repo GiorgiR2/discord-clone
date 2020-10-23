@@ -1,0 +1,198 @@
+/* 
+sass --watch .\static\styles\sass\_main.scss:.\static\styles\css\main.css
+sass --watch .\static\styles\sass\pages\_login.scss:.\static\styles\css\login.css
+sass --watch .\static\styles\sass\pages\_sign-up.scss:.\static\styles\css\sign-up.css
+
+    white:          #fff;
+    gwhite:         #cfd9e4
+    bright grey:    #2e4153;
+    dark grey:      #161f27;
+*/
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100vh;
+  width: 100vw;
+}
+
+html {
+  font-family: "Lato", "Arial", sans-serif;
+  font-size: 20px;
+  text-rendering: optimizeLegibility;
+  overflow-y: hidden;
+}
+
+body {
+  background-color: #1c2732;
+}
+
+body {
+  display: flex;
+  justify-content: space-between;
+}
+body a {
+  color: #cfd9e4;
+  text-decoration: none;
+}
+body h1 {
+  height: 5%;
+  padding-left: 10px;
+  font-size: 22px;
+  color: white;
+  padding-bottom: 10px;
+  border-bottom: 2px solid black;
+}
+body h2 {
+  padding-top: 4px;
+  padding-left: 10px;
+  font-size: 15px;
+  border-bottom: 1px solid #ccc;
+}
+body div {
+  height: 100vh;
+  color: #cfd9e4;
+}
+body #left {
+  width: 18vw;
+  background-color: #161f27;
+  padding-left: 8px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+body #left #user {
+  font-size: 1.1em;
+}
+body #left nav ul {
+  list-style: none;
+}
+body #left nav ul li {
+  font-size: 1em;
+}
+body #left nav ul li a:hover,
+body #left nav ul li a:active {
+  color: white;
+}
+body #center {
+  width: 62%;
+  background-color: #2e4153;
+  padding: 1px;
+}
+body #center #top {
+  display: flex;
+  justify-content: space-between;
+  height: 6vh;
+}
+body #center #top h1 {
+  font-size: 1.1em;
+  border-bottom: 0px;
+}
+body #center #top #log_out {
+  padding-right: 4px;
+}
+body #center #top #log_out a:hover,
+body #center #top #log_out a:active {
+  color: white;
+}
+body #center #chat-screen {
+  margin: 5px;
+  height: 81vh;
+  width: 99%;
+  background-color: #283848;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+body #center #chat-screen div {
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+  height: fit-content;
+}
+body #center #chat-screen div .author {
+  min-width: 13%;
+  margin-left: 4px;
+  vertical-align: top;
+  /* text-align: left; */
+}
+body #center #chat-screen div .message {
+  width: 75%;
+  margin-left: 4px;
+  vertical-align: top;
+}
+body #center #chat-screen div .date {
+  width: 10%;
+  vertical-align: top;
+  text-align: right;
+}
+body #center .input {
+  height: fit-content !important;
+}
+body #center .input textarea {
+  position: absolute;
+  float: left;
+  resize: none !important;
+  overflow: hidden !important;
+  height: 11vh;
+  width: 61.2vw;
+  /* 99% */
+  margin-left: 0.4vw;
+  background-color: #46637f;
+  z-index: 1;
+}
+body #center .input textarea::placeholder {
+  color: black;
+}
+body #center .input svg {
+  float: right;
+  z-index: 2;
+  position: relative;
+  cursor: pointer;
+  margin-right: 0.4vw;
+}
+body #right {
+  width: 19vw;
+  background-color: #161f27;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+body #right .online {
+  font-size: 0.8em;
+  color: #4810f6;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background: none;
+  box-shadow: none;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #a6a6a6;
+}
+
+@media screen and (max-width: 860px) {
+  body {
+    font-size: 15px;
+  }
+}
+@media screen and (max-width: 620px) {
+  body #left {
+    display: none !important;
+  }
+  body #right {
+    display: none !important;
+  }
+  body #center {
+    width: 100vw;
+  }
+  body #center .input textarea {
+    width: 99vw;
+  }
+}
+
+/*# sourceMappingURL=main.css.map */

@@ -1,0 +1,22 @@
+// File: main.scss
+
+/* 
+sass --watch .\static\styles\sass\_main.scss:.\static\styles\css\main.css
+sass --watch .\static\styles\sass\pages\_login.scss:.\static\styles\css\login.css
+sass --watch .\static\styles\sass\pages\_sign-up.scss:.\static\styles\css\sign-up.css
+
+    white:          #fff;
+    gwhite:         #cfd9e4
+    bright grey:    #2e4153;
+    dark grey:      #161f27;
+*/
+
+// helpers
+@import 'tools/normalizer';
+@import 'helpers/base';
+@import 'helpers/variables';
+
+// pages
+//@import 'pages/login';
+//@import 'pages/sign-up';
+@import 'pages/chat';

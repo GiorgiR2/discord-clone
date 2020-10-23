@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/css/main.css') }}" type="text/css">
+    <title>safe chat</title>
+
+{% endblock %}
+{% block body %}
+    <!-- <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+
+    <div id="left">
+        <h1 id="user">{{user_name}}</h1>
+        <nav>
+            <ul>
+                <li class="li"><a href="/welcome/"># welcome</a></li>
+                <li class="li"><a href="/announcements/"># announcements</a></li>
+                <li class="li"><a href="/rules/"># rules</a></li>
+                <li class="li"><a href="/whoami/"># whoami</a></li>
+
+                <li class="li"><a href="/general/"># general</a></li>
+                <li class="li"><a href="/ლინუქსი/"># ლინუქსი</a></li>
+                <li class="li"><a href="/მეცნიერება/"># მეცნიერება</a></li>
+                <li class="li"><a href="/კრიპტოგრაფია/"># კრიპტოგრაფია</a></li>
+                <li class="li"><a href="/coding-challenges/"># coding-challenges</a></li>
+                <li class="li"><a href="/movies-n-books/"># movies-n-books</a></li>
+                <li class="li"><a href="/hacking-penetration-forensics-ctf/"># hacking-penetration-forensics-ctf</a></li>
+                <li class="li"><a href="/multiplayer-games/"># multiplayer-games</a></li>
+                <li class="li"><a href="/good-stuff/"># good-stuff</a></li>
+                <li class="li"><a href="/tldr/"># tldr</a></li>
+                <li class="li"><a href="/memes/"># memes</a></li>
+
+                <li class="li"><a href="/python/"># python</a></li>
+                <li class="li"><a href="/c-cpp/"># c-cpp</a></li>
+                <li class="li"><a href="/java/"># java</a></li>
+                <li class="li"><a href="/front-end/"># front-end</a></li>
+                <li class="li"><a href="/database-languages/"># database-languages</a></li>
+
+                <li class="li"><a href="/el-general/"># general</a></li>
+                <li class="li"><a href="/radio-circuits/"># radio-circuits</a></li>
+
+                <li class="li"><a href="/bot-spam/"># bot-spam</a></li>
+                <li class="li"><a href="/music/"># music</a></li>
+                <li class="li"><a href="/git/"># git</a></li>
+                <li class="li"><a href="/github-notifs."># github-notifs</a></li>
+
+                <li class="li"><a href="/root/"># root</a></>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="center">
+        <div id="top">
+            <h1 id="category"># {{title.decode("utf-8")}}</h1>
+            <h1 id="log_out"><a href="/log_out/">Log out</a></h1>
+        </div>
+
+        <div id="chat-screen">
+            <div class="mmm">
+                <h4 class="author">author</h4>
+                <h4 class="message">message</h4>
+                <h4 class="date">date</h4>
+            </div>
+
+            {% for message in messages %}
+                <script>
+                     append_message('{{message.username}}', `{{message.message}}`, '{{message.date}}', "{{title.decode('utf-8')}}");
+                </script>
+            {% endfor %}
+
+            <h4 id="last"></h4>
+            <script>
+                document.getElementById('last').scrollIntoView();
+            </script>
+        </div>
+
+        <div class="input">
+            <textarea id="text-area" type="text" name="text-input" runat="server" placeholder="Message #{{title.decode('utf-8')}}" rows="10" cols="30"></textarea>
+            <svg onclick="append_file()" width="24" height="24" viewBox="0 0 24 24">
+                <path
+                fill="currentColor"
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z">
+                </path>
+            </svg>
+        </div>
+    </div>
+
+    <div id="right"></div>
+
+    <script>main();</script>
+{% endblock %}
