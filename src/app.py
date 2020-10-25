@@ -4,7 +4,6 @@
 
 from flask import Flask, send_from_directory, render_template, redirect, request, url_for, session
 from flask_caching import Cache
-from flask_sqlalchemy import SQLAlchemy
 
 from flask_socketio import SocketIO
 
@@ -13,9 +12,6 @@ from datetime import datetime
 from alphabet_detector import AlphabetDetector
 
 import pymongo
-
-# from shared.db import db
-# from models import User, Message
 
 port = 5000
 current  = f"{os.getcwd()}\\"
@@ -48,53 +44,6 @@ socketio = SocketIO(app)
 
 ad = AlphabetDetector()
 status = {}
-
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DATABASE}"
-db = SQLAlchemy(app)
-
-
-class User(db.Model):
-    id       = db.Column(db.Integer,    primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(15), nullable=False)
-    ip       = db.Column(db.String(40), nullable=False)
-    remember = db.Column(db.Integer,    nullable=False, default=0)
-    # status = db.Column(db.Integer,    nullable=False, default=0)
-    role     = db.Column(db.String(10), nullable=False, default="nobody")
-
-    messages = db.relationship("Message", backref="author", lazy=True)
-    # user1 = User("kommando", "123", "", "admin")
-
-    def __repr__(self):
-        return f"User('{self.username}', '{self.ip}', '{self.role}')"
-
-    def __init__(self, username, password, ip="", role="nobody", remember=0):  # status=0, xp=0
-        self.username = username
-        self.password = password
-        self.ip       = ip
-        self.role     = role
-        self.remember = remember
-
-
-class Message(db.Model):
-    # post = Message(category="General", username="kommando", message="none", user_id=User.query.get(1).id)
-    id       = db.Column(db.Integer,    primary_key=True)
-    category = db.Column(db.Text,       nullable=False)
-    username = db.Column(db.String(15), nullable=False)
-    message  = db.Column(db.Text,       nullable=False)
-    date     = db.Column(db.Text,       nullable=False, default=datetime.now().strftime('%m-%d %H:%M'))  # db.Date
-    # "{:%d-%b-%Y %H:%M}".format(datetime.now())
-    user_id  = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __repr__(self):
-        return f"Message('{self.username}', '{self.date}', '{self.category}', '{self.message}')"
-
-    def __init__(self, category, username, message, user_id):
-        self.category = category
-        self.username = username
-        self.message  = message
-        # self.date   = date
-        self.user_id  = user_id
 
 
 @app.route("/home/", methods=["POST", "GET"])
@@ -352,19 +301,6 @@ def save_message(json):
     send_all('m_s_o', json)
 
 
-def init_db():
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
-
-
-def db_sqlite():
-    global db
-
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DATABASE}"
-    db = SQLAlchemy(app)
-
-
 def db_mongo():
     link = input("db address: ")
 
@@ -386,21 +322,10 @@ def db_choose():
     Choose your db (m or s): 
     '''
 
-    db = "s"  # input(info).strip().lower()
-
-    if db == "m":
-        db_mongo()
-    elif db == "s":
-        init_db()  # comment out for a testing mode
-
-        db_sqlite()
-    else:
-        db_choose()
-
 
 def main():
-    # db_choose()  # choose a db type
-
+    db_mongo()
+    
     socketio.run(app, debug=True)  # app.run(debug=True)  # debug=True, host="169.254.110.104", port=5010
 
 
