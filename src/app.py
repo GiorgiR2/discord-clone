@@ -115,12 +115,8 @@ def find_page(category):
                 category = category.capitalize()
 
             return render_template("index.html", user_name=username, title=category.encode("utf-8"), messages=mm)
-        # num_of_users=num_of_users,
-        # num_of_offliners=len(offliners),
-        # online=online,
-        # offline=offliners,
         else:
-            return redirect("/login/")  # f"<h1>fuck u bitch...\nlick my \"{category}\" ass<h2>"
+            return redirect("/login/")
     else:
         # Todo: error page
         return f"<h1>404 - Page \"{category}\" not found<h2>"
