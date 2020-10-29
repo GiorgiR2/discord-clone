@@ -1,5 +1,9 @@
 """
+    File: api.py
     Developed by: Giorgi Rakviashvili
+
+    The front-end of this project previously has been written in JS Dom and was using SQLite to store data.
+    Lately, I transferred it into ReactJS and MongoDB technologies.
 """
 
 from flask import Flask, send_from_directory, render_template, redirect, request, url_for, session
@@ -31,12 +35,11 @@ config = {
 TEMPLATES_DIR = os.path.abspath("templates")
 STATIC_DIR    = os.path.abspath("static")  # print(TEMPLATES_DIR, "\n", STATIC_DIR)
 
-cache = Cache(config={'CACHE_TYPE': 'simple'})
-
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
 app.config.from_mapping(config)
-app.config["SECRET_KEY"]              = "$fdvnjDFE&*)EEDN@d.0("
+app.config["SECRET_KEY"] = "$fdvnjDFE&*)EEDN@d.0("
 
+cache = Cache(config={'CACHE_TYPE': 'simple'})
 cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
 clients, clients_w  = [], {}  # [ips, num_of_connections]
@@ -298,7 +301,7 @@ def save_message(json):
 
 
 def db_mongo():
-    link = input("db address: ")
+    link = input("MongoDB db address: ")
 
     try:
         my_client = pymongo.MongoClient(link)
@@ -309,14 +312,6 @@ def db_mongo():
         messages = my_db["messages"]
     except pymongo.errors.DuplicateKeyError:
         db_mongo()
-
-
-def db_choose():
-    info = '''
-    [m]ongoDB
-    [S]QLite
-    Choose your db (m or s): 
-    '''
 
 
 def main():
