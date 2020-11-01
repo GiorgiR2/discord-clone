@@ -12,8 +12,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-api": "",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "start-test": "",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
