@@ -32,8 +32,8 @@ config = {
     "CACHE_DEFAULT_TIMEOUT": 300
 }
 
-TEMPLATES_DIR = os.path.abspath("templates")
-STATIC_DIR    = os.path.abspath("static")  # print(TEMPLATES_DIR, "\n", STATIC_DIR)
+TEMPLATES_DIR = os.path.abspath("../build")
+STATIC_DIR    = os.path.abspath("../build")  # print(TEMPLATES_DIR, "\n", STATIC_DIR)
 
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
 app.config.from_mapping(config)
