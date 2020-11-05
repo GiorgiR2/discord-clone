@@ -6,6 +6,5 @@ const main = () => {
 };
 
 ReactDOM.render(
-  <main />,
   document.getElementById('root')
 );

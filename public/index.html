@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles/css/main.css') }}" type="text/css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/css/main.css') }}" type="text/css">
     <title>safe chat</title>
 
 {% endblock %}
 {% block body %}
-    <!-- <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script> -->
-    <!-- <script type="text/javascript" src="{{ url_for('static', filename='scripts/main.js') }}"></script> -->
+    <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/main.js') }}"></script>
 
     <div id="left">
         <h1 id="user">{{user_name}}</h1>
@@ -45,7 +45,7 @@
                 <li class="li"><a href="/git/"># git</a></li>
                 <li class="li"><a href="/github-notifs."># github-notifs</a></li>
 
-                <li class="li"><a href="/root/"># root</a></>
+                <li class="li"><a href="/root/"># root</a></li>
             </ul>
         </nav>
     </div>
@@ -65,7 +65,7 @@
 
             {% for message in messages %}
                 <script>
-                    //  append_message('{{message.username}}', `{{message.message}}`, '{{message.date}}', "{{title.decode('utf-8')}}");
+                     append_message('{{message.username}}', `{{message.message}}`, '{{message.date}}', "{{title.decode('utf-8')}}");
                 </script>
             {% endfor %}
 
@@ -88,5 +88,5 @@
 
     <div id="right"></div>
 
-    <!-- <script>main();</script> -->
+    <script>main();</script>
 {% endblock %}
