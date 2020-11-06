@@ -13,7 +13,7 @@
   "scripts": {
     "start-all": "yarn start && yarn start-api",
     "start": "start \"\" react-scripts start",
-    "start-api": "start \"\" cd api && venv\\\\Scripts\\\\activate\\\\flask run",
+    "start-api": "start \"\" cd api && venv\\Scripts\\activate\\flask run",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test-api": "cd api && flask test",
