@@ -11,9 +11,10 @@
     "react-scripts": "3.4.3"
   },
   "scripts": {
-    "start-all": "yarn start && yarn start-api",
+    "start-all": "npm run start && npm run start-api",
     "start": "start \"\" react-scripts start",
-    "start-api": "start \"\" cd api && venv\\Scripts\\activate\\flask run",
+    "start-api": "start \"\" cd api && npm run flask-run",
+    "flask-run": ".venv/Scripts/activate && flask run",
     "build": "react-scripts build && yarn sass-compile",
     "sass-compile": "sass --watch .\\build\\sass\\_main.sass:.\\build\\static\\main.css",
     "test": "react-scripts test",
