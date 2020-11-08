@@ -7,7 +7,7 @@
 """
 
 from flask import Flask, send_from_directory, render_template, redirect, request, url_for, session
-from flask_caching import Cache
+# from flask_caching import Cache
 
 from flask_socketio import SocketIO
 
@@ -39,8 +39,8 @@ app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
 app.config.from_mapping(config)
 app.config["SECRET_KEY"] = "$fdvnjDFE&*)EEDN@d.0("
 
-cache = Cache(config={'CACHE_TYPE': 'simple'})
-cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+# cache = Cache(config={'CACHE_TYPE': 'simple'})
+# cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
 clients, clients_w  = [], {}  # [ips, num_of_connections]
 socketio = SocketIO(app)
@@ -126,7 +126,7 @@ def find_page(category):
 
 
 @app.route("/login/", methods=["POST", "GET"])
-@cache.cached(timeout=50, key_prefix="all_categories")
+# @cache.cached(timeout=50, key_prefix="all_categories")
 def log_in():
     return render_template("login.html")
 
