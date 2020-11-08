@@ -82,16 +82,17 @@ def login_to(username, password, sign=False):
 
     ip_address = request.remote_addr
 
-    for user in User.query.all():
-        if user.ip == ip_address:
-            user.ip = ""
-        if user.username == username and user.password == password:
-            user.ip, user.remember = ip_address, 1
-            db.session.commit()
-            if sign:
-                socketio.emit('redirect', {'url': f'http://127.0.0.1:{port}/general/'})  # {'url': url_for('general')})
-            else:
-                return redirect("/general/")
+    # for user in User.query.all():
+    #     if user.ip == ip_address:
+    #         user.ip = ""
+    #     if user.username == username and user.password == password:
+    #         user.ip, user.remember = ip_address, 1
+    #         # db.session.commit()
+    #         if sign:
+    #             socketio.emit('redirect', {'url': f'http://127.0.0.1:{port}/general/'})  # {'url': url_for('general')})
+    #         else:
+    #             return redirect("/general/")
+    return redirect("/general/")
     return "try again - 000"
 
 
@@ -105,19 +106,20 @@ def find_page(category):
         else:
             ip_address = request.remote_addr
 
-        username = User.query.filter_by(ip=ip_address).first().username
+        username = "giorgi"  # User.query.filter_by(ip=ip_address).first().username
         session["username"], session["category"] = username, category
 
-        ips = [user.ip for user in User.query.all()]
+        ips = []  # [user.ip for user in User.query.all()]
         ip_address = request.remote_addr
 
         if ip_address in ips and remember(ip_address):
-            mm = Message.query.filter_by(category=category)
+            mm = []
+            # mm = Message.query.filter_by(category=category)
 
-            if ad.only_alphabet_chars(category, "Latin"):
-                category = category.capitalize()
+            # if ad.only_alphabet_chars(category, "Latin"):
+            #     category = category.capitalize()
 
-            return render_template("index.html", user_name=username, title=category.encode("utf-8"), messages=mm)
+            return render_template("index.html", user_name=username, title=category.encode("utf-8"), messages=mm, className="index")
         else:
             return redirect("/login/")
     else:
@@ -128,7 +130,7 @@ def find_page(category):
 @app.route("/login/", methods=["POST", "GET"])
 # @cache.cached(timeout=50, key_prefix="all_categories")
 def log_in():
-    return render_template("login.html")
+    return render_template("login.html", className="login-f")
 
 
 @app.route("/log_out/", methods=["POST", "GET"])
@@ -144,7 +146,7 @@ def exit_user():
 
     User.query.filter_by(ip=ip_address).first().remember = 0
     status[ip_address] = False  # User.query.filter_by(ip=ip_address).first().status = 0
-    db.session.commit()
+    # db.session.commit()
     clients_w[ip_address] = 0
 
 
@@ -155,7 +157,7 @@ def sign_up():
     except:  # [NameError, AttributeError]
         pass
 
-    return render_template("sign-up.html")
+    return render_template("sign-up.html", className="sign-up-f")
 
 
 @socketio.on("siggnn")
@@ -189,16 +191,18 @@ def remember(ip: str, name=None) -> bool:
         pass
     else:
         try:
-            if User.query.filter_by(ip=ip).first().remember == 1:
-                return True
+            return True
+            #if User.query.filter_by(ip=ip).first().remember == 1:
+            #    return True
         except AttributeError:
             return False
 
 
 def register(username, password):
-    new_user = User(username, password)
-    db.session.add(new_user)
-    db.session.commit()
+    pass
+    # new_user = User(username, password)
+    # db.session.add(new_user)
+    # db.session.commit()
 
 
 @socketio.on("joined")
@@ -285,16 +289,17 @@ def save_message(json):
                           message=json["message"],
                           user_id=User.query.filter_by(username=usr).first().id)
     # "{:%d-%b-%Y %H:%M}".format(datetime.now())
-    db.session.add(new_message)
+    # db.session.add(new_message)
     try:
-        db.session.commit()
+        pass
+        # db.session.commit()
     except Exception as e:
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         print(e)
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        db.session.rollback()
+        # db.session.rollback()
 
     json["date"] = "{:%d-%b-%Y %H:%M}".format(datetime.now())
     send_all('m_s_o', json)
