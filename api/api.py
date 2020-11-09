@@ -144,10 +144,8 @@ def log_out():
 def exit_user():
     ip_address = session["ip_address"]
 
-    User.query.filter_by(ip=ip_address).first().remember = 0
-    status[ip_address] = False  # User.query.filter_by(ip=ip_address).first().status = 0
-    # db.session.commit()
-    clients_w[ip_address] = 0
+    # !status
+    # send exit data to available clients
 
 
 @app.route("/signup/", methods=["POST", "GET"])
@@ -208,17 +206,10 @@ def register(username, password):
 @socketio.on("joined")
 def handle_my_custom_event(json, methods=["POST", "GET"]):
     ip = session.get("ip_address")
+    # !status
 
-    status[ip] = True
-    clients.append((ip, request.sid))
-
-    if ip in clients_w:
-        clients_w[ip] += 1
-    else:
-        clients_w[ip] = 1
-
-    socketio.emit("connect/disconnect", load_users(), room=request.sid)
-    print(f"received my event \"{ip}\": {str(json)}")  # {'user_name': 'kommando', 'data': 'User Connected'}
+    # socketio.emit("connect/disconnect", load_users(), room=request.sid)
+    # print(f"received my event \"{ip}\": {str(json)}")  # {'user_name': 'kommando', 'data': 'User Connected'}
 
 
 @socketio.on("disconnect")
@@ -226,9 +217,10 @@ def diconnect_user():
     ip = session.get("ip_address")
     print(f"user disconnected {ip}\n {clients_w}")
 
-    clients_w[ip] -= 1
-    if clients_w == 0:
-        status[ip] = False
+    # !status
+    # clients_w[ip] -= 1
+    # if clients_w == 0:
+    #     status[ip] = False
 
     send_all("connect/disconnect", load_users())
 
@@ -249,21 +241,23 @@ def voice_chat(json, methods=["POST", "GET"]):
 
 def load_users():
     admins, moderators, others, offliners = [], [], [], []
+    data = {}
 
-    for i in User.query.all():
-        if not status[i.ip]:
-            offliners.append(i.username)
-            continue
+    # !status
+    # for i in User.query.all():
+    #     if not status[i.ip]:
+    #         offliners.append(i.username)
+    #         continue
 
-        if i.role == "admin":
-            admins.append(i.username)
-        elif i.role == "moderator":
-            moderators.append(i.username)
-        else:
-            others.append(i.username)
+    #     if i.role == "admin":
+    #         admins.append(i.username)
+    #     elif i.role == "moderator":
+    #         moderators.append(i.username)
+    #     else:
+    #         others.append(i.username)
 
-    num_of_users = [len(admins), len(moderators), len(others), len(offliners)]
-    data = {"admins": admins, "moderators": moderators, "online": others, "offline": offliners, "num_of_users": num_of_users}
+    # num_of_users = [len(admins), len(moderators), len(others), len(offliners)]
+    # data = {"admins": admins, "moderators": moderators, "online": others, "offline": offliners, "num_of_users": num_of_users}
     return data
 
 
@@ -321,7 +315,7 @@ def db_mongo():
 
 def main():
     db_mongo()
-    
+
     socketio.run(app, debug=True)  # app.run(debug=True)  # debug=True, host="169.254.110.104", port=5010
 
 
