@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start-all": "npm run start && npm run start-api",
-    "start": "start \"\" react-scripts start",
-    "start-api": "start \"\" cd api && flask run",
+    "start": "react-scripts start",
+    "start-api": ".",
     "flask-run": "venv/Scripts/activate && flask run",
     "build": "react-scripts build && yarn sass-compile",
     "sass-compile": "sass --watch .\\build\\sass\\_main.sass:.\\build\\static\\main.css",
