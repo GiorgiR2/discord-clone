@@ -18,8 +18,6 @@ from alphabet_detector import AlphabetDetector
 import pymongo
 
 port = 5000
-current  = f"{os.getcwd()}\\"
-DATABASE = f"{current}sql\\database.db"  # database = f"{current}api\\00users.json"
 
 categories = ["welcome", "announcements", "rules", "whoami", "general", "ლინუქსი", "მეცნიერება", "კრიპტოგრაფია",
               "coding-challenges", "movies-n-books", "hacking-penetration-forensics-ctf", "multiplayer-games",
@@ -46,7 +44,6 @@ clients, clients_w  = [], {}  # [ips, num_of_connections]
 socketio = SocketIO(app)
 
 ad = AlphabetDetector()
-status = {}
 
 
 @app.route("/home/", methods=["POST", "GET"])
@@ -144,8 +141,7 @@ def log_out():
 def exit_user():
     ip_address = session["ip_address"]
 
-    # !status
-    # send exit data to available clients
+    # !status send exit data to available clients
 
 
 @app.route("/signup/", methods=["POST", "GET"])
@@ -197,10 +193,7 @@ def remember(ip: str, name=None) -> bool:
 
 
 def register(username, password):
-    pass
-    # new_user = User(username, password)
-    # db.session.add(new_user)
-    # db.session.commit()
+    pass  # !status register user into mongodb
 
 
 @socketio.on("joined")
@@ -218,11 +211,7 @@ def diconnect_user():
     print(f"user disconnected {ip}\n {clients_w}")
 
     # !status
-    # clients_w[ip] -= 1
-    # if clients_w == 0:
-    #     status[ip] = False
-
-    send_all("connect/disconnect", load_users())
+    # send_all("connect/disconnect", load_users())
 
 
 @socketio.on("voice")
@@ -278,25 +267,14 @@ def send_all(first, json):  # category, json-message
 
 def save_message(json):
     usr = json["user_name"]
-    new_message = Message(category=json["category"],
-                          username=usr,
-                          message=json["message"],
-                          user_id=User.query.filter_by(username=usr).first().id)
-    # "{:%d-%b-%Y %H:%M}".format(datetime.now())
+    msg = json["message"]
+    cat = json["category"]
+    dtt = "{:%d-%b-%Y %H:%M}".format(datetime.now())
     # db.session.add(new_message)
-    try:
-        pass
-        # db.session.commit()
-    except Exception as e:
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print(e)
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        # db.session.rollback()
+    # save
 
     json["date"] = "{:%d-%b-%Y %H:%M}".format(datetime.now())
-    send_all('m_s_o', json)
+    send_all("m_s_o", json)
 
 
 def db_mongo():
