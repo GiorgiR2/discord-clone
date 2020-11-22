@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>login section</title>
+
+{% endblock %}
+{% block body %}
+    <form action="{{ url_for('submit') }}" method="post">
+        <h2>Login</h2>
+        <h3 class="username">UserName:</h3>
+        <h3 class="password">Password:</h3>
+
+        <input type="text" name="username0" class="e-name" rows="1" cols="20">
+        <input type="password" name="password0" class="e-pass" rows="1" cols="20">
+
+        <button type="submit">></button> 
+
+        <a href="/signup">Sign up</a>
+    </form>
+{% endblock %}

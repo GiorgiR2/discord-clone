@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>sign up</title>
+
+{% endblock %}
+{% block body %}
+    <!-- <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/sign_up.js') }}"></script>
+
+    <div>
+        <h2>sign up</h2>
+        <h3 class="username">UserName:</h3>
+        <h3 class="password00">Password:</h3>
+        <h3 class="password01">Repeat Password:</h3>
+
+        <input type="text"     id="username"  class="e-name"                  rows="1" cols="15">
+        <input type="password" id="password0" class="pass0" autocomplete="on" rows="1" cols="15">
+        <input type="password" id="password1" class="pass1" autocomplete="on" rows="1" cols="15">
+
+        <button onclick="send_data()">></button> 
+    </div>
+    {% if error %}
+        <script>
+            alert("please repeat password correctly...");
+        </script>
+    {% endif %}
+{% endblock %}
