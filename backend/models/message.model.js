@@ -13,6 +13,18 @@ const messageSchema = new schema({
         unique: false,
         trim: true,
         required: true,
+    },
+    user: {
+        type: String,
+        unique: false,
+        trim: true,
+        required: true,
+    },
+    category: {
+        type: String,
+        unique: false,
+        trim: true,
+        required: true,
     }
 },{
     timestamps: true,
