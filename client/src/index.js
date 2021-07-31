@@ -6,5 +6,8 @@ const main = () => {
 };
 
 ReactDOM.render(
+  <React.StrictMode>
+    <main />
+  </React.StrictMode>,
   document.getElementById('root')
 );

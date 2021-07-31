@@ -21,9 +21,10 @@ connection.once('open', () => {
 });
 
 // require models
-const usersRouter = require('./route/users'); // Todo: this section should be finished
-
+const usersRouter = require('./route/users');
+const messagesRouter = require('./route/messages');
 app.use('users', usersRouter);
+app.use('messages', messagesRouter);
 
 // listen
 app.listen(port, () => {
