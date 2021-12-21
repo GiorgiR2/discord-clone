@@ -5,9 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"run": "nodemon index.js",
+    "start": "nodemon --experimental-modules index.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "body-parser": "^1.19.0",
+    "buffer": "^6.0.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.2",
+    "mongoose": "^6.0.14",
+    "socket.io": "^4.2.0",
+    "validator": "^13.7.0"
+  }
 }

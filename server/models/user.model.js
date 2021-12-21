@@ -1,8 +1,8 @@
+const { kStringMaxLength } = require('buffer');
 const mongoose = require('mongoose');
 
-const schema = mongoose.schema;
-
-const userSchema = new schema({
+const userSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
     username: {
         type: String,
         required: true,
@@ -10,11 +10,23 @@ const userSchema = new schema({
         trim: true,
         minwidth: 3,
     },
-    role: {
+    password: {
+        type: String,
+        required: true,
+        unique: false,
+        trim: true,
+    },
+    status: {
+        type: Number, // 1=online, 0=offline
+        required: false,
+        unique: false,
+        trim: false,
+    },
+    ip: {
         type: String,
         required: false,
         unique: false,
-        trim: false
+        trim: true,
     }
 },{
     timestamp: true,

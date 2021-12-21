@@ -1,32 +1,32 @@
 const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+const http = require('http');
+const socketio = require('socket.io');
+
+const usersRouter = require('./routes/users.js');
+const messagesRouter = require('./routes/messages.js');
+
+require('./mongooseAPI.js');
 
 require('dotenv').config(); // variables
 
-// express server
+const PORT = process.env.PORT || '5000';
+
 const app = express();
-const port = process.env.PORT;
+const server = http.createServer(app);
+const io = socketio(server);
 
-app.use(cors());
-app.use(express.json());
+io.on('connection', (socket) => {
+    console.log('new connection');
+    socket.on('join', (message, callback) => {
+        // pass
+    });
 
-// mongodb
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
-
-const connection = mongoose.connect;
-connection.once('open', () => {
-    console.log("Succesfully established connection with mongodb connection");
+    socket.on('disconnect', (message, callback) => {
+        // pass
+    });
 });
 
-// require models
-const usersRouter = require('./route/users');
-const messagesRouter = require('./route/messages');
-app.use('users', usersRouter);
-app.use('messages', messagesRouter);
+server.listen(PORT, () => console.log(`Server is on PORT: ${PORT}`));
 
-// listen
-app.listen(port, () => {
-    console.log(`Server is fcking listening on port ${port}...`);
-});
+app.use(usersRouter);
+app.use(messagesRouter);

@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const schema = mongoose.Schema;
-
-const messageSchema = new schema({
+const messageSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
     date: {
         type: Date,
         unique: false,
         trim: true,
+        required: true,
     },
     message: {
         type: String,
