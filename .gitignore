@@ -2,15 +2,19 @@
 
 # dependencies
 /node_modules
+client/node_modules
+server/node_modules
 
 # testing
 /coverage
 
 # production
 /build
+client/build
 
 # misc
 .env
+/server/.env
 
 npm-debug.log*
 yarn-debug.log*
@@ -21,4 +25,6 @@ yarn-error.log*
 __pycache__
 
 /temp
+client/temp
+server/temp
 
