@@ -2,15 +2,15 @@
 
 # dependencies
 /node_modules
-client/node_modules
-server/node_modules
+/client/node_modules
+/server/node_modules
 
 # testing
 /coverage
 
 # production
 /build
-client/build
+/client/build
 
 # misc
 .env
@@ -25,6 +25,6 @@ yarn-error.log*
 __pycache__
 
 /temp
-client/temp
-server/temp
+./client/temp
+./server/temp
 
