@@ -15,7 +15,7 @@ const sendLoginData = (e, user, pswrd, history) => {
 
     axios.post("/api/users/login", data)
     .then(res => {
-        if (res.data.data !== "try again") {
+        if (res.data.data === "done") {
             history.push(`/chat`); // /?id=${res.data.data}
         }
         else {
@@ -38,11 +38,8 @@ const Login = () => {
         if (queryParams.get('status') === "done"){ // successfully registered
             alert("registration is done...");
         }
-    }, []
-    );
 
-    useEffect(() => {
-        getBasicData(setUserName, history);
+        getBasicData(history);
     }, []);
 
     return (

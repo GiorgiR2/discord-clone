@@ -14,7 +14,7 @@ const App = () => {
                 <Route exact path="/" component={Login} />
                 <Route exact path="/signup" component={SignUp} />
                 {/* <Route exact path="/chat/id=:id" component={Chat} /> */}
-                <Route exact path="/chat/:" component={Chat} />
+                <Route exact path="/chat/:roomId" component={Chat} />
                 <Route exact component={Chat} />
             </Switch>
         </BrowserRouter>

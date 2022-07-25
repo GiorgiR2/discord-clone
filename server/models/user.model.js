@@ -5,14 +5,14 @@ const userSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     username: {
         type: String,
-        required: true,
+        required: [true, 'Please add a username'],
         unique: true,
         trim: true,
         minwidth: 3,
     },
     password: {
         type: String,
-        required: true,
+        required: [true, 'Please add a password'],
         unique: false,
         trim: true,
     },

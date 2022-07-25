@@ -3,6 +3,10 @@ const Message = require('../models/message.model');
 
 const bp = require('body-parser');
 
+const multer = require('multer'); // for file uploading
+
+const upload = multer({ dest: "uploads" });
+
 const router = express.Router();
 
 router.use(bp.json());
@@ -47,6 +51,10 @@ router.patch('/:messageId', (req, res, next) => {
     .exec()
     .then()
     .catch();
+});
+
+router.post("/file", upload.single("file"), async (req, res) => {
+    //
 });
 
 module.exports = router;

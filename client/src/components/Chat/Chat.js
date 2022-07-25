@@ -1,155 +1,263 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
+
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import FormData from 'form-data';
 
 import './_chat.sass';
-import editIcon from '../../icons/edit-97.png';
-import plusIcon from '../../icons/white-plus-icon-3.jpg';
+import { EditSVG, MicSVGOff, MicSVGOn, CamSVGOff, CamSVGOn, ScreenShareOff, ScreenShareOn } from '../../styles/SVGs/_SVGs';
 
-import { getBasicData } from '../js/_getBasicData';
 import { appendFile } from './_appendFile';
+import { getBasicData } from '../js/_getBasicData';
+import * as socks from '../js/_socketSide';
 
-const chatRoomList = [
-    "# room 1",
-    "# room 2",
-    "# room 3",
-    "# room 4",
-    "# room 5",
-    "# room 6",
-    "# room 7",
-];
+// import { WebRTCFrame } from '../WebRTCInteractive/WebRTCInteractive';
+import { VoiceFrame } from '../Voice/_voice';
 
-const voiceChatList = [
-    "# voice 1",
-    "# voice 2",
-    "# voice 3",
-];
+import { PopupEditCat, PopupAddCat } from './_editCat';
 
-const EditSVG = () => {
-    return (
-        <svg width="25" height="25" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-            d="M18.303 4.742L16.849 3.287C16.678 3.116 16.374 3.116 16.203 3.287L13.142 6.351H2.01901C1.76801 6.351 1.56201 6.556 1.56201 6.807V16.385C1.56201 16.636 1.76801 16.841 2.01901 16.841H15.702C15.954 16.841 16.159 16.636 16.159 16.385V7.533L18.303 5.387C18.481 5.208 18.483 4.917 18.303 4.742ZM15.258 15.929H2.47601V7.263H12.23L9.69501 9.792C9.63801 9.849 9.59401 9.922 9.57601 10.004L9.18001 11.36H5.20001C4.94901 11.36 4.74301 11.565 4.74301 11.816C4.74301 12.069 4.94801 12.272 5.20001 12.272H9.53601C9.55901 12.272 10.435 12.292 11.034 12.145C11.346 12.068 11.584 12.008 11.584 12.008C11.664 11.99 11.739 11.949 11.796 11.89L15.259 8.447V15.929H15.258ZM11.241 11.156L10.163 11.423L10.43 10.347L16.527 4.256L17.335 5.064L11.241 11.156Z"
-            fill="#fff"/>
-        </svg>
-    );
-}
+const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
+    if (roomId === undefined)
+        history.push("/chat/61ed960432479c682956802b");
+        // roomId = "61ed960432479c682956802b";
 
-const changeLabel = () => {
-    /* -/- */
-    console.log("fuck");
-}
-
-const addCategory = () => {
-    // pass
-}
-
-const logOut = (e, history) => {
-    e.preventDefault();
-    axios.post("/api/users/logout", { junk: "" }) // /api/users/logout
+    axios.post("/api/roomId", { id: roomId })
     .then(res => {
-        if (res.data.status === "done"){
-            console.log("done");
-            history.push("/");
+        if (res.data.roomName != "try_again"){
+            setCategory(res.data.roomName);
+            if (res.data.voiceMode)
+                setVoiceMode(true);
+        }
+        else{
+            history.push("/chat/61ed960432479c682956802b");
+            // roomId = "61ed960432479c682956802b";
+            setCategory("room 1");
+            setVoiceMode(false);
         }
     })
     .catch(err => console.error(err));
 }
 
-const CategoriesJSX = () => {
-    return (
-        [
-        chatRoomList.map(category => <li className="category">
-            <a href="#">{category}</a>
-            <EditSVG />
-        </li>),
-        <br />,
-        voiceChatList.map(category => <li className="category">
-            <a href="#">{category}</a>
-            <EditSVG />
-        </li>)
-        ]
-    )
-};
+const logOut = (e, history) => {
+    e.preventDefault();
+    axios.post("/api/users/logout", { junk: "" })
+    .then(res => {
+        if (res.data.status === "done")
+            history.push("/");
+    })
+    .catch(err => console.error(err));
 
-const Categories = ({user}) => (
-    <div className="categories">
-        <div className="topbar">
-            <h1 className="user">{user}</h1>
-            <img src={plusIcon} alt="plusIcon" className="plusIcon" onClick={addCategory} />
+    socks.disconnect();
+}
+
+const newMessage = (user, msg, date) => (
+    <div className="element">
+        <div className="author">
+            {user}
         </div>
-
-        <nav>
-            <ul>
-                <CategoriesJSX />
-            </ul>
-        </nav>
-    </div>
-)
-
-const Messages = ({category, placeholder, history}) => (
-    <div className="messages">
-        <div id="top">
-            <h1 id="category">{category}</h1>
-            <h1 className="log_out" onClick={(event) => {logOut(event, history)}}>Log out</h1>
+        <div className="message">
+            {msg.split("\n").map(line => <div>{line}</div>)}
         </div>
-
-        <div id="chat-screen">
-            <div className="mmm">
-                <h4 className="author">author</h4>
-                <h4 className="message">message</h4>
-                <h4 className="date">date</h4>
-            </div>
-        </div>
-
-        <div id="input">
-            <textarea
-                id="text-area"
-                type="text"
-                name="text-input"
-                placeholder={placeholder}
-                rows="10"
-                cols="30"
-                // onChange={}
-            ></textarea>
-            <svg width="24" height="24" viewBox="0 0 24 24" onClick={(event) => appendFile(event)}>
-                <path
-                fill="currentColor"
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z">
-                </path>
-            </svg>
+        <div className="date">
+           {date}
         </div>
     </div>
 )
 
-const StatusBar = () => (
-    <div className="status-bar"></div>
-)
+const CategoriesJSX = ({ cats, display, setDisplay, setElementId }) =>
+    cats.map(cat => <li className="category" id={cat._id}>
+        <a href={`/chat/${cat._id}`}># {cat.name}</a>
+        <EditSVG id={cat._id} display={display} setDisplay={setDisplay} setElementId={setElementId} />
+    </li>);
 
 const Chat = () => {
-    let { id, category } = useParams();
+    const Categories = () => (
+        // { user, cats, displayEdit, setDisplayEdit, displayAdd, setDisplayAdd, setElementId}
+        <div className="categories">
+            <div className="top">
+                <div className="topbar">
+                    <h1 className="user">{userName}</h1>
+                    <h1 className="plus" onClick={() => setDisplayAdd(!displayAdd)}>+</h1>
+                </div>
+    
+                <nav>
+                    <ul id="ul-id">
+                        <CategoriesJSX cats={catjson} display={displayEdit} setDisplay={setDisplayEdit} setElementId={setElementId} />
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    )
+    
+    const Messages = () => { // { authentication, room, roomId, elements, user }
+        const sendFile = () => {
+            // sendFile(e.target.files[0])
+            let file = selectedFile;
+            console.log("shit", file);
+            // const formData = new FormData();
+            // formData.append("user", userName);
+            // // formData.append("time", "00:00");
+            // formData.append("size", file.size); // in bites
+            // // let fileF = "";
+            // formData.append("file", selectedFile, file.name);
+            // axios.post("/upload", formData)
+            //      .then(res => {
+            //         console.log("Successfully Uploaded...");
+            //      })
+            //      .catch(err => alert(err));
+        }
 
-    const [username, setusername] = useState("gio");
-    const [placeholder, setPlaceholder] = useState(`Message #${category}`); // .decode('utf-8')
-    const queryParams = new URLSearchParams(window.location.search);
+        const [selectedFile, setSelectedFile] = useState(null);
+
+        useEffect(() => {
+            if (selectedFile != null)
+                sendFile();
+        }, [selectedFile]);
+
+        return (
+        <>
+            <div id="chat-screen">
+                {elements.map(el => newMessage(el.user, el.msg, el.date))}
+                <div id="last-element"></div>
+            </div>
+            <div id="input">
+                <textarea
+                    id="text-area"
+                    type="text"
+                    placeholder={`Message #${category}`}
+                    onKeyPress={(e) => socks.sendMessage(e, userName, category, roomId, authentication)}
+                ></textarea>
+                {/* <svg viewBox="0 0 24 24" onClick={(event) => appendFile(event)}>
+                    <path
+                    fill="currentColor"
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z">
+                    </path>
+                </svg> */}
+                <input type="file" value={selectedFile} onChange={(e) => setSelectedFile(e.target.files[0])}/>
+            </div>
+        </>
+        );
+    }
+    
+    const Center = () => (
+        <div className="messages">
+            <div id="top">
+                <h1 id="category"># {category}</h1>
+                <h1 id="log_out" onClick={(event) => {logOut(event, history)}}>Log out</h1>
+            </div>
+
+            {voiceMode
+            ? <VoiceFrame history={history} roomId={roomId} userName={userName} />
+            : <Messages/>}
+        </div>
+    )
+
+    const StatusBar = () => ( // { online, offline }
+        <div className="status-bar">
+            <h2>ACTIVE - {onlineList.length}</h2>
+            {onlineList.map(el => <h2 className="online">--- {el}</h2>)}
+            <h2>OFFLINE - {offlineList.length}</h2>
+            {offlineList.map(el => <h2 className="offline">--- {el}</h2>)}
+        </div>
+    )
+
+    const reducer = (state, action) => {
+        // pass
+    }
+
+    const initialState = {
+        setOnline: "",
+        setOffline: "",
+        onlineList: [],
+        offlineList: [],
+    };
+
+    const [online, setOnline] = useState("");
+    const [offline, setOffline] = useState("");
+    const [onlineList, setOnlineList] = useState([]);
+    const [offlineList, setOfflineList] = useState([]);
+    
+    // const [state, dispatch] = useReducer(reducer, initialState);
+
+    let { roomId } = useParams();
+
+    const [userName, setUserName] = useState("");
+    const [category, setCategory] = useState("");
+
+    const [catjson, setCatJson] = useState([]);
+    const [authentication, setAuthentication] = useState();
+
+    const [element, setElement] = useState({
+        user: "author",
+        msg: "message",
+        date: "date"});
+    const [elements, setElements] = useState([]);
+
+    const [displayEdit, setDisplayEdit] = useState(false);
+    const [displayAdd, setDisplayAdd] = useState(false);
+    const [elementId, setElementId] = useState();
+
+    const [voiceMode, setVoiceMode] = useState(false);
+
     const history = useHistory();
 
     useEffect(() => {
-        console.log(queryParams.get('id'));
-        if (queryParams.get('room') !== null){ // successfully registered
-            // pass
-        }
-        else {
-            category = "room #1";
-        }
-        getBasicData(setusername, history, "chat");
+        checkRoomId(roomId, setCategory, history, setVoiceMode);
+
+        getBasicData(history, setUserName, setAuthentication, setCatJson, "chat");
     }, []);
+
+    useEffect(() => {
+        if (userName !== "")
+            socks.main(category, userName, setElement, setOnline, setOffline);
+    }, [userName]);
+
+    useEffect(() => {
+        setElements([...elements, element]);
+    }, [element]);
+
+    useEffect(() => {
+        let el = document.getElementById("last-element");
+        el.scrollIntoView();
+    }, [elements]);
+
+    useEffect(() => {
+        if (online !== ""){
+            let new_offlineList = offlineList.filter(element => element !== online)
+            setOfflineList(new_offlineList);
+            setOnlineList([...onlineList, online]);
+        }
+    }, [online]);
+
+    useEffect(() => {
+        if (offline !== ""){
+            let new_onlineList = onlineList.filter(element => element !== offline)
+            setOnlineList(new_onlineList);
+            setOfflineList([...offlineList, offline]);
+        }
+    }, [offline]);
 
     return (
         <div className="chat">
-            <Categories user={username} />
-            <Messages category={category} placeholder={placeholder} history={history} />
-            <StatusBar />
+            { displayEdit ?
+            <PopupEditCat
+                setDisplay={setDisplayEdit}
+                catjson={catjson}
+                setCatJson={setCatJson}
+                elementId={elementId}
+            /> : null
+            }
+            { displayAdd ?
+            <PopupAddCat
+                setDisplay={setDisplayAdd}
+                catjson={catjson}
+                setCatJson={setCatJson}
+            /> : null
+            }
+
+            <Categories/>
+            <Center/>
+            <StatusBar/>
         </div>
     );
 }

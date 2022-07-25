@@ -144,7 +144,7 @@ function main (){
 
     let user_na  = document.getElementById("user").textContent;
 
-    socket.on( 'connect', function() {
+    socket.on('connect', function() {
         socket.emit( 'joined', {
             user_name: user_na,
             data: 'User Connected'

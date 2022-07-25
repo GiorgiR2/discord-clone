@@ -1,7 +1,14 @@
 // File: _chat.scss
 
+@import '../../styles/_variables';
+
+svg
+    cursor: pointer
+
 .chat
-    margin: 5px 0px 5px 0px
+    background-color: $bg-color//#161f27
+    // margin: 5px 0px 5px 0px
+    max-height: 800px
     display: flex
     justify-content: space-between
 
@@ -10,11 +17,11 @@
         text-decoration: none
 
     h1
-        height: 5%
-        padding-left: 10px
+        // height: 5%
+        // padding-left: 10px
         font-size: 22px
         color: white
-        padding-bottom: 10px
+        // padding-bottom: 10px
 
     h2
         padding-top: 4px
@@ -25,88 +32,100 @@
     .categories,
     .messages,
     .status-bar
-        height: 99vh
-        color: #cfd9e4
+        height: 100vh
+        background-color: $bg-color
 
     .categories
         width: 18vw
-        background-color: #161f27
-        // padding-left: 8px
-        overflow: hidden
-        overflow-y: scroll
+        display: flex
+        flex-direction: column
+        justify-content: space-between
 
-        .topbar
-            display: flex
-            justify-content: space-between
-            border-bottom: 2px solid black
-            margin-left: 5px
-
-            .user
-                font-size: 1.1em
-                // padding-left: 14px
+        .top
+            overflow: hidden
+            overflow-y: scroll
+            width: 100%
             
-            .plusIcon
-                height: 25px
-                color: white
-                cursor: pointer
-                // background-color: green
-
-        nav ul
-            list-style: none
-            padding-left: 6px
-
-            li
-                font-size: 1em // font: 14px Lato, Arial, Sans-Serif;
-                margin-top: .4em
-                padding-left: .4em
-
+            .topbar
+                width: 100%
+                height: 43px
+                margin-left: 5px
                 display: flex
                 justify-content: space-between
+                border-bottom: 2px solid darken($fg-color, 50)
+                
+                .user
+                    font-size: 1.2em
+                    margin: 6px
 
-                svg
-                    opacity: 0
+                .plus
+                    height: 30px
+                    margin-right: 6px
+                    font-size: 2em
 
                     &:hover,
                     &:active
                         cursor: pointer
+                        color: darken($fg-color, 30)
+                        transition-duration: .2s
 
-            li:hover,
-            li:active
-                background-color: #8f9397
-                border-radius: 5px
+            nav ul
+                list-style: none
+                padding-left: 6px
 
-                a
-                    color: #fff
+                li
+                    // font-size: 1em
+                    font: 20px Lato, Arial, Sans-Serif
+                    margin-top: .4em
+                    padding-left: .4em
 
-                svg
-                    opacity: 1
+                    display: flex
+                    justify-content: space-between
+
+                    svg
+                        opacity: 0
+                        width: 25px
+                        height: 25px
+
+                li:hover,
+                li:active
+                    background-color: #8f9397
+                    border-radius: 5px
+
+                    a
+                        color: $fg-color
+
+                    svg
+                        opacity: 1
 
     .messages
-        width: 62%
+        width: 62vw
         background-color: #2e4153
-        padding: 1px
+        // padding: 1px
 
         #top
             display: flex
             justify-content: space-between
-            height: 6vh
+            height: 43px //6%
+            margin: 0 auto
+            width: 98%
 
             h1
-                font-size: 1.1em
-                border-bottom: 0px
+                padding-top: 3px
 
-            .log_out
-                padding-right: 4px
+            #category
+                // pass
 
+            #log_out
                 &:hover,
                 &:active
                     cursor: pointer
                     color: darken(white, 30)
 
         #chat-screen
-            margin: 5px
-            height: 81vh
-            width: 99%
+            margin: 0 auto
+            height: calc(100% - 120px) // 82%
+            width: 98%
             background-color: #283848
             overflow: hidden
             overflow-y: scroll
@@ -116,34 +135,35 @@
                 font-size: 14px
                 justify-content: space-between
                 height: fit-content
+                padding-bottom: 1px
                 
                 .author
-                    min-width: 13%
+                    width: 8%
                     margin-left: 4px
                     vertical-align: top
-                    /* text-align: left; */
 
                 .message
-                    width: 75%
-                    margin-left: 4px
+                    width: 78%
+                    // margin-left: 4px
                     vertical-align: top
+                    display: inline-block
 
                 .date
                     width: 10%
                     vertical-align: top
-                    text-align: right
+                    text-align: left
 
         #input
-            // height: 10px !important //fit-content !important
+            margin-top: 1%
 
             textarea
                 position: absolute
-                float: left
+                // float: left
                 resize: none !important
                 overflow: hidden !important
-                height: 65px //11vh
-                width: 61.2vw // 99%
-                margin-left: .4vw
+                height: 65px // 10vh
+                width: 60.6vw // 99%
+                margin-left: .7vw
                 background-color: #46637f
                 z-index: 1
                 color: #cfd9e4
@@ -151,12 +171,21 @@
                 &::placeholder
                     color: #cfd9e4
 
-            svg
+            svg, input
                 float: right
                 z-index: 2
                 position: relative
-                cursor: pointer
-                margin-right: .4vw
+            
+            input
+                // width: 240px
+                top: 42px
+                width: 130px
+                left: -10px
+                
+            svg // no longer needed
+                margin-right: .8vw
+                height: 24px
+                width: 24px
 
                 path:active,
                 path:hover
@@ -164,13 +193,17 @@
 
     .status-bar
         width: 19vw
-        background-color: #161f27
         overflow: hidden
         overflow-y: scroll
 
         .online
             font-size: .8em
-            color: #4810f6
+            // color: #4810f6
+        
+        .offline
+            font-size: .8em
+            color: #707070
+
 
 ::-webkit-scrollbar
     width: 10px
@@ -181,20 +214,16 @@
     border-radius: 10px
     background-color: #a6a6a6
 
-@media screen and (max-width: 860px)
+@media screen and (max-width: 800px)
     body
-        font-size: 15px
-
-@media screen and (max-width: 620px)
-    body
-        #left
+        .categories
             display: none !important
 
-        #right
+        .status-bar
             display: none !important
 
-        #center
-            width: 100vw
+        .messages
+            width: 100vw !important
 
-            .input textarea
-                width: 99vw
+            #chat-screen
+                width: 100% !important

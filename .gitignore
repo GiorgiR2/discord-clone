@@ -2,16 +2,15 @@
 
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
-/api/venv
+/client/node_modules
+/server/node_modules
 
 # testing
 /coverage
 
 # production
-/build
+# /client/build
+/client/build/static
 
 # misc
 .DS_Store
@@ -24,14 +23,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+/.vscode
 __pycache__
 
 /temp
 
-
 .vscode
-/client/node_modules
-/server/node_modules
 
 /client/temp
 /server/temp

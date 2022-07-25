@@ -16,12 +16,12 @@ const sendData = (e, username, password0, password1, history) => {
 
     axios.post('/api/users/register', data)
     .then(res => {
+        console.log("res", res.data);
         if (res.data.data === "done"){
             history.push('/?status=done');
         }
-        else {
+        else
             alert("try again, something went wrong...");
-        }
     })
     .catch(err => console.log(err));
 }
@@ -32,12 +32,13 @@ const SignUp = () => {
     const [password1, setPassword1] = useState();
 
     const history = useHistory();
+    // let { signup } = useParams();
 
     document.title = "sign up";
 
     useEffect(() => {
-        getBasicData();
-    });
+        getBasicData(history);
+    }, []);
 
     return (
         <div className="sign-up">
