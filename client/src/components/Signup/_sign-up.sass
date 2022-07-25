@@ -1,0 +1,56 @@
+// File: sign-up.scss
+
+@import '../../styles/_variables'
+@import '../../styles/go-button'
+
+.sign-up
+    display: grid
+    grid-row-gap: 1.4px
+    grid-column-gap: 2px
+
+    min-width: 400px
+
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-200px, -60px)
+
+    h2
+        font-size: 16px
+        width: 155px
+
+    input
+        resize: none
+        height: 25px
+
+    .sign-up-title
+        font-size: 20px
+        grid-area: 1 / 1
+        margin-bottom: 10px
+        text-transform: uppercase
+
+    .username
+        grid-area: 2 / 1
+
+    .password00
+        grid-area: 3 / 1
+
+    .password01
+        grid-area: 4 / 1
+
+    .e-name
+        grid-area: 2 / 2
+
+    .pass0
+        grid-area: 3 / 2
+
+    .pass1
+        grid-area: 4 / 2
+
+    .go-button
+        grid-area: 4 / 3
+
+    .go-back-button
+        grid-area: 5 / 2
+        color: darken($fg-color, 20%)
+        text-decoration: none

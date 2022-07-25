@@ -1,0 +1,64 @@
+// File: Login.sass
+
+@import '../../styles/_variables'
+@import '../../styles/go-button'
+
+.login
+    min-width: 360px
+
+    display: grid
+    grid-template-columns: 90px 200px 30px
+    grid-column-gap: 3px
+    grid-row-gap: 4px
+
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-170px, -70px)
+
+    a
+        text-decoration: none
+        grid-area: 4 / 2
+
+    h2
+        font-size: 17px
+
+    .title
+        font-size: 20px
+        grid-area: 1 / 1
+        margin-bottom: 10px
+
+    .username
+        grid-column: 1
+        grid-row: 2
+        margin-top: 2px
+
+    .password
+        grid-column: 1
+        grid-row: 3
+        margin-top: 4px
+
+    input
+        resize: none
+        color: black
+        width: 200px
+        height: 28px
+
+    form
+        grid-area: 3 / 3
+        .go-button
+            width: 42px
+
+    .e-name
+        grid-area: 2 / 2
+
+    .e-pass
+        grid-area: 3 / 2
+
+    .sign-up-button
+        color: darken($fg-color, 20%)
+        transition: .2s
+
+        &:hover,
+        &:active
+            color: lighten($fg-color, 5%)
