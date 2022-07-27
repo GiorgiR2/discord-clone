@@ -35,7 +35,7 @@ const PopupAddCat = ({ setDisplay, catjson, setCatJson }) => {
             <div className="center">
                 <h4 className="label">Add Category:</h4>
 
-                <input rows="1" columns="20" ref={newNameRef}/>
+                <input rows="1" columns="20" ref={newNameRef} placeholder='not supported' disabled/>
 
                 <div className="buttons">
                     <h4 className="cancel" onClick={() => setDisplay(false)}>
