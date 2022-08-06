@@ -9,7 +9,6 @@
 * 
 
 ## Overview
-Previously back-end of this projects i had written in python/flask and after some time decided to rewrite on node.
 
 ## Install && Run
 
@@ -23,12 +22,12 @@ cd server && npm i && npm start
 ## Functions
 
 | Function                                  | Description                                       |
-|-----------------------------------------------------------------------------------------------|
+|-------------------------------------------|---------------------------------------------------|
 | sending messages/files                    | -                                                 |
 | video/audio chat                          | p2p connection (using webrtc/simple-peer)         |
-| android app version                       |                                                   |
-| -                                         |                                                   |
-| -                                         |                                                   |
+| android app version                       | -                                                 |
+| -                                         | -                                                 |
+| -                                         | -                                                 |
 
 ## Screens
 
