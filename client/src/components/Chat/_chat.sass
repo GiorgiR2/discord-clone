@@ -143,13 +143,13 @@ svg
                     vertical-align: top
 
                 .message
-                    width: 78%
+                    width: 76%
                     // margin-left: 4px
                     vertical-align: top
                     display: inline-block
 
                 .date
-                    width: 10%
+                    width: 12%
                     vertical-align: top
                     text-align: left
 
@@ -171,16 +171,17 @@ svg
                 &::placeholder
                     color: #cfd9e4
 
-            svg, input
+            svg, .inputForm
                 float: right
                 z-index: 2
                 position: relative
             
-            input
-                // width: 240px
-                top: 42px
+            .inputForm
+                top: 26px
                 width: 130px
-                left: -10px
+                left: -15px
+                display: flex
+                flex-direction: column
                 
             svg // no longer needed
                 margin-right: .8vw
