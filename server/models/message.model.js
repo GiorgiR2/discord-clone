@@ -49,6 +49,16 @@ const messageSchema = new mongoose.Schema(
       unique: false,
       required: false,
     },
+    downloadCount: {
+      type: Number,
+      unique: false,
+      required: false,
+    },
+    size: {
+      type: Number,
+      unique: false,
+      required: false,
+    },
   },
   {
     timestamps: false,
