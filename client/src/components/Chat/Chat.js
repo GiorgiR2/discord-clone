@@ -7,15 +7,9 @@ import FormData from "form-data";
 import getTime from "../js/getTime";
 
 import "./_chat.sass";
-import {
-  EditSVG,
-  MicSVGOff,
-  MicSVGOn,
-  CamSVGOff,
-  CamSVGOn,
-  ScreenShareOff,
-  ScreenShareOn,
-} from "../../styles/SVGs/_SVGs";
+import { EditSVG } from "../../styles/SVGs/_SVGs";
+
+import FileDownload from "js-file-download";
 
 import { appendFile } from "./_appendFile";
 import { getBasicData } from "../js/_getBasicData";
@@ -25,6 +19,8 @@ import * as socks from "../js/_socketSide";
 import { VoiceFrame } from "../Voice/_voice";
 
 import { PopupEditCat, PopupAddCat } from "./_editCat";
+
+const apiLink = "http://127.0.0.1:5000";
 
 const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
   if (roomId === undefined) history.push("/chat/61ed960432479c682956802b");
@@ -58,17 +54,40 @@ const logOut = (e, history) => {
   socks.disconnect();
 };
 
-const newMessage = (user, msg, date) => (
-  <div className="element">
-    <div className="author">{user}</div>
-    <div className="message">
-      {msg.split("\n").map((line) => (
-        <div>{line}</div>
-      ))}
+const NewMessage = ({ user, msg, date, isFile }) => {
+  // msg may be a text / a multiline text or a fileID
+  const downloadByURL = (e, linkId) => {
+    e.preventDefault();
+    axios.post(`/file:${linkId}`, { data: "nothing" }).then((response) => {
+      FileDownload(response.data, "report.jpg");
+      return;
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.png"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+    });
+  };
+
+  let link = `${apiLink}/file/${msg}`; // msg === Id
+
+  return (
+    <div className="element">
+      <div className="author">{user}</div>
+      <div className="message">
+        {isFile ? (
+          <a href={link} target="_blank">
+            {link}
+          </a>
+        ) : (
+          msg.split("\n").map((line) => <div>{line}</div>)
+        )}
+      </div>
+      <div className="date">{date}</div>
     </div>
-    <div className="date">{date}</div>
-  </div>
-);
+  );
+};
 
 const CategoriesJSX = ({ cats, display, setDisplay, setElementId }) =>
   cats.map((cat) => (
@@ -112,17 +131,32 @@ const Chat = () => {
   const Messages = () => {
     // { authentication, room, roomId, elements, user }
     const handleSubmit = (e) => {
+      const sendFileData = () => {
+        socks.sendFileData(
+          e,
+          userName,
+          category,
+          roomId,
+          datetime,
+          file.size,
+          file.name,
+          authentication
+        );
+      };
+
       e.preventDefault();
 
-      const url = "http://127.0.0.1:5000/upload";
+      const url = `${apiLink}/upload`;
       const formData = new FormData();
+      const datetime = getTime();
 
       formData.append("file", file);
       formData.append("fileName", file.name);
       formData.append("room", category);
       formData.append("user", userName);
       formData.append("roomId", roomId);
-      formData.append("datetime", getTime());
+      formData.append("datetime", datetime);
+      formData.append("size", file.size);
 
       const config = {
         headers: {
@@ -130,9 +164,17 @@ const Chat = () => {
         },
       };
 
-      axios.post(url, formData, config).then((response) => {
-        console.log(response.data);
-      });
+      axios
+        .post(url, formData, config)
+        .then((res) => {
+          console.log("file send, res:", res.data);
+          if (res === "done") sendFileData();
+        })
+        .catch((err) => sendFileData());
+
+      // console.log("!!!!!!!!!!", file.name, file.size, typeof file.size);
+
+      // socket send
     };
 
     const [file, setFile] = useState();
@@ -140,7 +182,14 @@ const Chat = () => {
     return (
       <>
         <div id="chat-screen">
-          {elements.map((el) => newMessage(el.user, el.msg, el.date))}
+          {elements.map((el) => (
+            <NewMessage
+              user={el.user}
+              msg={el.msg}
+              date={el.date}
+              isFile={el.isFile}
+            />
+          ))}
           <div id="last-element"></div>
         </div>
         <div id="input">
@@ -243,6 +292,7 @@ const Chat = () => {
     user: "author",
     msg: "message",
     date: "date",
+    isFile: false,
   });
   const [elements, setElements] = useState([]);
 

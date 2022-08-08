@@ -10,6 +10,8 @@ const userOps = require("./js/userOperations");
 const msgOps = require("./js/msgOperations");
 const catOps = require("./js/catOperations");
 
+const Message = require("./models/message.model");
+
 require("./mongooseAPI.js");
 
 require("dotenv").config(); // variables
@@ -95,7 +97,7 @@ const main = (connectedUsers, usersInVoice) => {
       console.log("disconnect", userNN, socket.id); // automatically leaves the room
     });
 
-    socket.on("message", (data, callback) => {
+    socket.on("message", async (data, callback) => {
       let authentication = data.authentication;
 
       let username = data.username;
@@ -105,15 +107,44 @@ const main = (connectedUsers, usersInVoice) => {
       let room = data.room;
 
       let sdata = {
-        username: username,
+        user: username,
         message: message,
-        datetime: datetime,
+        date: datetime,
+        isFile: false,
+      };
+
+      msgOps.addToMongoose({ ...data, isFile: false }); // authentication, username, message, datetime, room
+      socket.emit("M_S_O", sdata);
+      socket.in(room).emit("M_S_O", sdata);
+      // console.log("sent (1)", room, message, "from", userNN);
+    });
+
+    socket.on("file", async (data) => {
+      let authentication = data.authentication;
+
+      let username = data.username;
+      let datetime = data.datetime;
+      let room = data.room;
+      let roomId = data.roomId;
+      let size = data.size;
+      let filename = data.filename;
+
+      const file = await Message.findOne({
+        size: size,
+        originalName: filename,
+      });
+      // console.log("received!!!!!!!!!!!!!!!!!!!!!!!!!!!", file._id);
+      // console.log("room:", room);
+
+      let sdata = {
+        user: username,
+        _id: file._id,
+        date: datetime,
+        isFile: true,
       };
 
       socket.emit("M_S_O", sdata);
       socket.in(room).emit("M_S_O", sdata);
-      msgOps.addToMongoose({ ...data, isFile: false }); // authentication, username, message, datetime, room
-      // console.log("sent (1)", room, message, "from", userNN);
     });
 
     // voice

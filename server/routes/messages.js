@@ -55,13 +55,7 @@ router.patch("/:messageId", (req, res, next) => {
     .catch();
 });
 
-router.post("/upload", upload.single("file"), (req, res) => {
-  // const file = await fileModel.create(fileData);
-  // // res.send(file);
-  // res.render("../client-side/index.html", {
-  //   filelink: `${req.headers.origin}/file/${file.id}`,
-  // });
-
+router.post("/upload", upload.single("file"), async (req, res) => {
   const realFileData = {
     isFile: true,
     username: req.body.user,
@@ -70,12 +64,38 @@ router.post("/upload", upload.single("file"), (req, res) => {
     room: req.body.room,
     roomId: req.body.roomId,
     datetime: req.body.datetime,
+    size: req.body.size,
   };
 
-  console.log("data:", req.body);
-  console.log("path:", req.file.path);
-
-  msgOps.addToMongoose(realFileData);
+  // console.log("data:", req.body);
+  // console.log("path:", req.file.path);
+  await msgOps.addToMongoose(realFileData);
+  await res.send("done");
 });
+
+// router.post("/file:id", async (req, res) => {
+//   const id = req.params.id.substr(1);
+//   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!", id);
+
+//   const file = await Message.findById(id);
+
+//   file.downloadCount++;
+//   await file.save();
+//   // console.log(file.downloadCount);
+
+//   await res.download(file.path, file.originalName);
+// });
+
+const handleD = async (req, res) => {
+  // res.send(req.params.id);
+  const file = await Message.findById(req.params.id);
+
+  file.downloadCount++;
+  console.log("count:", file.downloadCount);
+  await file.save();
+
+  await res.download(file.path, file.originalName);
+};
+router.route("/file/:id").get(handleD).post(handleD);
 
 module.exports = router;

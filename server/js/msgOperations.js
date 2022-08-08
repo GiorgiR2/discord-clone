@@ -8,7 +8,7 @@ const addToMongoose = (data) => {
   // authentication, username, message, datetime, room
   // console.log("data", data);
   let newMessageModel;
-  console.log("data to save: ", data);
+  // console.log("data to save: ", data);
 
   if (data.isFile)
     newMessageModel = new MessageModel({
@@ -20,6 +20,8 @@ const addToMongoose = (data) => {
       date: data.datetime, // <----
       room: data.room,
       roomId: data.roomId, // <----
+      downloadCount: 0,
+      size: data.size,
     });
   else
     newMessageModel = new MessageModel({
@@ -42,10 +44,12 @@ const removeMessage = (hash) => {
 const loadMessages = (socket, room) => {
   MessageModel.find({
     room: room,
+    // isFile: false,
   })
     .exec()
     .then((doc) => {
       socket.emit("messagesData", doc);
+      // console.log(doc);
     });
   //   console.log("msg", messages);
   //   return messages;

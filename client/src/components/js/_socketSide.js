@@ -19,22 +19,23 @@ const main = (room, username, setElement, setOnline, setOffline) => {
   // });
 
   socket.on("M_S_O", (data) => {
-    console.log("received", data.message);
     setElement({
-      user: data.username,
-      msg: data.message,
-      date: data.datetime,
+      user: data.user,
+      msg: data.isFile ? data._id : data.message,
+      date: data.date,
+      isFile: data.isFile,
     });
   });
 
   socket.on("messagesData", (data) => {
-    data.forEach((el) =>
+    data.forEach((el) => {
       setElement({
         user: el.user,
-        msg: el.message,
+        msg: el.isFile ? el._id : el.message,
         date: el.date,
-      })
-    );
+        isFile: el.isFile,
+      });
+    });
   });
 
   socket.on("online", (data) => {
@@ -62,6 +63,34 @@ const urlify = (text) => {
   });
 };
 
+const sendFileData = (
+  e,
+  username,
+  room,
+  roomId,
+  datetime,
+  size,
+  filename,
+  authentication
+) => {
+  e.preventDefault();
+  const data = {
+    username: username,
+    room: room,
+    roomId: roomId,
+    datetime: datetime,
+    size: size,
+    authentication: authentication,
+    filename: filename,
+  };
+
+  console.log("sent...........", data);
+
+  socket.emit("file", data);
+
+  e.preventDefault();
+};
+
 const sendMessage = (e, user, room, roomId, authentication) => {
   if (e.key === "Enter" && e.shiftKey !== true && e.target.value != null) {
     let message = e.target.value;
@@ -87,4 +116,4 @@ const disconnect = () => socket.disconnect();
 const domain = `http://${window.location.hostname}:5000`;
 var socket = io.connect(domain);
 
-export { socket, main, sendMessage, disconnect };
+export { socket, main, sendMessage, sendFileData, disconnect };
