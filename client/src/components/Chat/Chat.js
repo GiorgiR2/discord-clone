@@ -9,8 +9,6 @@ import getTime from "../js/getTime";
 import "./_chat.sass";
 import { EditSVG } from "../../styles/SVGs/_SVGs";
 
-import FileDownload from "js-file-download";
-
 import { appendFile } from "./_appendFile";
 import { getBasicData } from "../js/_getBasicData";
 import * as socks from "../js/_socketSide";
@@ -56,20 +54,6 @@ const logOut = (e, history) => {
 
 const NewMessage = ({ user, msg, date, isFile }) => {
   // msg may be a text / a multiline text or a fileID
-  const downloadByURL = (e, linkId) => {
-    e.preventDefault();
-    axios.post(`/file:${linkId}`, { data: "nothing" }).then((response) => {
-      FileDownload(response.data, "report.jpg");
-      return;
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.png"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-    });
-  };
-
   let link = `${apiLink}/file/${msg}`; // msg === Id
 
   return (
