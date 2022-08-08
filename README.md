@@ -9,6 +9,7 @@
 * 
 
 ## Overview
+...
 
 ## Install && Run
 
@@ -26,6 +27,7 @@ cd server && npm i && npm start
 | sending messages/files                    | -                                                 |
 | video/audio chat                          | p2p connection (using webrtc/simple-peer)         |
 | android app version                       | -                                                 |
+| edit/add rooms/voice chats                | -                                                 |
 | -                                         | -                                                 |
 | -                                         | -                                                 |
 
