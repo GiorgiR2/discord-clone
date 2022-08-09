@@ -184,6 +184,7 @@ const Chat = () => {
             onKeyPress={(e) =>
               socks.sendMessage(e, userName, category, roomId, authentication)
             }
+            autoFocus
           ></textarea>
           {/* <svg viewBox="0 0 24 24" onClick={(event) => appendFile(event)}>
                     <path
