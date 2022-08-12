@@ -71,27 +71,15 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   // console.log("path:", req.file.path);
   await msgOps.addToMongoose(realFileData);
   await res.send("done");
+  console.log("uploaded");
 });
-
-// router.post("/file:id", async (req, res) => {
-//   const id = req.params.id.substr(1);
-//   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!", id);
-
-//   const file = await Message.findById(id);
-
-//   file.downloadCount++;
-//   await file.save();
-//   // console.log(file.downloadCount);
-
-//   await res.download(file.path, file.originalName);
-// });
 
 const handleD = async (req, res) => {
   // res.send(req.params.id);
   const file = await Message.findById(req.params.id);
 
   file.downloadCount++;
-  console.log("count:", file.downloadCount);
+  // console.log("count:", file.downloadCount);
   await file.save();
 
   await res.download(file.path, file.originalName);
