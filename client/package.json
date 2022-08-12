@@ -1,5 +1,6 @@
 {
   "name": "client",
+  "homepage": "http://giorgir2.github.io/discord-clone-react",
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
@@ -21,6 +22,8 @@
     "socket.io-client": "^4.4.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start-all": "npm run start && npm run start-api",
     "start": "react-scripts start",
     "start-api": ".",
@@ -45,8 +48,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://127.0.0.1:5000",
   "devDependencies": {
+    "gh-pages": "^4.0.0",
     "node-sass": "^7.0.1"
   }
 }
