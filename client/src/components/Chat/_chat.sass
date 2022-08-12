@@ -148,9 +148,14 @@ svg
                     vertical-align: top
                     display: inline-block
 
-                    .fileLink, a
+                    div
+                      width: 100%
+                      word-break: break-word
+
+                    a
                       cursor: pointer
                       width: 100%
+                      word-break: break-word
 
                 .date
                     width: 11%
@@ -228,14 +233,40 @@ svg
             display: none !important
 
         .messages
-            width: 100vw !important
+            // width: 100vw !important
+            width: 100% !important
 
             #chat-screen
                 width: 100% !important
 
+                div
+                  .author
+                    width: 14% !important
+                  
+                  .message
+                    width: 74% !important
+
             #input
+              
               textarea
                 width: 98vw !important
 
               .inputForm
-                left: -10px !important
+                height: 62px
+                width: 70px !important
+                position: relative
+
+                top: 1px !important
+                left: -5px !important
+                background-color: red
+
+                input
+                  // position: absolute
+                  display: none !important
+                  visibility: hidden
+
+                .submit
+                  height: 62px
+                  width: 70px
+
+                  // background: $bg-color

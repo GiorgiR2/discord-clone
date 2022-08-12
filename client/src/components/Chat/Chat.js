@@ -9,7 +9,6 @@ import getTime from "../js/getTime";
 import "./_chat.sass";
 import { EditSVG } from "../../styles/SVGs/_SVGs";
 
-import { appendFile } from "./_appendFile";
 import { getBasicData } from "../js/_getBasicData";
 import * as socks from "../js/_socketSide";
 
@@ -18,7 +17,9 @@ import { VoiceFrame } from "../Voice/_voice";
 
 import { PopupEditCat, PopupAddCat } from "./_editCat";
 
-const apiLink = "http://127.0.0.1:5000";
+import packageJson from "../../../package.json";
+
+const apiLink = packageJson.proxy;
 
 const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
   if (roomId === undefined) history.push("/chat/61ed960432479c682956802b");
@@ -130,6 +131,19 @@ const Chat = () => {
 
       e.preventDefault();
 
+      if (window.innerWidth <= 800) {
+        socks.sendMessage(
+          e,
+          userName,
+          category,
+          roomId,
+          authentication,
+          "mobile",
+          inputRef
+        );
+        return;
+      } else if (file === undefined) return;
+
       const url = `${apiLink}/upload`;
       const formData = new FormData();
       const datetime = getTime();
@@ -162,6 +176,7 @@ const Chat = () => {
     };
 
     const [file, setFile] = useState();
+    const inputRef = useRef(null); // inputRef.current.value
 
     return (
       <>
@@ -181,8 +196,17 @@ const Chat = () => {
             id="text-area"
             type="text"
             placeholder={`Message #${category}`}
+            ref={inputRef}
             onKeyPress={(e) =>
-              socks.sendMessage(e, userName, category, roomId, authentication)
+              socks.sendMessage(
+                e,
+                userName,
+                category,
+                roomId,
+                authentication,
+                "desktop",
+                inputRef
+              )
             }
             autoFocus
           ></textarea>
@@ -202,9 +226,10 @@ const Chat = () => {
               type="file"
               id="file"
               onChange={(e) => setFile(e.target.files[0])}
-              required
             />
-            <button type="submit">send</button>
+            <button className="submit" type="submit">
+              send
+            </button>
           </form>
         </div>
       </>

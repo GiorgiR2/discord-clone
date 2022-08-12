@@ -2,6 +2,8 @@ import io from "socket.io-client";
 
 import getTime from "./getTime";
 
+import packageJson from "../../../package.json";
+
 const main = (room, username, setElement, setOnline, setOffline) => {
   if (socket.disconnected) socket = io.connect(domain);
 
@@ -39,6 +41,7 @@ const main = (room, username, setElement, setOnline, setOffline) => {
   });
 
   socket.on("online", (data) => {
+    console.log("online:", data);
     setOnline("");
     setOnline(data.username);
   });
@@ -49,6 +52,7 @@ const main = (room, username, setElement, setOnline, setOffline) => {
   });
 
   socket.on("status", (data) => {
+    console.log("status:", data);
     data.forEach((el) => {
       if (el.status === "online") setOnline(el.username);
       else setOffline(el.username);
@@ -56,16 +60,16 @@ const main = (room, username, setElement, setOnline, setOffline) => {
   });
 };
 
-const urlify = (text) => {
-  var urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.replace(urlRegex, function (url) {
-    return `</a12>${url}</a12>`;
-  });
-};
+// const urlify = (text) => {
+//   var urlRegex = /(https?:\/\/[^\s]+)/g;
+//   return text.replace(urlRegex, function (url) {
+//     return `</a12>${url}</a12>`;
+//   });
+// };
 
 const sendFileData = (
   e,
-  username,
+  user,
   room,
   roomId,
   datetime,
@@ -75,7 +79,7 @@ const sendFileData = (
 ) => {
   e.preventDefault();
   const data = {
-    username: username,
+    user: user,
     room: room,
     roomId: roomId,
     datetime: datetime,
@@ -91,9 +95,20 @@ const sendFileData = (
   e.preventDefault();
 };
 
-const sendMessage = (e, user, room, roomId, authentication) => {
-  if (e.key === "Enter" && e.shiftKey !== true && e.target.value != null) {
-    let message = e.target.value;
+const sendMessage = (
+  e,
+  user,
+  room,
+  roomId,
+  authentication,
+  device,
+  inputRef
+) => {
+  if (
+    ((e.key === "Enter" && e.shiftKey !== true) || device === "mobile") &&
+    inputRef.current.value != null
+  ) {
+    let message = inputRef.current.value;
     let datetime = getTime();
 
     let sdata = {
@@ -106,14 +121,16 @@ const sendMessage = (e, user, room, roomId, authentication) => {
     };
 
     socket.emit("message", sdata);
-    e.target.value = "";
+    // e.target.value = "";
+    inputRef.current.value = "";
+    // e.persist();
     e.preventDefault();
   }
 };
 
 const disconnect = () => socket.disconnect();
 
-const domain = `http://${window.location.hostname}:5000`;
+const domain = packageJson.proxy;
 var socket = io.connect(domain);
 
 export { socket, main, sendMessage, sendFileData, disconnect };

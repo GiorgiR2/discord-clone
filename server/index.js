@@ -16,7 +16,7 @@ require("./mongooseAPI.js");
 
 require("dotenv").config(); // variables
 
-const PORT = process.env.PORT || "5000";
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 const server = http.createServer(app);
@@ -100,14 +100,14 @@ const main = (connectedUsers, usersInVoice) => {
     socket.on("message", async (data, callback) => {
       let authentication = data.authentication;
 
-      let username = data.username;
+      let user = data.username;
       let message = data.message;
 
       let datetime = data.datetime;
       let room = data.room;
 
       let sdata = {
-        user: username,
+        user: user,
         message: message,
         date: datetime,
         isFile: false,
@@ -122,7 +122,7 @@ const main = (connectedUsers, usersInVoice) => {
     socket.on("file", async (data) => {
       let authentication = data.authentication;
 
-      let username = data.username;
+      let user = data.user;
       let datetime = data.datetime;
       let room = data.room;
       let roomId = data.roomId;
@@ -136,15 +136,18 @@ const main = (connectedUsers, usersInVoice) => {
       // console.log("received!!!!!!!!!!!!!!!!!!!!!!!!!!!", file._id);
       // console.log("room:", room);
 
-      let sdata = {
-        user: username,
-        _id: file._id,
-        date: datetime,
-        isFile: true,
-      };
-
-      socket.emit("M_S_O", sdata);
-      socket.in(room).emit("M_S_O", sdata);
+      // console.log("file:", file);
+      let sdata;
+      await setTimeout(() => {
+        sdata = {
+          user: user,
+          _id: file._id,
+          date: datetime,
+          isFile: true,
+        };
+        socket.emit("M_S_O", sdata);
+        socket.in(room).emit("M_S_O", sdata);
+      }, 1000);
     });
 
     // voice
