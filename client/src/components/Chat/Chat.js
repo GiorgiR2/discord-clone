@@ -24,7 +24,7 @@ const startPoint =
   window.location.href.toString().includes("localhost") ||
   window.location.href.toString().includes("127.0.0.1")
     ? ""
-    : packageJson.homepage;
+    : "/discord-clone-react";
 
 const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
   if (roomId === undefined)

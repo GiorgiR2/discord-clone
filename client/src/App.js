@@ -13,7 +13,7 @@ const startPoint =
   window.location.href.toString().includes("localhost") ||
   window.location.href.toString().includes("127.0.0.1")
     ? ""
-    : packageJson.homepage;
+    : "/discord-clone-react"; //packageJson.homepage;
 
 const App = () => {
   return (
