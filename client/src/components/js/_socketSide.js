@@ -21,6 +21,7 @@ const main = (room, username, setElement, setOnline, setOffline) => {
   // });
 
   socket.on("M_S_O", (data) => {
+    console.log(data);
     setElement({
       user: data.user,
       msg: data.isFile ? data._id : data.message,

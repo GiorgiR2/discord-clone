@@ -129,17 +129,8 @@ const main = (connectedUsers, usersInVoice) => {
       let size = data.size;
       let filename = data.filename;
 
-      const file = await Message.findOne({
-        size: size,
-        originalName: filename,
-      });
-      // console.log("received!!!!!!!!!!!!!!!!!!!!!!!!!!!", file._id);
-      // console.log("room:", room);
-
-      // console.log("file:", file);
-      let sdata;
-      await setTimeout(() => {
-        sdata = {
+      Message.findOne({ size: size, originalName: filename }).then((file) => {
+        let sdata = {
           user: user,
           _id: file._id,
           date: datetime,
@@ -147,7 +138,8 @@ const main = (connectedUsers, usersInVoice) => {
         };
         socket.emit("M_S_O", sdata);
         socket.in(room).emit("M_S_O", sdata);
-      }, 1000);
+        console.log("file sent:", file._id, filename);
+      });
     });
 
     // voice
