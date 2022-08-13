@@ -20,9 +20,15 @@ import { PopupEditCat, PopupAddCat } from "./_editCat";
 import packageJson from "../../../package.json";
 
 const apiLink = packageJson.proxy;
+const startPoint =
+  window.location.href.toString().includes("localhost") ||
+  window.location.href.toString().includes("127.0.0.1")
+    ? ""
+    : packageJson.homepage;
 
 const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
-  if (roomId === undefined) history.push("/chat/61ed960432479c682956802b");
+  if (roomId === undefined)
+    history.push(`${startPoint}/chat/61ed960432479c682956802b`);
   // roomId = "61ed960432479c682956802b";
 
   axios
@@ -32,7 +38,7 @@ const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
         setCategory(res.data.roomName);
         if (res.data.voiceMode) setVoiceMode(true);
       } else {
-        history.push("/chat/61ed960432479c682956802b");
+        history.push(`${startPoint}/chat/61ed960432479c682956802b`);
         // roomId = "61ed960432479c682956802b";
         setCategory("room 1");
         setVoiceMode(false);
@@ -46,7 +52,7 @@ const logOut = (e, history) => {
   axios
     .post("/api/users/logout", { junk: "" })
     .then((res) => {
-      if (res.data.status === "done") history.push("/");
+      if (res.data.status === "done") history.push(`${startPoint}/`);
     })
     .catch((err) => console.error(err));
 
