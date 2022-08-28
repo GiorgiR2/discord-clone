@@ -50,4 +50,3 @@ router.post("/api/users/status", async (req, res) => {
 });
 
 module.exports = router;
-

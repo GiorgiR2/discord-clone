@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Login from "./components/Login/Login";
@@ -15,14 +15,22 @@ const startPoint =
     ? ""
     : "/discord-clone-react"; //packageJson.homepage;
 
+const mainT = startPoint + "/";
+const signUpT = startPoint + "/signup";
+const chatT = startPoint + "/chat/:roomId";
+
 const App = () => {
+  useEffect(() => {
+    console.log(startPoint);
+  });
+
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path={startPoint + "/"} component={Login} />
-        <Route exact path={startPoint + "/signup"} component={SignUp} />
+        <Route exact path={mainT} component={Login} />
+        <Route exact path={signUpT} component={SignUp} />
         {/* <Route exact path="/chat/id=:id" component={Chat} /> */}
-        <Route exact path={startPoint + "/chat/:roomId"} component={Chat} />
+        <Route exact path={chatT} component={Chat} />
         <Route exact component={Chat} />
       </Switch>
     </BrowserRouter>
