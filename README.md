@@ -33,6 +33,4 @@ cd server && npm i && npm start
 
 ## Screens
 
-![alt text](https://github.com/GiorgiR2/discord-mern/blob/master/screens/discord-mern.png)
-![alt text](https://github.com/GiorgiR2/discord-mern/blob/master/data/screen.png)
-![alt text](https://github.com/GiorgiR2/discord-mern/blob/master/data/screen.png)
+![alt text](https://github.com/GiorgiR2/discord-clone-react/tree/master/screens/discord-mern.png)
