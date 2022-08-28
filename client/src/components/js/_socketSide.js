@@ -1,7 +1,6 @@
 import io from "socket.io-client";
 
 import getTime from "./getTime";
-
 import packageJson from "../../../package.json";
 
 const main = (room, username, setElement, setOnline, setOffline) => {

@@ -1,6 +1,12 @@
 const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
+const cors = require("cors");
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 
 const usersRouter = require("./routes/users.js");
 const messagesRouter = require("./routes/messages.js");
@@ -23,6 +29,8 @@ const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
     origins: "*:*",
+    // credentials: true, //access-control-allow-credentials:true
+    // optionSuccessStatus: 200,
     //     origin: [
     //         "http://localhost:3000",
     //         "http://192.168.100.8:3000",
@@ -202,6 +210,7 @@ const main = (connectedUsers, usersInVoice) => {
 
   server.listen(PORT, () => console.log(`Server is on PORT: ${PORT}`));
 
+  app.use(cors(corsOptions));
   app.use(usersRouter);
   app.use(messagesRouter);
   app.use(categoriesRouter);

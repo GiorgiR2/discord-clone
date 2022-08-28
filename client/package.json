@@ -48,6 +48,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy-old": "https://git.heroku.com/protected-caverns-46385.git",
   "proxy": "http://127.0.0.1:5000",
   "devDependencies": {
     "gh-pages": "^4.0.0",

@@ -1,8 +1,11 @@
 import React, { useRef } from "react";
 
 import axios from "axios";
+import packageJson from "../../../package.json";
 
 import "./_editCat.sass";
+
+const apiLink = packageJson.proxy;
 
 const PopupEditCat = ({ setDisplay, catjson, setCatJson, elementId }) => {
     const newNameRef = useRef();
@@ -55,7 +58,7 @@ const sendEditCommand = (event, elementId, catJson, setCatJson, newName, setDisp
     // console.log("id =", elementId);
     // console.log(catJson);
     if (newName != ""){
-        axios.post("/api/editCat", { catId: elementId, newCatName: newName })
+        axios.post(`${apiLink}/api/editCat`, { catId: elementId, newCatName: newName })
         .then(res => {
             if (res.data.status === "done"){
                 // update category name

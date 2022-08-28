@@ -32,7 +32,7 @@ const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
   // roomId = "61ed960432479c682956802b";
 
   axios
-    .post("/api/roomId", { id: roomId })
+    .post(`${apiLink}/api/roomId`, { id: roomId })
     .then((res) => {
       if (res.data.roomName != "try_again") {
         setCategory(res.data.roomName);
@@ -50,7 +50,7 @@ const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
 const logOut = (e, history) => {
   e.preventDefault();
   axios
-    .post("/api/users/logout", { junk: "" })
+    .post(`${apiLink}/api/users/logout`, { junk: "" })
     .then((res) => {
       if (res.data.status === "done") history.push(`${startPoint}/`);
     })
@@ -172,7 +172,7 @@ const Chat = () => {
         .post(url, formData, config)
         .then((res) => {
           console.log("file send, res:", res.data);
-          if (res === "done") sendFileData();
+          if (res.data === "done") sendFileData();
         })
         .catch((err) => sendFileData());
 
@@ -278,23 +278,10 @@ const Chat = () => {
     </div>
   );
 
-  const reducer = (state, action) => {
-    // pass
-  };
-
-  const initialState = {
-    setOnline: "",
-    setOffline: "",
-    onlineList: [],
-    offlineList: [],
-  };
-
   const [online, setOnline] = useState("");
   const [offline, setOffline] = useState("");
   const [onlineList, setOnlineList] = useState([]);
   const [offlineList, setOfflineList] = useState([]);
-
-  // const [state, dispatch] = useReducer(reducer, initialState);
 
   let { roomId } = useParams();
 

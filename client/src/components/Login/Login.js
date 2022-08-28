@@ -5,6 +5,7 @@ import axios from "axios";
 import { getBasicData } from "../js/_getBasicData";
 
 import "./_login.sass";
+import packageJson from "../../../package.json";
 
 const startPoint =
   window.location.href.toString().includes("localhost") ||
@@ -12,18 +13,18 @@ const startPoint =
     ? ""
     : "/discord-clone-react"; //packageJson.homepage;
 
-const server = ""; // "http://127.0.0.1:5000";
+const server = packageJson.proxy; // "http://127.0.0.1:5000";
+
+const config = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+};
 
 const sendLoginData = (e, user, pswrd, history) => {
   e.preventDefault();
   let data = {
     username: user,
     password: pswrd,
-  };
-
-  const config = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
   };
 
   axios

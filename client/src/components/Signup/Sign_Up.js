@@ -3,8 +3,11 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 import { getBasicData } from '../js/_getBasicData';
+import packageJson from "../../../package.json";
 
 import './_sign-up.sass';
+
+const apiLink = packageJson.proxy;
 
 const sendData = (e, username, password0, password1, history) => {
     e.preventDefault();
@@ -14,7 +17,7 @@ const sendData = (e, username, password0, password1, history) => {
         password1: password1
     };
 
-    axios.post('/api/users/register', data)
+    axios.post(`${apiLink}/api/users/register`, data)
     .then(res => {
         console.log("res", res.data);
         if (res.data.data === "done"){

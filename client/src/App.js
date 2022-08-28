@@ -22,7 +22,7 @@ const chatT = startPoint + "/chat/:roomId";
 const App = () => {
   useEffect(() => {
     console.log(startPoint);
-  });
+  }, []);
 
   return (
     <BrowserRouter>
