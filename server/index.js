@@ -29,8 +29,8 @@ const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
     origins: "*:*",
-    // credentials: true, //access-control-allow-credentials:true
-    // optionSuccessStatus: 200,
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
     //     origin: [
     //         "http://localhost:3000",
     //         "http://192.168.100.8:3000",

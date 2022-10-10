@@ -20,11 +20,7 @@ import { PopupEditCat, PopupAddCat } from "./_editCat";
 import packageJson from "../../../package.json";
 
 const apiLink = packageJson.proxy;
-const startPoint =
-  window.location.href.toString().includes("localhost") ||
-  window.location.href.toString().includes("127.0.0.1")
-    ? ""
-    : "/discord-clone-react";
+const startPoint = "";
 
 const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
   if (roomId === undefined)
