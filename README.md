@@ -2,6 +2,7 @@
 
 ## Technologies Used
 * React.js - front-end
+* Redux - state managment
 * Node - back-end
 * React Native - android version
 * socket.io - sending messages / status bar data

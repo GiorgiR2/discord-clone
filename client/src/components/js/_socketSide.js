@@ -3,14 +3,16 @@ import io from "socket.io-client";
 import getTime from "./getTime";
 import packageJson from "../../../package.json";
 
-const main = (room, username, setElement, setOnline, setOffline) => {
+import { setOnline, setOffline, addMessage } from "../../features/users";
+
+const main = (reduxData, dispatch) => {
   if (socket.disconnected) socket = io.connect(domain);
 
   socket.emit("join", {
-    room: room,
-    username: username,
+    room: reduxData.currentRoom,
+    username: reduxData.currentUser,
   });
-  console.log("sent join", room, username);
+  console.log("sent join", reduxData.currentRoom, reduxData.currentUser);
   // socket.on('connect', () => {
   // console.log("connected", room, username);
   // socket.emit('join', {
@@ -20,42 +22,39 @@ const main = (room, username, setElement, setOnline, setOffline) => {
   // });
 
   socket.on("M_S_O", (data) => {
-    console.log(data);
-    setElement({
-      user: data.user,
-      msg: data.isFile ? data._id : data.message,
-      date: data.date,
-      isFile: data.isFile,
-    });
+    let msgList = [
+      [
+        data.user,
+        data.isFile ? data._id : data.message,
+        data.date,
+        data.isFile,
+      ],
+    ];
+
+    dispatch(addMessage({ messageList: msgList })); // message/messages
   });
 
   socket.on("messagesData", (data) => {
-    data.forEach((el) => {
-      setElement({
-        user: el.user,
-        msg: el.isFile ? el._id : el.message,
-        date: el.date,
-        isFile: el.isFile,
-      });
+    let msgList = data.map((el) => {
+      return [el.user, el.isFile ? el._id : el.message, el.date, el.isFile];
     });
+    dispatch(addMessage({ messageList: msgList })); // message/messages
   });
 
   socket.on("online", (data) => {
     console.log("online:", data);
-    setOnline("");
-    setOnline(data.username);
+    dispatch(setOnline({ name: data.username }));
   });
 
   socket.on("offline", (data) => {
-    setOffline("");
-    setOffline(data.username);
+    dispatch(setOffline({ name: data.username }));
   });
 
   socket.on("status", (data) => {
     console.log("status:", data);
     data.forEach((el) => {
-      if (el.status === "online") setOnline(el.username);
-      else setOffline(el.username);
+      if (el.status === "online") dispatch(setOnline({ name: el.username }));
+      else dispatch(setOffline({ name: el.username }));
     });
   });
 };
@@ -67,56 +66,40 @@ const main = (room, username, setElement, setOnline, setOffline) => {
 //   });
 // };
 
-const sendFileData = (
-  e,
-  user,
-  room,
-  roomId,
-  datetime,
-  size,
-  filename,
-  authentication
-) => {
+const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
   e.preventDefault();
   const data = {
-    user: user,
-    room: room,
+    user: reduxData.currentUser,
+    room: reduxData.currentRoom,
     roomId: roomId,
     datetime: datetime,
     size: size,
-    authentication: authentication,
+    authentication: reduxData.authentication,
     filename: filename,
   };
 
   console.log("sent...........", data);
-
   socket.emit("file", data);
 
   e.preventDefault();
 };
 
-const sendMessage = (
-  e,
-  user,
-  room,
-  roomId,
-  authentication,
-  device,
-  inputRef
-) => {
+const sendMessage = (e, reduxData, roomId, device, inputRef) => {
+  let input = inputRef.current.value;
   if (
     ((e.key === "Enter" && e.shiftKey !== true) || device === "mobile") &&
-    inputRef.current.value != null
+    input != null &&
+    input != 0
   ) {
-    let message = inputRef.current.value;
+    let message = input;
     let datetime = getTime();
 
     let sdata = {
-      authentication: authentication,
-      username: user,
+      authentication: reduxData.authentication,
+      username: reduxData.currentUser,
       message: message,
       datetime: datetime,
-      room: room,
+      room: reduxData.currentRoom,
       roomId: roomId,
     };
 

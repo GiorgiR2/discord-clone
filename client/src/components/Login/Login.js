@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useHistory } from "react-router-dom"; // { Link, Redirect }
 import axios from "axios";
 
@@ -48,7 +48,7 @@ const Login = () => {
 
   const queryParams = new URLSearchParams(window.location.search);
   // console.log(queryParams.get('status')===null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (queryParams.get("status") === "done") {
       // successfully registered
       alert("registration is done...");

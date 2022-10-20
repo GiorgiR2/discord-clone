@@ -1,47 +1,30 @@
-import React, { useState, useEffect, useReducer, useRef } from "react";
-
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
+
 import axios from "axios";
 import FormData from "form-data";
+import { useSelector, useDispatch } from "react-redux";
 
-import getTime from "../js/getTime";
+import {
+  togglePopupAdd,
+  setRoomName,
+  setVoiceMode,
+} from "../../features/users";
 
 import "./_chat.sass";
-import { EditSVG } from "../../styles/SVGs/_SVGs";
 
+import getTime from "../js/getTime";
+import packageJson from "../../../package.json";
 import { getBasicData } from "../js/_getBasicData";
 import * as socks from "../js/_socketSide";
 
 // import { WebRTCFrame } from '../WebRTCInteractive/WebRTCInteractive';
 import { VoiceFrame } from "../Voice/_voice";
-
 import { PopupEditCat, PopupAddCat } from "./_editCat";
-
-import packageJson from "../../../package.json";
+import { EditSVG } from "../../styles/SVGs/_SVGs";
 
 const apiLink = packageJson.proxy;
 const startPoint = "";
-
-const checkRoomId = (roomId, setCategory, history, setVoiceMode) => {
-  if (roomId === undefined)
-    history.push(`${startPoint}/chat/61ed960432479c682956802b`);
-  // roomId = "61ed960432479c682956802b";
-
-  axios
-    .post(`${apiLink}/api/roomId`, { id: roomId })
-    .then((res) => {
-      if (res.data.roomName != "try_again") {
-        setCategory(res.data.roomName);
-        if (res.data.voiceMode) setVoiceMode(true);
-      } else {
-        history.push(`${startPoint}/chat/61ed960432479c682956802b`);
-        // roomId = "61ed960432479c682956802b";
-        setCategory("room 1");
-        setVoiceMode(false);
-      }
-    })
-    .catch((err) => console.error(err));
-};
 
 const logOut = (e, history) => {
   e.preventDefault();
@@ -64,7 +47,7 @@ const NewMessage = ({ user, msg, date, isFile }) => {
       <div className="author">{user}</div>
       <div className="message">
         {isFile ? (
-          <a href={link} target="_blank">
+          <a href={link} rel="noreferrer" target="_blank">
             {link}
           </a>
         ) : (
@@ -76,73 +59,71 @@ const NewMessage = ({ user, msg, date, isFile }) => {
   );
 };
 
-const CategoriesJSX = ({ cats, display, setDisplay, setElementId }) =>
-  cats.map((cat) => (
-    <li className="category" id={cat._id}>
-      <a href={`/chat/${cat._id}`}># {cat.name}</a>
-      <EditSVG
-        id={cat._id}
-        display={display}
-        setDisplay={setDisplay}
-        setElementId={setElementId}
-      />
-    </li>
-  ));
-
 const Chat = () => {
-  const Categories = () => (
-    // { user, cats, displayEdit, setDisplayEdit, displayAdd, setDisplayAdd, setElementId}
-    <div className="categories">
-      <div className="top">
-        <div className="topbar">
-          <h1 className="user">{userName}</h1>
-          <h1 className="plus" onClick={() => setDisplayAdd(!displayAdd)}>
-            +
-          </h1>
-        </div>
+  const checkRoomId = (roomId, history) => {
+    if (roomId === undefined)
+      history.push(`${startPoint}/chat/61ed960432479c682956802b`); // roomId = "61ed960432479c682956802b";
 
-        <nav>
-          <ul id="ul-id">
-            <CategoriesJSX
-              cats={catjson}
-              display={displayEdit}
-              setDisplay={setDisplayEdit}
-              setElementId={setElementId}
-            />
-          </ul>
-        </nav>
+    axios
+      .post(`${apiLink}/api/roomId`, { id: roomId })
+      .then((res) => {
+        if (res.data.roomName !== "try_again") {
+          dispatch(setRoomName({ name: res.data.roomName }));
+          if (res.data.voiceMode) dispatch(setVoiceMode({ bool: true }));
+        } else {
+          history.push(`${startPoint}/chat/61ed960432479c682956802b`); // roomId = "61ed960432479c682956802b";
+          dispatch(setRoomName({ name: "room 1" }));
+          dispatch(setVoiceMode({ bool: false }));
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const Categories = () => {
+    const CategoriesJSX = () =>
+      reduxData.rooms.map((room) => (
+        <li className="category" id={room._id}>
+          <a href={`/chat/${room._id}`}># {room.name}</a>
+          <EditSVG id={room._id} /> {/* set redux editingCatId as id */}
+        </li>
+      ));
+    return (
+      <div className="categories">
+        <div className="top">
+          <div className="topbar">
+            <h1 className="user">{reduxData.currentUser}</h1>
+            <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
+              +
+            </h1>
+          </div>
+
+          <nav>
+            <ul id="ul-id">
+              <CategoriesJSX />
+            </ul>
+          </nav>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const Messages = () => {
-    // { authentication, room, roomId, elements, user }
     const handleSubmit = (e) => {
       const sendFileData = () => {
         socks.sendFileData(
           e,
-          userName,
-          category,
+          reduxData,
           roomId,
           datetime,
           file.size,
-          file.name,
-          authentication
+          file.name
         );
       };
 
       e.preventDefault();
 
       if (window.innerWidth <= 800) {
-        socks.sendMessage(
-          e,
-          userName,
-          category,
-          roomId,
-          authentication,
-          "mobile",
-          inputRef
-        );
+        socks.sendMessage(e, reduxData, roomId, "mobile", inputRef);
         return;
       } else if (file === undefined) return;
 
@@ -152,8 +133,8 @@ const Chat = () => {
 
       formData.append("file", file);
       formData.append("fileName", file.name);
-      formData.append("room", category);
-      formData.append("user", userName);
+      formData.append("room", reduxData.currentRoom);
+      formData.append("user", reduxData.currentUser);
       formData.append("roomId", roomId);
       formData.append("datetime", datetime);
       formData.append("size", file.size);
@@ -183,13 +164,8 @@ const Chat = () => {
     return (
       <>
         <div id="chat-screen">
-          {elements.map((el) => (
-            <NewMessage
-              user={el.user}
-              msg={el.msg}
-              date={el.date}
-              isFile={el.isFile}
-            />
+          {reduxData.messages.map((el) => (
+            <NewMessage user={el[0]} msg={el[1]} date={el[2]} isFile={el[3]} />
           ))}
           <div id="last-element"></div>
         </div>
@@ -197,18 +173,10 @@ const Chat = () => {
           <textarea
             id="text-area"
             type="text"
-            placeholder={`Message #${category}`}
+            placeholder={`Message #${reduxData.currentRoom}`}
             ref={inputRef}
             onKeyPress={(e) =>
-              socks.sendMessage(
-                e,
-                userName,
-                category,
-                roomId,
-                authentication,
-                "desktop",
-                inputRef
-              )
+              socks.sendMessage(e, reduxData, roomId, "desktop", inputRef)
             }
             autoFocus
           ></textarea>
@@ -241,7 +209,7 @@ const Chat = () => {
   const Center = () => (
     <div className="messages">
       <div id="top">
-        <h1 id="category"># {category}</h1>
+        <h1 id="category"># {reduxData.currentRoom}</h1>
         <h1
           id="log_out"
           onClick={(event) => {
@@ -252,8 +220,8 @@ const Chat = () => {
         </h1>
       </div>
 
-      {voiceMode ? (
-        <VoiceFrame history={history} roomId={roomId} userName={userName} />
+      {reduxData.voiceMode ? (
+        <VoiceFrame history={history} roomId={roomId} />
       ) : (
         <Messages />
       )}
@@ -263,99 +231,43 @@ const Chat = () => {
   const StatusBar = () => (
     // { online, offline }
     <div className="status-bar">
-      <h2>ACTIVE - {onlineList.length}</h2>
-      {onlineList.map((el) => (
+      <h2>ACTIVE - {reduxData.online.length}</h2>
+      {reduxData.online.map((el) => (
         <h2 className="online">--- {el}</h2>
       ))}
-      <h2>OFFLINE - {offlineList.length}</h2>
-      {offlineList.map((el) => (
+      <h2>OFFLINE - {reduxData.offline.length}</h2>
+      {reduxData.offline.map((el) => (
         <h2 className="offline">--- {el}</h2>
       ))}
     </div>
   );
 
-  const [online, setOnline] = useState("");
-  const [offline, setOffline] = useState("");
-  const [onlineList, setOnlineList] = useState([]);
-  const [offlineList, setOfflineList] = useState([]);
+  // redux
+  const dispatch = useDispatch();
+  const reduxData = useSelector((state) => state.users.value);
 
   let { roomId } = useParams();
-
-  const [userName, setUserName] = useState("");
-  const [category, setCategory] = useState("");
-
-  const [catjson, setCatJson] = useState([]);
-  const [authentication, setAuthentication] = useState();
-
-  const [element, setElement] = useState({
-    user: "author",
-    msg: "message",
-    date: "date",
-    isFile: false,
-  });
-  const [elements, setElements] = useState([]);
-
-  const [displayEdit, setDisplayEdit] = useState(false);
-  const [displayAdd, setDisplayAdd] = useState(false);
-  const [elementId, setElementId] = useState();
-
-  const [voiceMode, setVoiceMode] = useState(false);
-
   const history = useHistory();
 
-  useEffect(() => {
-    checkRoomId(roomId, setCategory, history, setVoiceMode);
+  useLayoutEffect(() => {
+    checkRoomId(roomId, history);
 
-    getBasicData(history, setUserName, setAuthentication, setCatJson, "chat");
+    getBasicData(history, dispatch, "chat");
   }, []);
 
   useEffect(() => {
-    if (userName !== "")
-      socks.main(category, userName, setElement, setOnline, setOffline);
-  }, [userName]);
-
-  useEffect(() => {
-    setElements([...elements, element]);
-  }, [element]);
+    if (reduxData.currentUser !== "") socks.main(reduxData, dispatch);
+  }, [reduxData.currentUser]);
 
   useEffect(() => {
     let el = document.getElementById("last-element");
     el.scrollIntoView();
-  }, [elements]);
-
-  useEffect(() => {
-    if (online !== "") {
-      let new_offlineList = offlineList.filter((element) => element !== online);
-      setOfflineList(new_offlineList);
-      setOnlineList([...onlineList, online]);
-    }
-  }, [online]);
-
-  useEffect(() => {
-    if (offline !== "") {
-      let new_onlineList = onlineList.filter((element) => element !== offline);
-      setOnlineList(new_onlineList);
-      setOfflineList([...offlineList, offline]);
-    }
-  }, [offline]);
+  }, [reduxData.messages]);
 
   return (
     <div className="chat">
-      {displayEdit ? (
-        <PopupEditCat
-          setDisplay={setDisplayEdit}
-          catjson={catjson}
-          setCatJson={setCatJson}
-          elementId={elementId}
-        />
-      ) : null}
-      {displayAdd ? (
-        <PopupAddCat
-          setDisplay={setDisplayAdd}
-          catjson={catjson}
-          setCatJson={setCatJson}
-        />
-      ) : null}
+      {reduxData.displayEdit ? <PopupEditCat /> : null}
+      {reduxData.displayAdd ? <PopupAddCat /> : null}
 
       <Categories />
       <Center />
