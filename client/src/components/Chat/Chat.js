@@ -9,6 +9,7 @@ import {
   togglePopupAdd,
   setRoomName,
   setVoiceMode,
+  clearAll,
 } from "../../features/users";
 
 import "./_chat.sass";
@@ -26,7 +27,7 @@ import { EditSVG } from "../../styles/SVGs/_SVGs";
 const apiLink = packageJson.proxy;
 const startPoint = "";
 
-const logOut = (e, history) => {
+const logOut = (e, history, dispatch) => {
   e.preventDefault();
   axios
     .post(`${apiLink}/api/users/logout`, { junk: "" })
@@ -35,6 +36,7 @@ const logOut = (e, history) => {
     })
     .catch((err) => console.error(err));
 
+  dispatch(clearAll());
   socks.disconnect();
 };
 
@@ -213,7 +215,7 @@ const Chat = () => {
         <h1
           id="log_out"
           onClick={(event) => {
-            logOut(event, history);
+            logOut(event, history, dispatch);
           }}
         >
           Log out

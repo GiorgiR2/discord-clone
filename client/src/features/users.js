@@ -24,12 +24,6 @@ export const userSlice = createSlice({
     value: initialStateValue,
   },
   reducers: {
-    login: (state, action) => {
-      state.value = action.payload;
-    },
-    logout: (state) => {
-      // pass
-    },
     togglePopupEdit: (state) => {
       state.value.displayEdit = !state.value.displayEdit;
     },
@@ -55,16 +49,46 @@ export const userSlice = createSlice({
       state.value.voiceMode = action.payload.bool;
     },
     setOnline: (state, action) => {
-      state.value.online = [...state.value.online, action.payload.name];
+      let valuesOnline = state.value.online;
+      let valuesOffline = state.value.offline;
+      let newName = action.payload.name;
+      if (
+        !valuesOnline.find((value) => {
+          return value === newName;
+        })
+      ) {
+        // add to onlines
+        state.value.online = [...valuesOnline, newName];
+        // remove from offlines
+        state.value.offline = valuesOffline.filter(
+          (value) => value !== newName
+        );
+      }
     },
     setOffline: (state, action) => {
-      state.value.offline = [...state.value.offline, action.payload.name];
+      let valuesOffline = state.value.offline;
+      let valuesOnline = state.value.online;
+      let newName = action.payload.name;
+      if (
+        !valuesOffline.find((value) => {
+          return value === newName;
+        })
+      ) {
+        // add to offlines
+        state.value.offline = [...valuesOffline, newName];
+        // remove from onlines
+        state.value.online = valuesOnline.filter((value) => value !== newName);
+      }
     },
     addMessage: (state, action) => {
       state.value.messages = [
         ...state.value.messages,
         ...action.payload.messageList,
       ];
+    },
+
+    clearAll: (state) => {
+      state.value = initialStateValue;
     },
   },
 });
@@ -83,6 +107,8 @@ export const {
   setOnline,
   setOffline,
   addMessage,
+
+  clearAll,
 } = userSlice.actions;
 
 export default userSlice.reducer;
