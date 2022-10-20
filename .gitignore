@@ -29,3 +29,5 @@ __pycache__
 /server/temp
 
 /server/uploads
+
+client/public/oldIcons
