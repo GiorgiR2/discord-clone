@@ -59,3 +59,8 @@ Login Window
 Sign Up window
 
 ![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone-react/master/screens/signUp.png)
+
+## Contact
+
+* Email: grakv2020@agruni.edu.ge
+
