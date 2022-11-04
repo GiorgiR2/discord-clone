@@ -12,13 +12,26 @@
 ## Overview
 ...
 
-## Install && Run
+## Getting Started
 
+1. clone repo
 ```sh
 git clone https://github.com/GiorgiR2/discord-clone-react.git
+```
+
+2. cd directory
+```sh
 cd discord-mern
-cd client && npm i && npm start
+```
+
+2. Install Packages && Run Server-Side
+```sh
 cd server && npm i && npm start
+```
+
+3. Install Packages && Run Client-Side
+```sh
+cd client && npm i && npm start
 ```
 
 ## Functions
