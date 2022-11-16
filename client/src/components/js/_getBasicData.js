@@ -13,6 +13,7 @@ const getBasicData = (history, dispatch, frame = "none") => {
   axios
     .post(`${server}/api/users/status`, { junk: "" }, config)
     .then((res) => {
+      // console.log(`pathname: '${history.location.pathname}'`);
       if (res.data.status === "1") {
         if (frame !== "chat") history.push("/chat/");
         else {
@@ -27,6 +28,9 @@ const getBasicData = (history, dispatch, frame = "none") => {
       } else if (history.location.pathname !== "/signup") {
         history.push("/");
       }
+      // else {
+      // history.push("/");
+      // }
     })
     .catch((err) => {
       console.error("error", err);

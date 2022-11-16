@@ -182,17 +182,6 @@ const Chat = () => {
             }
             autoFocus
           ></textarea>
-          {/* <svg viewBox="0 0 24 24" onClick={(event) => appendFile(event)}>
-                    <path
-                    fill="currentColor"
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z">
-                    </path>
-                </svg> */}
-          {/*
-            action="/upload"
-            method="post"
-            encType="multipart/form-data"
-										*/}
           <form onSubmit={handleSubmit} className="inputForm">
             <input
               type="file"
@@ -222,11 +211,7 @@ const Chat = () => {
         </h1>
       </div>
 
-      {reduxData.voiceMode ? (
-        <VoiceFrame history={history} roomId={roomId} />
-      ) : (
-        <Messages />
-      )}
+      {reduxData.voiceMode ? <VoiceFrame /> : <Messages />}
     </div>
   );
 
@@ -262,8 +247,12 @@ const Chat = () => {
   }, [reduxData.currentUser]);
 
   useEffect(() => {
-    let el = document.getElementById("last-element");
-    el.scrollIntoView();
+    try {
+      let el = document.getElementById("last-element");
+      el.scrollIntoView();
+    } catch {
+      //pass
+    }
   }, [reduxData.messages]);
 
   return (

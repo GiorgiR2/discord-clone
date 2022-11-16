@@ -4,10 +4,10 @@
 * React.js - front-end
 * Redux - state managment
 * Node - back-end
-* React Native - android version
+* React Native - android version (not yet supported)
 * socket.io - sending messages / status bar data
 * RestAPI
-* 
+* WebRTC
 
 ## Overview
 ...
@@ -25,6 +25,9 @@ cd discord-mern
 ```
 
 3. add server/.env file with PORT && MONGO_ADDRESS
+
+Example:
+
 ```sh
 PORT = 5000
 MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFirstDatabase?retryWrites=true&w=majority

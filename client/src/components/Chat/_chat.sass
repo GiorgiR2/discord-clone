@@ -8,7 +8,8 @@ svg
 .chat
     background-color: $bg-color//#161f27
     // margin: 5px 0px 5px 0px
-    max-height: 800px
+    // max-height: 800px
+    height: -webkit-fill-available
     display: flex
     justify-content: space-between
 
@@ -32,7 +33,8 @@ svg
     .categories,
     .messages,
     .status-bar
-        height: 100vh
+        // height: 100vh
+        height: -webkit-fill-available
         background-color: $bg-color
 
     .categories
@@ -99,120 +101,134 @@ svg
                         opacity: 1
 
     .messages
-        width: 62vw
-        background-color: #2e4153
-        // padding: 1px
+      display: flex
+      flex-direction: column
+      width: 62vw
+        
+      // height: calc(100vh - 10px)
+      background-color: #2e4153
+      // height: -webkit-fill-available
+      // padding: 1px
 
-        #top
-            display: flex
-            justify-content: space-between
-            height: 43px //6%
-            margin: 0 auto
-            width: 98%
+      #top
+        flex: 0 1 auto
+        display: flex
+        justify-content: space-between
+        height: 45px //6%
+        padding-top: 5px
+        margin: 0 auto
+        width: 98%
 
-            h1
-                padding-top: 3px
+        h1
+          padding-top: 3px
 
-            #category
-                // pass
+        #category
+          // pass
 
-            #log_out
-                &:hover,
-                &:active
-                    cursor: pointer
-                    color: darken(white, 30)
+        #log_out
+          &:hover,
+          &:active
+            cursor: pointer
+            color: darken(white, 30)
 
-        #chat-screen
-            margin: 0 auto
-            height: calc(100% - 120px) // 82%
-            width: 98%
-            background-color: #283848
-            overflow: hidden
-            overflow-y: scroll
+      #chat-screen
+        flex: 1 1 auto
+        margin: 0 auto
+        height: calc(100vh - 120px)
+        // height: calc(100vh - 120px) // 82%
 
-            div
-                display: flex
-                font-size: 14px
-                justify-content: space-between
-                height: fit-content
-                padding-bottom: 1px
-                
-                .author
-                    width: 8%
-                    margin-left: 4px
-                    vertical-align: top
-
-                .message
-                    width: 80%
-                    // margin-left: 4px
-                    vertical-align: top
-                    display: inline-block
-
-                    div
-                      width: 100%
-                      word-break: break-word
-
-                    a
-                      cursor: pointer
-                      width: 100%
-                      word-break: break-word
-
-                .date
-                    width: 11%
-                    vertical-align: top
-                    text-align: left
-
-        #input
-            margin-top: 1%
-
-            textarea
-                position: absolute
-                // float: left
-                resize: none !important
-                overflow: hidden !important
-                height: 65px // 10vh
-                width: 60.6vw // 99%
-                margin-left: .7vw
-                background-color: #46637f
-                z-index: 1
-                color: #cfd9e4
-
-                &::placeholder
-                    color: #cfd9e4
-
-            svg, .inputForm
-                float: right
-                z-index: 2
-                position: relative
-            
-            .inputForm
-                top: 22px
-                width: 130px
-                left: -15px
-                display: flex
-                flex-direction: column
-                
-            svg // no longer needed
-                margin-right: .8vw
-                height: 24px
-                width: 24px
-
-                path:active,
-                path:hover
-                    fill: #fff
-
-    .status-bar
-        width: 19vw
+        width: 98%
+        background-color: #283848
         overflow: hidden
         overflow-y: scroll
 
-        .online
-            font-size: .8em
-            // color: #4810f6
+        div
+          display: flex
+          font-size: 14px
+          justify-content: space-between
+          height: fit-content
+          padding-bottom: 1px
+                
+          .author
+            width: 8%
+            margin-left: 4px
+            vertical-align: top
+
+          .message
+            width: 80%
+            // margin-left: 4px
+            vertical-align: top
+            display: inline-block
+
+            div
+              width: 100%
+              word-break: break-word
+
+            a
+              cursor: pointer
+              width: 100%
+              word-break: break-word
+
+          .date
+            width: 11%
+            vertical-align: top
+            text-align: left
+
+      #input
+        flex: 0 1 65px
+        margin-top: 1%
+        // height: 80px
+        // margin: 1%
+        // background: lighten(red, 30%)
+          
+        textarea
+          position: absolute
+          // float: left
+          resize: none !important
+          overflow: hidden !important
+          height: 65px // 10vh
+          width: 60.6vw // 99%
+          margin-left: .7vw
+          background-color: #46637f
+          z-index: 1
+          color: #cfd9e4
+
+          &::placeholder
+            color: #cfd9e4
+
+        svg, .inputForm
+          float: right
+          z-index: 2
+          position: relative
+          
+        .inputForm
+          top: 22px
+          width: 130px
+          left: -15px
+          display: flex
+          flex-direction: column
+                
+        svg // no longer needed
+          margin-right: .8vw
+          height: 24px
+          width: 24px
+
+          // path: active,
+          // path: hover
+          // fill: #fff
+
+    .status-bar
+      width: 19vw
+      overflow: hidden
+      overflow-y: scroll
+
+      .online
+        font-size: .8em
+        // color: #4810f6
         
-        .offline
-            font-size: .8em
-            color: #707070
+      .offline
+        font-size: .8em
+        color: #707070
 
 
 ::-webkit-scrollbar
@@ -236,15 +252,22 @@ svg
             // width: 100vw !important
             width: 100% !important
 
-            #chat-screen
-                width: 100% !important
+            #top
+              padding-top: 8px
+              height: 40px !important
+              // position: absolute
 
-                div
-                  .author
-                    width: 14% !important
+            #chat-screen
+              height: calc(100vh - 160px) !important
+              // margin-top: 20px !important
+              width: 100% !important
+
+              div
+                .author
+                  width: 14% !important
                   
-                  .message
-                    width: 74% !important
+                .message
+                  width: 74% !important
 
             #input
               

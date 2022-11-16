@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { socket } from "../js/_socketSide";
+import { useSelector, useDispatch } from "react-redux";
 
 import Peer from "simple-peer";
 
@@ -17,7 +18,7 @@ import {
 import "./_voice.sass";
 
 const egress = (history) => {
-  history.push("/chat/61ed960432479c682956802b");
+  history.push("/");
 };
 
 const Frame = ({ name, status, videoStream }) => (
@@ -29,7 +30,7 @@ const Frame = ({ name, status, videoStream }) => (
   </div>
 );
 
-const VoiceFrame = ({ history, roomId, userName }) => {
+const VoiceFrame = () => {
   const setLabel = (user, text) => {
     if (user === "current") {
       let newUsers = users;
@@ -40,16 +41,16 @@ const VoiceFrame = ({ history, roomId, userName }) => {
     }
   };
 
-  const [mediaStream, setMediaStream] = useState();
+  const reduxData = useSelector((state) => state.users.value);
 
   const [users, setUsers] = useState([]);
 
+  const [mediaStream, setMediaStream] = useState();
   const videoStreams = [useRef(), useRef()]; // [0] is of current device
-
   const [mediaData, setMediaData] = useState({ audio: false, video: true });
 
   useEffect(() => {
-    setUsers([[userName, ""]]);
+    setUsers([...users, [reduxData.currentUser, ""]]);
     // socket.emit("join voice", {
     //     roomId: roomId,
     //     username: username,
@@ -92,10 +93,6 @@ const VoiceFrame = ({ history, roomId, userName }) => {
       });
   }, [mediaData]);
 
-  useEffect(() => {
-    console.log(".......");
-  }, [users]);
-
   return (
     <div className="webrtc">
       <div className="windows">
@@ -123,7 +120,7 @@ const VoiceFrame = ({ history, roomId, userName }) => {
 
           <ScreenShareOn mediaData={mediaData} setMediaData={setMediaData} />
         </div>
-        <button className="egress" onClick={() => egress(history)}>
+        <button className="egress" onClick={() => egress()}>
           egress
         </button>
       </div>
@@ -160,4 +157,3 @@ const checkMode = (voiceMode, setStatusLabel) => {
 };
 
 export { VoiceFrame };
-
