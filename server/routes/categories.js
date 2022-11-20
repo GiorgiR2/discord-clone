@@ -81,8 +81,9 @@ router.post("/api/addCategory", async (req, res) => {
   // }
 });
 
-router.post("/getdata", (req, res) => {
-  // pass
+router.post("/api/deleteCategory", (req, res) => {
+  Categories.find({ _id: req.body.deleteId }).remove().exec();
+  res.send({ status: "deleted" });
 });
 
 router.post("/move", (req, res) => {

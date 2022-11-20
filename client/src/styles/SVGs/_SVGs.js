@@ -1,8 +1,9 @@
 import React from "react";
+import axios from "axios";
 
-// togglePopupAdd,
 import { togglePopupEdit, addEditingCatId } from "../../features/users";
 
+import { addRooms } from "../../features/users";
 import { useDispatch, useSelector } from "react-redux";
 
 // import CamOff from './videoOff.svg';
@@ -32,11 +33,52 @@ const EditSVG = ({ id }) => {
   const dispatch = useDispatch();
 
   return (
-    <svg onClick={(e) => editCat(e)} xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M18.303 4.742L16.849 3.287C16.678 3.116 16.374 3.116 16.203 3.287L13.142 6.351H2.01901C1.76801 6.351 1.56201 6.556 1.56201 6.807V16.385C1.56201 16.636 1.76801 16.841 2.01901 16.841H15.702C15.954 16.841 16.159 16.636 16.159 16.385V7.533L18.303 5.387C18.481 5.208 18.483 4.917 18.303 4.742ZM15.258 15.929H2.47601V7.263H12.23L9.69501 9.792C9.63801 9.849 9.59401 9.922 9.57601 10.004L9.18001 11.36H5.20001C4.94901 11.36 4.74301 11.565 4.74301 11.816C4.74301 12.069 4.94801 12.272 5.20001 12.272H9.53601C9.55901 12.272 10.435 12.292 11.034 12.145C11.346 12.068 11.584 12.008 11.584 12.008C11.664 11.99 11.739 11.949 11.796 11.89L15.259 8.447V15.929H15.258ZM11.241 11.156L10.163 11.423L10.43 10.347L16.527 4.256L17.335 5.064L11.241 11.156Z"
-        fill="#fff"
-      />
+    <svg
+      onClick={(event) => editCat(event)}
+      height="20px"
+      viewBox="0 0 24 24"
+      width="20px"
+      fill="#fff"
+    >
+      <path d="M0 0h24v24H0z" fill="none" />
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+    </svg>
+  );
+};
+
+const TrashSVG = ({ id }) => {
+  const trash = (e) => {
+    e.preventDefault();
+
+    axios
+      .post("/api/deleteCategory", { deleteId: id })
+      .then((res) => {
+        if (res.data.status === "deleted") {
+          //console.log("deleted successfully");
+          console.log("id:", id);
+          let newj = [];
+          let newJson = reduxData.rooms.map((cat) => {
+            if (cat._id !== id) newj.push(cat);
+          });
+
+          dispatch(addRooms({ rooms: newj }));
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+  const reduxData = useSelector((state) => state.users.value);
+  const dispatch = useDispatch();
+
+  return (
+    <svg
+      onClick={(event) => trash(event)}
+      height="24px"
+      viewBox="0 0 24 24"
+      width="24px"
+      fill="#fff"
+    >
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
     </svg>
   );
 };
@@ -141,12 +183,12 @@ const ScreenShareOn = ({ mediaData, setMediaData }) => (
 
 export {
   EditSVG,
+  TrashSVG,
   MicSVGOff,
   MicSVGOn,
   CamSVGOff,
   CamSVGOn,
   ScreenShareOff,
   ScreenShareOn,
-
   // FullScreen
 };

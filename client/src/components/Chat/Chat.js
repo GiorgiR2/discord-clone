@@ -25,7 +25,7 @@ import * as socks from "../js/_socketSide";
 // import { WebRTCFrame } from '../WebRTCInteractive/WebRTCInteractive';
 import { VoiceFrame } from "../Voice/_voice";
 import { PopupEditCat, PopupAddCat } from "./_editCat";
-import { EditSVG } from "../../styles/SVGs/_SVGs";
+import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
 import egressSVG from "../../icons/egress.svg";
 
 const apiLink = packageJson.proxy;
@@ -90,7 +90,10 @@ const Chat = () => {
       reduxData.rooms.map((room) => (
         <li className="category" id={room._id}>
           <a href={`/chat/${room._id}`}># {room.name}</a>
-          <EditSVG id={room._id} /> {/* set redux editingCatId as id */}
+          <div className="svgs">
+            <EditSVG id={room._id} /> {/* set redux editingCatId as id */}
+            <TrashSVG id={room._id} />
+          </div>
         </li>
       ));
 
