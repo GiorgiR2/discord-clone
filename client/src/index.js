@@ -7,10 +7,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
 import userReducer from "./features/users";
+import interfaceReducer from "./features/interface";
 
 const store = configureStore({
   reducer: {
     users: userReducer,
+    interfaces: interfaceReducer,
   },
 });
 

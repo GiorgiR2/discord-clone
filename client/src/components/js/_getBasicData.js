@@ -23,6 +23,7 @@ const getBasicData = (history, dispatch, frame = "none") => {
           dispatch(addUserName({ username: username }));
           //setUserName(username);
 
+          console.log(res.data.categories);
           dispatch(addRooms({ rooms: res.data.categories }));
         }
       } else if (history.location.pathname !== "/signup") {
