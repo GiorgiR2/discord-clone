@@ -11,6 +11,9 @@ import {
   setVoiceMode,
   clearAll,
 } from "../../features/users";
+import { toggleLeft, toggleRight } from "../../features/interface";
+
+import Panel from "../../styles/sidePanel/sidePanel";
 
 import "./_chat.sass";
 
@@ -23,6 +26,7 @@ import * as socks from "../js/_socketSide";
 import { VoiceFrame } from "../Voice/_voice";
 import { PopupEditCat, PopupAddCat } from "./_editCat";
 import { EditSVG } from "../../styles/SVGs/_SVGs";
+import egressSVG from "../../icons/egress.svg";
 
 const apiLink = packageJson.proxy;
 const startPoint = "";
@@ -89,15 +93,27 @@ const Chat = () => {
           <EditSVG id={room._id} /> {/* set redux editingCatId as id */}
         </li>
       ));
+
     return (
-      <div className="categories">
+      <div
+        className={`categories ${
+          interfacesRedux.toggleLeft === false ? "hidden" : ""
+        }`}
+      >
         <div className="top">
-          <div className="topbar">
+          <div className="topl">
             <h1 className="user">{reduxData.currentUser}</h1>
-            <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
-              +
-            </h1>
+            <img
+              className="x"
+              src={egressSVG}
+              alt="exit"
+              onClick={() => dispatch(toggleLeft())}
+            />
           </div>
+
+          <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
+            add new room <b>+</b>
+          </h1>
 
           <nav>
             <ul id="ul-id">
@@ -200,6 +216,7 @@ const Chat = () => {
   const Center = () => (
     <div className="messages">
       <div id="top">
+        <Panel side="left" />
         <h1 id="category"># {reduxData.currentRoom}</h1>
         <h1
           id="log_out"
@@ -209,6 +226,7 @@ const Chat = () => {
         >
           Log out
         </h1>
+        <Panel side="right" />
       </div>
 
       {reduxData.voiceMode ? <VoiceFrame /> : <Messages />}
@@ -217,7 +235,17 @@ const Chat = () => {
 
   const StatusBar = () => (
     // { online, offline }
-    <div className="status-bar">
+    <div
+      className={`status-bar ${
+        interfacesRedux.toggleRight === false ? "hidden" : ""
+      }`}
+    >
+      <img
+        className="x"
+        src={egressSVG}
+        alt="exit"
+        onClick={() => dispatch(toggleRight())}
+      />
       <h2>ACTIVE - {reduxData.online.length}</h2>
       {reduxData.online.map((el) => (
         <h2 className="online">--- {el}</h2>
@@ -232,6 +260,7 @@ const Chat = () => {
   // redux
   const dispatch = useDispatch();
   const reduxData = useSelector((state) => state.users.value);
+  const interfacesRedux = useSelector((state) => state.interfaces.value);
 
   let { roomId } = useParams();
   const history = useHistory();

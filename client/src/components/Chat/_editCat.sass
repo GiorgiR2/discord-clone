@@ -9,23 +9,23 @@
         height: 100vh
         position: absolute
         // visibility: hidden
-        z-index: 3
+        z-index: 12
 
         .center
             border: 2px solid #fff
             display: flex
             flex-direction:	column
             border-radius: 5px
-            width: 340px
+            width: 380px
             position: absolute
             top: 50%
             left: 50%
-            transform: translate(-240px, -30px)
+            transform: translate(-50%, -50%)
             padding: 5px
 
-            h4,
-            input
-                margin: auto
+            h4
+              letter-spacing: 2px
+              margin: 4px auto 4px auto
             
             .h4, div h4
                 font-family: Roboto
@@ -33,15 +33,22 @@
                 font-weight: normal
                 font-size: 25px
             
-            input
-                width: 300px
+            .nameInput
+                margin: auto
+                width: 340px
                 height: 30px
 
                 background: #FFFFFF
                 border-radius: 8px
             
-            div
+            form
+              display: flex
+              justify-content: space-around
+              margin-top: 8px
+
+            .buttons
                 display: flex
+                margin: 10px 0 4px 0
 
                 h4
                     cursor: pointer
@@ -51,3 +58,5 @@
 
                 .cancel
                     // pass
+
+

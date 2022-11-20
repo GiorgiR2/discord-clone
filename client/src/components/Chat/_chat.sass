@@ -39,6 +39,8 @@ svg
 
     .categories
         width: 18vw
+        // min-width: 250px
+        // min-width: fit-content
         display: flex
         flex-direction: column
         justify-content: space-between
@@ -48,28 +50,55 @@ svg
             overflow-y: scroll
             width: 100%
             
-            .topbar
+            .topl
+              display: flex
+              justify-content: space-between
+              margin: 15px 0px 0px 10px
+              border-bottom: 2px solid darken($fg-color, 50)
+              
+              .x
+                position: relative
+                top: -6px
+                height: 25px
+                color: #fff
+                margin-top: 8px
+                // margin-top: 15px
+                cursor: pointer
+                display: none
+
+              .user
                 width: 100%
                 height: 43px
                 margin-left: 5px
-                display: flex
-                justify-content: space-between
-                border-bottom: 2px solid darken($fg-color, 50)
-                
-                .user
-                    font-size: 1.2em
-                    margin: 6px
+                font-size: 1.2em
+                // margin: 6px
 
-                .plus
-                    height: 30px
-                    margin-right: 6px
-                    font-size: 2em
+            .plus
+              margin-top: 7px
+              margin-left: 6px
+              padding: 8px 8px 8px 8px
+              background-color: #C4C4C4
+              color: lighten(#000000, 40%)
+              border-radius: 5px
+              font-size: 1.0em
+              height: 38px
+              letter-spacing: 1.4px
+              // text-align: center
 
-                    &:hover,
-                    &:active
-                        cursor: pointer
-                        color: darken($fg-color, 30)
-                        transition-duration: .2s
+              display: flex
+              justify-content: space-between
+
+              b
+                position: relative
+                top: -1px
+                font-size: 1.2em
+                margin-bottom: -4px
+
+              &:hover,
+              &:active
+                cursor: pointer
+                color: #000000
+                transition-duration: .2s
 
             nav ul
                 list-style: none
@@ -188,6 +217,7 @@ svg
           overflow: hidden !important
           height: 65px // 10vh
           width: 60.6vw // 99%
+          min-width: 100px
           margin-left: .7vw
           background-color: #46637f
           z-index: 1
@@ -219,8 +249,13 @@ svg
 
     .status-bar
       width: 19vw
+      // min-width: 250px
       overflow: hidden
       overflow-y: scroll
+
+      .x
+        margin-top: 5px
+        display: none
 
       .online
         font-size: .8em
@@ -240,13 +275,36 @@ svg
     border-radius: 10px
     background-color: #a6a6a6
 
-@media screen and (max-width: 800px)
+@media screen and (max-width: 1100px)
     body
+        .hidden
+          display: none !important
+
+        .categories,
+        .status-bar
+          padding-top: 5px !important
+          height: 100vh !important
+          width: 260px !important
+          
         .categories
-            display: none !important
+          // display: none !important
+          position: absolute
+          // width: fit-content
+          z-index: 10
+          
+          .top .topl .x
+            display: block !important
 
         .status-bar
-            display: none !important
+          // display: none !important
+          position: absolute
+          right: 0px
+          padding-left: 8px
+          // width: fit-content
+          z-index: 10
+
+          .x
+            display: block !important
 
         .messages
             // width: 100vw !important
@@ -256,6 +314,12 @@ svg
               padding-top: 8px
               height: 40px !important
               // position: absolute
+
+              .panel
+                display: block
+
+              #log_out
+                display: none
 
             #chat-screen
               height: calc(100vh - 160px) !important
@@ -270,7 +334,6 @@ svg
                   width: 74% !important
 
             #input
-              
               textarea
                 width: 98vw !important
 
@@ -281,7 +344,7 @@ svg
 
                 top: 1px !important
                 left: -5px !important
-                background-color: red
+                // background-color: red
 
                 input
                   // position: absolute
