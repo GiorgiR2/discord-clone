@@ -5,7 +5,7 @@ const initialStateValue = {
   currentUser: "",
   currentRoom: "",
   currentRoomId: "",
-  rooms: [],
+  rooms: [], // all mongodb data
   online: [],
   offline: [],
   messages: [
@@ -37,7 +37,10 @@ export const userSlice = createSlice({
       state.value.currentUser = action.payload.username;
     },
     addRooms: (state, action) => {
-      state.value.rooms = action.payload.rooms;
+      state.value.rooms = action.payload.rooms; // elements of [name, position, voice, __v, _id]
+    },
+    addRoom: (state, action) => {
+      state.value.rooms.push(action.payload.room); // name, voice, _id
     },
     setRoomName: (state, action) => {
       state.value.currentRoom = action.payload.name;
@@ -94,13 +97,12 @@ export const userSlice = createSlice({
 });
 
 export const {
-  login,
-  logout,
   togglePopupEdit,
   togglePopupAdd,
   addEditingCatId,
   addUserName,
   addRooms,
+  addRoom,
   setRoomName,
   setAuthentication,
   setVoiceMode,
