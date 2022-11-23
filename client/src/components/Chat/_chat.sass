@@ -229,37 +229,38 @@ svg
           // float: left
           resize: none !important
           overflow: hidden !important
-          height: 65px // 10vh
+          height: 62px // 10vh
           width: 60.6vw // 99%
           min-width: 100px
           margin-left: .7vw
           background-color: #46637f
+          border-radius: 3px
           z-index: 1
           color: #cfd9e4
 
           &::placeholder
             color: #cfd9e4
 
-        svg, .inputForm
+        .inputForm
           float: right
           z-index: 2
           position: relative
-          
-        .inputForm
+
+          // display: none
           top: 22px
           width: 130px
           left: -15px
           display: flex
           flex-direction: column
                 
-        svg // no longer needed
-          margin-right: .8vw
-          height: 24px
-          width: 24px
+        .send
+          display: none
+          float: right
+          position: relative
+          top: 22px
+          left: -15px
+          z-index: 3
 
-          // path: active,
-          // path: hover
-          // fill: #fff
 
     .status-bar
       width: 19vw
@@ -392,23 +393,33 @@ svg
             #input
               textarea
                 width: 98vw !important
+                background-color: #4C6C8A !important
+                color: $bg-color !important
+                border-radius: 10px !important
+
+                // height: 45px !important
 
               .inputForm
-                height: 62px
-                width: 70px !important
-                position: relative
+                display: none !important
 
-                top: 1px !important
-                left: -5px !important
-                // background-color: red
+              .send
+                display: block !important
+              // .inputForm
+              //   height: 62px
+              //   width: 70px !important
+              //   position: relative
 
-                input
-                  // position: absolute
-                  display: none !important
-                  visibility: hidden
+              //   top: 1px !important
+              //   left: -5px !important
+              //   // background-color: red
 
-                .submit
-                  height: 62px
-                  width: 70px
+              //   input
+              //     // position: absolute
+              //     display: none !important
+              //     visibility: hidden
 
-                  // background: $bg-color
+              //   .submit
+              //     height: 62px
+              //     width: 70px
+
+              //     // background: $bg-color

@@ -32,6 +32,7 @@ import { VoiceFrame } from "../Voice/_voice";
 import { PopupEditCat, PopupAddCat } from "./editCategory/_editCat";
 import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
 import egressSVG from "../../icons/egress.svg";
+import sendSVG from "../../icons/send-24px.svg";
 
 const apiLink = packageJson.proxy;
 const startPoint = "";
@@ -162,10 +163,11 @@ const Chat = () => {
 
       e.preventDefault();
 
-      if (window.innerWidth <= 800) {
-        socks.sendMessage(e, reduxData, roomId, "mobile", inputRef);
-        return;
-      } else if (file === undefined) return;
+      // if (window.innerWidth <= 800) {
+      //   socks.sendMessage(e, reduxData, roomId, "mobile", inputRef);
+      //   return;
+      // }
+      if (file === undefined) return;
 
       const url = `${apiLink}/upload`;
       const formData = new FormData();
@@ -237,6 +239,14 @@ const Chat = () => {
               send
             </button>
           </form>
+          <img
+            className="send"
+            src={sendSVG}
+            alt="send"
+            onClick={(event) =>
+              socks.sendMessage(event, reduxData, roomId, "mobile", inputRef)
+            }
+          />
         </div>
       </>
     );
