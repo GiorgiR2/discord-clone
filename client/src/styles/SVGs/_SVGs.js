@@ -19,22 +19,19 @@ const changeMode = (mediaData, setMediaData, button) => {
   setMediaData(data);
 };
 
-const EditSVG = ({ id }) => {
+const EditSVG = ({ id, typeE }) => {
+  // typeE === "room" || "message" // ignore on "message"
   const editCat = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     dispatch(addEditingCatId({ id: id }));
-    // Todo: !!!!! set redux editingCatId as id
     dispatch(togglePopupEdit());
-    console.log("id:", reduxData.editingCatId);
-    // add code so it toggle active
-    // setElementId(id);
   };
   const reduxData = useSelector((state) => state.users.value);
   const dispatch = useDispatch();
 
   return (
     <svg
-      onClick={(event) => editCat(event)}
+      onClick={(event) => (typeE === "room" ? editCat(event) : null)}
       height="20px"
       viewBox="0 0 24 24"
       width="20px"
@@ -46,16 +43,14 @@ const EditSVG = ({ id }) => {
   );
 };
 
-const TrashSVG = ({ id }) => {
+const TrashSVG = ({ id, typeE }) => {
+  // typeE === "room" || "message"
   const trash = (e) => {
-    e.preventDefault();
-
+    // e.preventDefault();
     axios
       .post("/api/deleteCategory", { deleteId: id })
       .then((res) => {
         if (res.data.status === "deleted") {
-          //console.log("deleted successfully");
-          console.log("id:", id);
           let newj = [];
           let newJson = reduxData.rooms.map((cat) => {
             if (cat._id !== id) newj.push(cat);
@@ -71,7 +66,7 @@ const TrashSVG = ({ id }) => {
 
   return (
     <svg
-      onClick={(event) => trash(event)}
+      onClick={(event) => (typeE === "room" ? trash(event) : null)}
       height="24px"
       viewBox="0 0 24 24"
       width="24px"

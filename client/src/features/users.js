@@ -10,7 +10,7 @@ const initialStateValue = {
   offline: [],
   messages: [
     // name, message, date, isFile=false
-    ["name", "message", "date", false],
+    // ["name", "message", "date", false],
   ],
   displayEdit: false,
   editingCatId: "",

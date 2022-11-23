@@ -47,11 +47,11 @@ cd client && npm i && npm start
 
 | Function                                  | Description                                       | Status                 |
 |-------------------------------------------|---------------------------------------------------|------------------------|
-| sending messages/files                    | -                                                 | done                   |
+| send messages/files                       | -                                                 | done                   |
 | video/audio chat                          | p2p connection (using webrtc/simple-peer)         | under development      |
 | android app version                       | -                                                 | not yet supported      |
-| edit/add rooms/voice chats                | -                                                 | done                   |
-| -                                         | -                                                 | -                      |
+| edit/add rooms                            | -                                                 | done                   |
+| edit/delete messages                      | -                                                 | -                      |
 | -                                         | -                                                 | -                      |
 
 ## Screens
@@ -60,6 +60,10 @@ cd client && npm i && npm start
 Main Chat Window
 
 ![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/discord-mern.png)
+
+Responsive View
+
+![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/responsive-screen.png)
 
 Voice Chat Window
 

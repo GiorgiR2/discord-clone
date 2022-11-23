@@ -11,9 +11,14 @@ import {
   setVoiceMode,
   clearAll,
 } from "../../features/users";
-import { toggleLeft, toggleRight } from "../../features/interface";
+import {
+  toggleLeft,
+  toggleRight,
+  setContextMenu,
+} from "../../features/interface";
 
 import Panel from "../../styles/sidePanel/sidePanel";
+import DeleteDiv from "./deleteDiv/deleteDiv";
 
 import "./_chat.sass";
 
@@ -24,7 +29,7 @@ import * as socks from "../js/_socketSide";
 
 // import { WebRTCFrame } from '../WebRTCInteractive/WebRTCInteractive';
 import { VoiceFrame } from "../Voice/_voice";
-import { PopupEditCat, PopupAddCat } from "./_editCat";
+import { PopupEditCat, PopupAddCat } from "./editCategory/_editCat";
 import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
 import egressSVG from "../../icons/egress.svg";
 
@@ -45,11 +50,24 @@ const logOut = (e, history, dispatch) => {
 };
 
 const NewMessage = ({ user, msg, date, isFile }) => {
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+
+    const { pageX, pageY } = e;
+    dispatch(
+      setContextMenu({ contextMenu: { show: true, x: pageX, y: pageY } })
+    );
+  };
   // msg may be a text / a multiline text or a fileID
   let link = `${apiLink}/file/${msg}`; // msg === Id
 
+  const dispatch = useDispatch();
+
   return (
-    <div className="element">
+    <div
+      className="element messageDiv"
+      onContextMenu={(event) => handleContextMenu(event)}
+    >
       <div className="author">{user}</div>
       <div className="message">
         {isFile ? (
@@ -91,8 +109,9 @@ const Chat = () => {
         <li className="category" id={room._id}>
           <a href={`/chat/${room._id}`}># {room.name}</a>
           <div className="svgs">
-            <EditSVG id={room._id} /> {/* set redux editingCatId as id */}
-            <TrashSVG id={room._id} />
+            <EditSVG id={room._id} typeE="room" />{" "}
+            {/* set redux editingCatId as id */}
+            <TrashSVG id={room._id} typeE="room" />
           </div>
         </li>
       ));
@@ -185,6 +204,13 @@ const Chat = () => {
     return (
       <>
         <div id="chat-screen">
+          <div className="element">
+            <div className="author">user</div>
+            <div className="message">message</div>
+            <div className="date">
+              <div>date</div>
+            </div>
+          </div>
           {reduxData.messages.map((el) => (
             <NewMessage user={el[0]} msg={el[1]} date={el[2]} isFile={el[3]} />
           ))}
@@ -243,19 +269,36 @@ const Chat = () => {
         interfacesRedux.toggleRight === false ? "hidden" : ""
       }`}
     >
-      <img
-        className="x"
-        src={egressSVG}
-        alt="exit"
-        onClick={() => dispatch(toggleRight())}
-      />
-      <h2>ACTIVE - {reduxData.online.length}</h2>
+      <div className="top">
+        <img
+          className="x"
+          src={egressSVG}
+          alt="exit"
+          onClick={() => dispatch(toggleRight())}
+        />
+
+        <h1
+          className="logOut"
+          onClick={(event) => {
+            logOut(event, history, dispatch);
+          }}
+        >
+          Log out
+        </h1>
+      </div>
+      <h3 className="titleON">ACTIVE - {reduxData.online.length}</h3>
       {reduxData.online.map((el) => (
-        <h2 className="online">--- {el}</h2>
+        <h3 className="online">
+          <div />
+          {el}
+        </h3>
       ))}
-      <h2>OFFLINE - {reduxData.offline.length}</h2>
+      <h3 className="titleOFF">OFFLINE - {reduxData.offline.length}</h3>
       {reduxData.offline.map((el) => (
-        <h2 className="offline">--- {el}</h2>
+        <h3 className="offline">
+          <div />
+          {el}
+        </h3>
       ))}
     </div>
   );
@@ -295,6 +338,12 @@ const Chat = () => {
       <Categories />
       <Center />
       <StatusBar />
+      {interfacesRedux.contextMenu.show ? (
+        <DeleteDiv
+          x={interfacesRedux.contextMenu.x}
+          y={interfacesRedux.contextMenu.y}
+        />
+      ) : null}
     </div>
   );
 };

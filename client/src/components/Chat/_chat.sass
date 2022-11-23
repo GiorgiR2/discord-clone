@@ -7,6 +7,7 @@ svg
 
 .chat
     background-color: $bg-color//#161f27
+    // background-color: #11171D
     // margin: 5px 0px 5px 0px
     // max-height: 800px
     height: -webkit-fill-available
@@ -33,9 +34,13 @@ svg
     .categories,
     .messages,
     .status-bar
-        // height: 100vh
-        height: -webkit-fill-available
-        background-color: $bg-color
+      // height: 100vh
+      height: -webkit-fill-available
+          
+
+    .categories,
+    .status-bar
+      background-color: $bg-color
 
     .categories
         width: 18vw
@@ -139,6 +144,7 @@ svg
         
       // height: calc(100vh - 10px)
       background-color: #2e4153
+      // background-color: $bg-color
       // height: -webkit-fill-available
       // padding: 1px
 
@@ -174,13 +180,18 @@ svg
         overflow: hidden
         overflow-y: scroll
 
+        .messageDiv
+          &:hover,
+          &:active
+            background-color: lighten($bg-color, 20%)
+
         div
           display: flex
           font-size: 14px
           justify-content: space-between
           height: fit-content
-          padding-bottom: 1px
-                
+          padding: 2px 0 1px 0
+
           .author
             width: 8%
             margin-left: 4px
@@ -256,17 +267,57 @@ svg
       overflow: hidden
       overflow-y: scroll
 
-      .x
-        margin-top: 5px
-        display: none
+      .top
+        display: flex
+        justify-content: space-between
+        margin-bottom: 5px
+
+        .x
+          margin-left: 2px
+        
+        .x, .logOut
+          margin-top: 5px
+          display: none
+
+          &:hover,
+          &:active
+            cursor: pointer
+
+      .titleON
+        font-size: 0.7em
+
+      .titleOFF
+        font-size: 0.7em
+        margin-top: 8px
+
+      .online,
+      .offline
+        margin-left: 10px
+        margin-top: 2px
+        display: flex
+
+        div
+          height: 15px
+          width: 15px
+          border-radius: 15px
+          border: 2px solid #000
+          margin: 3px 10px 0 0px
 
       .online
         font-size: .8em
+        margin
         // color: #4810f6
+        div
+          background-color: #fff//green
+
         
       .offline
         font-size: .8em
-        color: #707070
+        color: darken(#fff, 30%)
+
+        div
+          background-color: #000
+
 
 
 ::-webkit-scrollbar
@@ -278,7 +329,7 @@ svg
     border-radius: 10px
     background-color: #a6a6a6
 
-@media screen and (max-width: 1100px)
+@media screen and (max-width: 850px)
     body
         .hidden
           display: none !important
@@ -306,16 +357,18 @@ svg
           // width: fit-content
           z-index: 10
 
-          .x
-            display: block !important
+          .top
+            .x, .logOut
+              display: block !important
 
         .messages
             // width: 100vw !important
             width: 100% !important
 
             #top
-              padding-top: 8px
-              height: 40px !important
+              margin-top: 2px
+              padding-top: 11px
+              height: 45px !important
               // position: absolute
 
               .panel
