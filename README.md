@@ -4,10 +4,9 @@
 * React.js - front-end
 * Redux - state managment
 * Node - back-end
-* React Native - android version (not yet supported)
 * socket.io - sending messages / status bar data
 * RestAPI
-* WebRTC
+* WebRTC - p2p audio/video transfer
 
 ## Overview
 ...
@@ -49,10 +48,9 @@ cd client && npm i && npm start
 |-------------------------------------------|---------------------------------------------------|------------------------|
 | send messages/files                       | -                                                 | done                   |
 | video/audio chat                          | p2p connection (using webrtc/simple-peer)         | under development      |
-| android app version                       | -                                                 | not yet supported      |
-| edit/add rooms                            | -                                                 | done                   |
+| add/edit/delete rooms                     | -                                                 | done                   |
 | edit/delete messages                      | -                                                 | -                      |
-| -                                         | -                                                 | -                      |
+| p2p audio/video transfer                  | -                                                 | -                      |
 
 ## Screens
 ...
