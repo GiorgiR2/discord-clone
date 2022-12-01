@@ -36,7 +36,13 @@ const main = (reduxData, dispatch) => {
 
   socket.on("messagesData", (data) => {
     let msgList = data.map((el) => {
-      return [el.user, el.isFile ? el._id : el.message, el.date, el.isFile];
+      return [
+        el.user,
+        el.isFile ? el._id : el.message,
+        el.date,
+        el.isFile,
+        el.isFile ? el.originalName : "",
+      ];
     });
     dispatch(addMessage({ messageList: msgList })); // message/messages
   });

@@ -33,6 +33,7 @@ import { PopupEditCat, PopupAddCat } from "./editCategory/_editCat";
 import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
 import egressSVG from "../../icons/egress.svg";
 import sendSVG from "../../icons/send-24px.svg";
+import fileSVG from "../../icons/fileIcon.svg";
 
 const apiLink = packageJson.proxy;
 const startPoint = "";
@@ -50,7 +51,7 @@ const logOut = (e, history, dispatch) => {
   socks.disconnect();
 };
 
-const NewMessage = ({ user, msg, date, isFile }) => {
+const NewMessage = ({ user, msg, date, isFile, originalName }) => {
   const handleContextMenu = (e) => {
     e.preventDefault();
 
@@ -72,9 +73,12 @@ const NewMessage = ({ user, msg, date, isFile }) => {
       <div className="author">{user}</div>
       <div className="message">
         {isFile ? (
-          <a href={link} rel="noreferrer" target="_blank">
-            {link}
-          </a>
+          <div className="fileDiv">
+            <img src={fileSVG} className="fileSVG" />
+            <a href={link} rel="noreferrer" target="_blank" className="name">
+              {originalName}
+            </a>
+          </div>
         ) : (
           msg.split("\n").map((line) => <div>{line}</div>)
         )}
@@ -214,7 +218,13 @@ const Chat = () => {
             </div>
           </div>
           {reduxData.messages.map((el) => (
-            <NewMessage user={el[0]} msg={el[1]} date={el[2]} isFile={el[3]} />
+            <NewMessage
+              user={el[0]}
+              msg={el[1]}
+              date={el[2]}
+              isFile={el[3]}
+              originalName={el[4]}
+            />
           ))}
           <div id="last-element"></div>
         </div>
