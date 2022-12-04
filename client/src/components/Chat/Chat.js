@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
 
 import axios from "axios";
 import FormData from "form-data";
@@ -112,7 +112,13 @@ const Chat = () => {
     const CategoriesJSX = () =>
       reduxData.rooms.map((room) => (
         <li className="category" id={room._id}>
-          <a href={`/chat/${room._id}`}># {room.name}</a>
+          <a className="hyperlink" onClick={() => {
+            history.push(`/chat/${room._id}`);
+            window.location.reload();
+            }}># {room.name}</a>
+          {/* <Link to={`/chat/${room._id}`}>
+            # {room.name}
+          </Link> */}
           <div className="svgs">
             <EditSVG id={room._id} typeE="room" />{" "}
             {/* set redux editingCatId as id */}
@@ -194,7 +200,7 @@ const Chat = () => {
       axios
         .post(url, formData, config)
         .then((res) => {
-          console.log("file send, res:", res.data);
+          console.log("send file; res:", res.data);
           if (res.data === "done") sendFileData();
         })
         .catch((err) => sendFileData());

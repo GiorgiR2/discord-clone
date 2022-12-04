@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 
 import { getBasicData } from "../js/_getBasicData";
@@ -9,26 +9,25 @@ import "./_sign-up.sass";
 
 const apiLink = packageJson.proxy;
 
-const sendData = (e, username, password0, password1, history) => {
-  e.preventDefault();
-  const data = {
-    username: username,
-    password0: password0,
-    password1: password1,
-  };
-
-  axios
-    .post(`${apiLink}/api/users/register`, data)
-    .then((res) => {
-      console.log("res", res.data);
-      if (res.data.data === "done") {
-        history.push("/?status=done");
-      } else alert("try again, something went wrong...");
-    })
-    .catch((err) => console.log(err));
-};
-
 const SignUp = () => {
+  const sendData = (e, username, password0, password1) => {
+    e.preventDefault();
+    const data = {
+      username: username,
+      password0: password0,
+      password1: password1,
+    };
+
+    axios
+      .post(`${apiLink}/api/users/register`, data)
+      .then((res) => {
+        console.log("res", res.data);
+        if (res.data.data === "done") {
+          history.push("/?status=done");
+        } else alert("try again, something went wrong...");
+      })
+      .catch((err) => console.log(err));
+  };
   const [username, setUsername] = useState();
   const [password0, setPassword0] = useState();
   const [password1, setPassword1] = useState();
@@ -75,21 +74,19 @@ const SignUp = () => {
 
       <button
         className="go-button"
-        onClick={(event) =>
-          sendData(event, username, password0, password1, history)
-        }
+        onClick={(event) => sendData(event, username, password0, password1)}
       >
         GO
       </button>
 
-      <a href="/" className="go-back-button">
+      {/*<a href="/" className="go-back-button">
         go back
-      </a>
-
-      {/* if error => alert("please repeat password correctly..."); */}
+</a>*/}
+      <Link to="/" className="go-back-button">
+        go back
+      </Link>
     </div>
   );
 };
 
 export default SignUp;
-

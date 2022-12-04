@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import { useHistory } from "react-router-dom"; // { Link, Redirect }
+import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
 import axios from "axios";
 
 import { getBasicData } from "../js/_getBasicData";
@@ -7,11 +7,11 @@ import { getBasicData } from "../js/_getBasicData";
 import "./_login.sass";
 import packageJson from "../../../package.json";
 
-const startPoint =
-  window.location.href.toString().includes("localhost") ||
-  window.location.href.toString().includes("127.0.0.1")
-    ? ""
-    : "/discord-clone-react"; //packageJson.homepage;
+// const startPoint =
+//   window.location.href.toString().includes("localhost") ||
+//   window.location.href.toString().includes("127.0.0.1")
+//     ? ""
+//     : "/discord-clone-react"; //packageJson.homepage;
 
 const server = packageJson.proxy; // "http://127.0.0.1:5000";
 
@@ -20,26 +20,25 @@ const config = {
   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
 };
 
-const sendLoginData = (e, user, pswrd, history) => {
-  e.preventDefault();
-  let data = {
-    username: user,
-    password: pswrd,
-  };
-
-  axios
-    .post(`${server}/api/users/login`, data, config)
-    .then((res) => {
-      if (res.data.data === "done") {
-        history.push(`${startPoint}/chat`); // /?id=${res.data.data}
-      } else {
-        alert("Try again...");
-      }
-    })
-    .catch((err) => console.error("error...", err));
-};
-
 const Login = () => {
+  const sendLoginData = (e, user, pswrd) => {
+    e.preventDefault();
+    let data = {
+      username: user,
+      password: pswrd,
+    };
+
+    axios
+      .post(`${server}/api/users/login`, data, config)
+      .then((res) => {
+        if (res.data.data === "done") {
+          history.push("/chat"); // /?id=${res.data.data}
+        } else {
+          alert("Try again...");
+        }
+      })
+      .catch((err) => console.error("error...", err));
+  };
   document.title = "login section";
 
   const [userName, setUserName] = useState();
@@ -78,17 +77,18 @@ const Login = () => {
         onChange={(event) => setPassword(event.target.value)}
       />
 
-      <form
-        onSubmit={(event) => sendLoginData(event, userName, password, history)}
-      >
+      <form onSubmit={(event) => sendLoginData(event, userName, password)}>
         <button type="submit" className="go-button">
           GO
         </button>
       </form>
 
-      <a href="/signup" className="sign-up-button">
+      {/* <a href="/signup" className="sign-up-button">
         Sign up
-      </a>
+</a>*/}
+      <Link to="/signup" className="sign-up-button">
+        Sign Up
+      </Link>
     </div>
   );
 };
