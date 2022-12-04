@@ -15,7 +15,7 @@ const getBasicData = (history, dispatch, frame = "none") => {
     .then((res) => {
       // console.log(`pathname: '${history.location.pathname}'`);
       if (res.data.status === "1") {
-        if (frame !== "chat") history.push("/chat/");
+        if (frame !== "chat") history.push("/chat");
         else {
           // else if (setAuthentication) // no idea why I had this
           let username = res.data.username;
@@ -28,10 +28,10 @@ const getBasicData = (history, dispatch, frame = "none") => {
         }
       } else if (history.location.pathname !== "/signup") {
         history.push("/");
+      } else {
+        // history.push("/");
       }
-      // else {
-      // history.push("/");
-      // }
+      // console.log(`path: "${history.location.pathname}"`);
     })
     .catch((err) => {
       console.error("error", err);

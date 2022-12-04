@@ -28,6 +28,7 @@ const main = (reduxData, dispatch) => {
         data.isFile ? data._id : data.message,
         data.date,
         data.isFile,
+        data.isFile ? data.originalName : "",
       ],
     ];
 
@@ -73,7 +74,7 @@ const main = (reduxData, dispatch) => {
 // };
 
 const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
-  e.preventDefault();
+  // e.preventDefault();
   const data = {
     user: reduxData.currentUser,
     room: reduxData.currentRoom,
@@ -84,18 +85,18 @@ const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
     filename: filename,
   };
 
-  console.log("sent...........", data);
   socket.emit("file", data);
+  console.log("sent...........", data);
 
-  e.preventDefault();
+  // e.preventDefault();
 };
 
 const sendMessage = (e, reduxData, roomId, device, inputRef) => {
   let input = inputRef.current.value;
   if (
     ((e.key === "Enter" && e.shiftKey !== true) || device === "mobile") &&
-    input != null &&
-    input != 0
+    input !== null &&
+    input !== 0
   ) {
     let message = input;
     let datetime = getTime();
