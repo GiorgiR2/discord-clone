@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom"; // BrowserRouter, Switch
 
 import Login from "./components/Login/Login";
 import SignUp from "./components/Signup/Sign_Up";
@@ -9,15 +9,15 @@ import "./styles/_main.sass";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Switch>
         <Route exact path="/" component={Login} />
-        <Route exact path="/signup" component={SignUp} />
+        <Route path="/signup" component={SignUp} />
         {/* <Route exact path="/chat/id=:id" component={Chat} /> */}
-        <Route exact path="/chat/:roomId" component={Chat} />
-        <Route exact component={Chat} />
+        <Route path="/chat/:roomId" component={Chat} />
+        <Route component={Chat} />
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 };
 
