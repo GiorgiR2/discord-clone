@@ -137,16 +137,16 @@ const main = (connectedUsers, usersInVoice) => {
       let size = data.size;
       let filename = data.filename;
 
-      Message.findOne({ size: size, originalName: filename }).then((file) => {
-        let sdata = {
-          user: user,
-          _id: file._id,
-          date: datetime,
-          isFile: true,
-        };
-        socket.emit("M_S_O", sdata);
-        socket.in(room).emit("M_S_O", sdata);
-        console.log("file sent:", file._id, filename);
+      Message.findOne({ size: size, originalName: filename }).then((doc) => {
+        // let sdata = {
+        //   user: user,
+        //   _id: file._id,
+        //   date: datetime,
+        //   isFile: true,
+        // };
+        socket.emit("M_S_O", doc);
+        socket.in(room).emit("M_S_O", doc);
+        console.log("file sent:", doc._id, filename);
       });
     });
 
