@@ -50,7 +50,7 @@ cd client && npm i && npm start
 | video/audio chat                          | p2p connection (using webrtc/simple-peer)         | under development      |
 | add/edit/delete rooms                     | -                                                 | done                   |
 | edit/delete messages                      | -                                                 | -                      |
-| p2p audio/video transfer                  | -                                                 | -                      |
+| p2p audio/video chat                      | -                                                 | -                      |
 
 ## Screens
 ...
@@ -74,6 +74,10 @@ Login Window
 Sign Up window
 
 ![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/signUp.png)
+
+## Future Plans
+
+Rewrite it all in Next.ts
 
 ## Contact
 
