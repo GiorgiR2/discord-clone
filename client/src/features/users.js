@@ -5,12 +5,12 @@ const initialStateValue = {
   currentUser: "",
   currentRoom: "",
   currentRoomId: "",
-  rooms: [], // all mongodb data
+  rooms: [], // all mongoose rooms
   online: [],
   offline: [],
   messages: [
-    // name, message, date, isFile=false
-    // ["name", "message", "date", false],
+    // name, message, date, isFile=false, id
+    // ["name", "message", "date", false, 000001],
   ],
   displayEdit: false,
   editingCatId: "",
@@ -77,9 +77,9 @@ export const userSlice = createSlice({
           return value === newName;
         })
       ) {
-        // add to offlines
+        // add to offlines' list
         state.value.offline = [...valuesOffline, newName];
-        // remove from onlines
+        // remove from onlines' list
         state.value.online = valuesOnline.filter((value) => value !== newName);
       }
     },
@@ -88,6 +88,11 @@ export const userSlice = createSlice({
         ...state.value.messages,
         ...action.payload.messageList,
       ];
+    },
+    removeMessage: (state, action) => {
+      state.value.messages = state.value.messages.filter(
+        (el) => el[5] !== action.payload._id
+      );
     },
 
     clearAll: (state) => {
@@ -104,11 +109,15 @@ export const {
   addRooms,
   addRoom,
   setRoomName,
+
   setAuthentication,
   setVoiceMode,
+
   setOnline,
   setOffline,
+
   addMessage,
+  removeMessage,
 
   clearAll,
 } = userSlice.actions;

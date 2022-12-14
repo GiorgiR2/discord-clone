@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initalStateValues = {
   toggleLeft: false,
   toggleRight: false,
-  contextMenu: { show: false, x: 0, y: 0 },
+  contextMenu: { show: false, x: 0, y: 0, id: null },
 };
 
 export const userSlice = createSlice({

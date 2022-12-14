@@ -3,7 +3,7 @@ import packageJson from "../../../package.json";
 
 import { addUserName, setAuthentication, addRooms } from "../../features/users";
 
-const server = packageJson.proxy;
+const apiLink = packageJson.proxy;
 const config = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -11,7 +11,7 @@ const config = {
 
 const getBasicData = (history, dispatch, frame = "none") => {
   axios
-    .post(`${server}/api/users/status`, { junk: "" }, config)
+    .post(`${apiLink}/api/users/status`, { junk: "" }, config)
     .then((res) => {
       // console.log(`pathname: '${history.location.pathname}'`);
       if (res.data.status === "1") {

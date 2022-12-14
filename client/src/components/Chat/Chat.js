@@ -51,13 +51,15 @@ const logOut = (e, history, dispatch) => {
   socks.disconnect();
 };
 
-const NewMessage = ({ user, msg, date, isFile, originalName }) => {
-  const handleContextMenu = (e) => {
+const NewMessage = ({ user, msg, date, isFile, originalName, id }) => {
+  const handleContextMenu = (e, id) => {
     e.preventDefault();
 
     const { pageX, pageY } = e;
     dispatch(
-      setContextMenu({ contextMenu: { show: true, x: pageX, y: pageY } })
+      setContextMenu({
+        contextMenu: { show: true, x: pageX, y: pageY, id: id },
+      })
     );
   };
   // msg may be a text / a multiline text or a fileID
@@ -68,7 +70,7 @@ const NewMessage = ({ user, msg, date, isFile, originalName }) => {
   return (
     <div
       className="element messageDiv"
-      onContextMenu={(event) => handleContextMenu(event)}
+      onContextMenu={(event) => handleContextMenu(event, id)}
     >
       <div className="author">{user}</div>
       <div className="message">
@@ -112,10 +114,15 @@ const Chat = () => {
     const CategoriesJSX = () =>
       reduxData.rooms.map((room) => (
         <li className="category" id={room._id}>
-          <a className="hyperlink" onClick={() => {
-            history.push(`/chat/${room._id}`);
-            window.location.reload();
-            }}># {room.name}</a>
+          <a
+            className="hyperlink"
+            onClick={() => {
+              history.push(`/chat/${room._id}`);
+              window.location.reload();
+            }}
+          >
+            # {room.name}
+          </a>
           {/* <Link to={`/chat/${room._id}`}>
             # {room.name}
           </Link> */}
@@ -230,6 +237,7 @@ const Chat = () => {
               date={el[2]}
               isFile={el[3]}
               originalName={el[4]}
+              id={el[5]}
             />
           ))}
           <div id="last-element"></div>
@@ -368,6 +376,7 @@ const Chat = () => {
         <DeleteDiv
           x={interfacesRedux.contextMenu.x}
           y={interfacesRedux.contextMenu.y}
+          id={interfacesRedux.contextMenu.id}
         />
       ) : null}
     </div>

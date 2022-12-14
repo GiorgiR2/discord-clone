@@ -121,7 +121,7 @@ const PopupAddCat = () => {
       // alert("function not available...");
       let voiceBool = voiceChat();
       axios
-        .post("/api/addCategory", { name: name, voice: voiceBool })
+        .post(`${apiLink}/api/addCategory`, { name: name, voice: voiceBool })
         .then((res) => {
           if (res.data.status === "done") {
             let id = res.data._id;

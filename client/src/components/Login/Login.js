@@ -13,7 +13,7 @@ import packageJson from "../../../package.json";
 //     ? ""
 //     : "/discord-clone-react"; //packageJson.homepage;
 
-const server = packageJson.proxy; // "http://127.0.0.1:5000";
+const apiLink = packageJson.proxy; // "http://127.0.0.1:5000";
 
 const config = {
   "Access-Control-Allow-Origin": "*",
@@ -29,7 +29,7 @@ const Login = () => {
     };
 
     axios
-      .post(`${server}/api/users/login`, data, config)
+      .post(`${apiLink}/api/users/login`, data, config)
       .then((res) => {
         if (res.data.data === "done") {
           history.push("/chat"); // /?id=${res.data.data}

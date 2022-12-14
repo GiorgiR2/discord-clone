@@ -3,7 +3,12 @@ import io from "socket.io-client";
 import getTime from "./getTime";
 import packageJson from "../../../package.json";
 
-import { setOnline, setOffline, addMessage } from "../../features/users";
+import {
+  setOnline,
+  setOffline,
+  addMessage,
+  removeMessage,
+} from "../../features/users";
 
 const main = (reduxData, dispatch) => {
   if (socket.disconnected) socket = io.connect(domain);
@@ -43,9 +48,14 @@ const main = (reduxData, dispatch) => {
         el.date,
         el.isFile,
         el.isFile ? el.originalName : "",
+        el._id,
       ];
     });
     dispatch(addMessage({ messageList: msgList })); // message/messages
+  });
+
+  socket.on("messageDeleted", (data) => {
+    dispatch(removeMessage({ _id: data.id }));
   });
 
   socket.on("online", (data) => {
@@ -72,6 +82,10 @@ const main = (reduxData, dispatch) => {
 //     return `</a12>${url}</a12>`;
 //   });
 // };
+
+const sendDeleteStatus = (id) => {
+  socket.emit("deleteMessage", { _id: id });
+};
 
 const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
   // e.preventDefault();
@@ -123,4 +137,11 @@ const disconnect = () => socket.disconnect();
 const domain = packageJson.proxy;
 var socket = io.connect(domain);
 
-export { socket, main, sendMessage, sendFileData, disconnect };
+export {
+  socket,
+  main,
+  sendMessage,
+  sendFileData,
+  sendDeleteStatus,
+  disconnect,
+};

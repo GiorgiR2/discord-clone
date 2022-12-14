@@ -4,10 +4,13 @@ import { useEffect, useRef } from "react";
 
 import { useDispatch } from "react-redux";
 import { closeContext } from "../../../features/interface";
+import { removeMessage } from "../../../features/users";
+
+import { sendDeleteStatus } from "../../js/_socketSide";
 
 import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
 
-// hook is taken out of interet
+// This hook is taken out of internet
 const useOnClickOutside = (ref, handler) => {
   useEffect(
     () => {
@@ -35,16 +38,26 @@ const useOnClickOutside = (ref, handler) => {
   );
 };
 
-const DeleteDiv = ({ x, y }) => {
-  const editMSG = () => {
-    //Todo: send edit message using sockets
-  };
-  const deleteMSG = (id) => {
-    //Todo: send delete message using sockets
+const DeleteDiv = ({ x, y, id }) => {
+  const closeContextMenu = () => {
+    dispatch(closeContext());
   };
 
-  const closeContextMenu = (e) => {
-    dispatch(closeContext());
+  const editMSG = (id) => {
+    //Todo: send edit message using sockets
+    console.log("edit:", id);
+
+    closeContextMenu();
+  };
+  const deleteMSG = (id) => {
+    //Todo: remove message from redux states && send delete message using sockets
+    console.log("delete:", id);
+    dispatch(removeMessage({ _id: id }));
+
+    // sockets
+    sendDeleteStatus(id);
+
+    closeContextMenu();
   };
 
   const dispatch = useDispatch();
@@ -61,11 +74,11 @@ const DeleteDiv = ({ x, y }) => {
       {/*<h4>options</h4>*/}
       <nav>
         <ul>
-          <li id="edit" onClick={editMSG}>
+          <li id="edit" onClick={() => editMSG(id)}>
             <h3 className="edit">edit</h3>
             <EditSVG id="001" typeE="message" />
           </li>
-          <li id="delete" onClick={deleteMSG}>
+          <li id="delete" onClick={() => deleteMSG(id)}>
             <h3 className="delete">delete</h3>
             <TrashSVG id="001" typeE="message" />
           </li>

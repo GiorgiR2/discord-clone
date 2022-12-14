@@ -9,6 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 // import CamOff from './videoOff.svg';
 // import FullScreen0 from './fullScreen.svg';
 
+import packageJson from "../../../package.json";
+
+const apiLink = packageJson.proxy;
+
 const changeMode = (mediaData, setMediaData, button) => {
   // "data" should be immutable (send a new array each time)
   let data = { audio: mediaData.audio, video: mediaData.video };
@@ -48,7 +52,7 @@ const TrashSVG = ({ id, typeE }) => {
   const trash = (e) => {
     // e.preventDefault();
     axios
-      .post("/api/deleteCategory", { deleteId: id })
+      .post(`${apiLink}/api/deleteCategory`, { deleteId: id })
       .then((res) => {
         if (res.data.status === "deleted") {
           let newj = [];
