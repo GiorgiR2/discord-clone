@@ -127,6 +127,11 @@ const main = (connectedUsers, usersInVoice) => {
       // console.log("sent (1)", room, message, "from", userNN);
     });
 
+    socket.on("deleteMessage", async (data) => {
+      Message.find({ _id: data._id }).remove().exec();
+      socket.in(data.room).emit("messageDeleted", { _id: data._id });
+    });
+
     socket.on("file", async (data) => {
       let authentication = data.authentication;
 
