@@ -32,11 +32,14 @@ svg
         border-bottom: 1px solid #ccc
 
     .categories,
+    .status-bar
+      min-width: 200px
+
+    .categories,
     .messages,
     .status-bar
       // height: 100vh
       height: -webkit-fill-available
-          
 
     .categories,
     .status-bar
@@ -112,8 +115,10 @@ svg
                 li
                     // font-size: 1em
                     font: 20px Lato, Arial, Sans-Serif
-                    margin-top: .4em
+                    margin-top: .15em
                     padding-left: .4em
+                    padding-top: 3px
+                    padding-bottom: 3px
 
                     display: flex
                     justify-content: space-between
@@ -225,6 +230,7 @@ svg
       #input
         flex: 0 1 65px
         margin-top: 1%
+        width: 100%
         // height: 80px
         // margin: 1%
         // background: lighten(red, 30%)
@@ -236,7 +242,7 @@ svg
           overflow: hidden !important
           height: 62px // 10vh
           width: 60.6vw // 99%
-          min-width: 100px
+          // min-width: 100px
           margin-left: .7vw
           background-color: #46637f
           border-radius: 3px
@@ -316,7 +322,6 @@ svg
         div
           background-color: #fff//green
 
-        
       .offline
         font-size: .8em
         color: darken(#fff, 30%)
@@ -334,6 +339,10 @@ svg
 ::-webkit-scrollbar-thumb
     border-radius: 10px
     background-color: #a6a6a6
+
+@media screen and (max-width: 1050px)
+  body .messages #input textarea
+    width: calc(100% - 410px) !important
 
 @media screen and (max-width: 850px)
     body
