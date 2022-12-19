@@ -9,7 +9,32 @@ const config = {
   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
 };
 
-const getBasicData = (history, dispatch, frame = "none") => {
+const getBasicData = (history, roomId, hashId, dispatch, frame = "none") => {
+  if (hashId !== undefined) {
+    console.log("hashId:", hashId);
+    axios
+      .post(`${apiLink}/api/users/hashId`, { hashId: hashId })
+      .then((res) => {
+        if (res.data.status === "success") {
+          console.log("success");
+          // if (frame !== "chat") history.push(`/chat/${roomId}/${hashId}`);
+          // else {
+          let username = res.data.username;
+          dispatch(setAuthentication(res.data.authentication));
+          dispatch(addUserName({ username: username }));
+          dispatch(addRooms({ rooms: res.data.categories }));
+          // }
+        } else {
+          console.log("status:", res.data.status);
+          console.log("pizdec", hashId);
+          history.push("/");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  return;
   axios
     .post(`${apiLink}/api/users/status`, { junk: "" }, config)
     .then((res) => {
@@ -28,9 +53,9 @@ const getBasicData = (history, dispatch, frame = "none") => {
         }
       } else if (history.location.pathname !== "/signup") {
         history.push("/");
-      } else {
-        // history.push("/");
-      }
+      } // else {
+      // history.push("/");
+      //}
       // console.log(`path: "${history.location.pathname}"`);
     })
     .catch((err) => {

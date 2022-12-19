@@ -119,9 +119,8 @@ const PopupAddCat = () => {
   const sendAddCommand = (event, name) => {
     if (name !== "") {
       // alert("function not available...");
-      let voiceBool = voiceChat();
       axios
-        .post(`${apiLink}/api/addCategory`, { name: name, voice: voiceBool })
+        .post(`${apiLink}/api/addCategory`, { name: name, voice: voiceChat() })
         .then((res) => {
           if (res.data.status === "done") {
             let id = res.data._id;
@@ -129,7 +128,7 @@ const PopupAddCat = () => {
             dispatch(togglePopupAdd());
             dispatch(
               addRoom({
-                room: { name: name, voice: voiceBool, _id: id },
+                room: { name: name, voice: voiceChat(), _id: id },
               })
             );
           } else if (res.data.status === "try_again") {
@@ -145,7 +144,7 @@ const PopupAddCat = () => {
   const reduxData = useSelector((state) => state.users.value);
   const dispatch = useDispatch();
 
-  const [options, setOptions] = useState({ chat: true, voic: false });
+  const [options, setOptions] = useState({ chat: true, voice: false });
 
   return (
     <div className="popup">

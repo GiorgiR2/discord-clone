@@ -50,8 +50,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy-old": "https://git.heroku.com/protected-caverns-46385.git",
-  "proxy": "http://127.0.0.1:5000",
+  "proxy0": "http://localhost:5000",
+  "proxy": "https://discord-clone-production-38ae.up.railway.app",
   "devDependencies": {
     "gh-pages": "^4.0.0",
     "node-sass": "^7.0.1"

@@ -38,7 +38,7 @@ const SignUp = () => {
   document.title = "sign up";
 
   useEffect(() => {
-    getBasicData(history);
+    getBasicData(history, undefined, undefined);
   }, []);
 
   return (

@@ -36,14 +36,13 @@ import sendSVG from "../../icons/send-24px.svg";
 import fileSVG from "../../icons/fileIcon.svg";
 
 const apiLink = packageJson.proxy;
-const startPoint = "";
 
 const logOut = (e, history, dispatch) => {
   e.preventDefault();
   axios
     .post(`${apiLink}/api/users/logout`, { junk: "" })
     .then((res) => {
-      if (res.data.status === "done") history.push(`${startPoint}/`);
+      if (res.data.status === "done") history.push(`/`);
     })
     .catch((err) => console.error(err));
 
@@ -91,9 +90,23 @@ const NewMessage = ({ user, msg, date, isFile, originalName, id }) => {
 };
 
 const Chat = () => {
-  const checkRoomId = (roomId, history) => {
-    if (roomId === undefined)
-      history.push(`${startPoint}/chat/61ed960432479c682956802b`); // roomId = "61ed960432479c682956802b";
+  const checkHashId = (hashId, history) => {
+    return;
+    if (hashId !== undefined) {
+      axios
+        .post(`${apiLink}/api/users/hashId`, { hashId: hashId })
+        .then((res) => {
+          if (res.data.status !== "success") {
+            history.push("/");
+          }
+        });
+    } else {
+      history.push("/");
+    }
+  };
+  const checkRoomId = (roomId, hashId, history) => {
+    if (roomId === undefined || hashId === undefined)
+      history.push(`/chat/61ed960432479c682956802b/${hashId}`); // roomId = "61ed960432479c682956802b";
 
     axios
       .post(`${apiLink}/api/roomId`, { id: roomId })
@@ -102,7 +115,7 @@ const Chat = () => {
           dispatch(setRoomName({ name: res.data.roomName }));
           if (res.data.voiceMode) dispatch(setVoiceMode({ bool: true }));
         } else {
-          history.push(`${startPoint}/chat/61ed960432479c682956802b`); // roomId = "61ed960432479c682956802b";
+          history.push(`/chat/61ed960432479c682956802b/${hashId}`); // roomId = "61ed960432479c682956802b";
           dispatch(setRoomName({ name: "room 1" }));
           dispatch(setVoiceMode({ bool: false }));
         }
@@ -117,7 +130,7 @@ const Chat = () => {
           <a
             className="hyperlink"
             onClick={() => {
-              history.push(`/chat/${room._id}`);
+              history.push(`/chat/${room._id}/${hashId}`);
               window.location.reload();
             }}
           >
@@ -342,13 +355,16 @@ const Chat = () => {
   const reduxData = useSelector((state) => state.users.value);
   const interfacesRedux = useSelector((state) => state.interfaces.value);
 
-  let { roomId } = useParams();
+  let { roomId, hashId } = useParams();
   const history = useHistory();
 
   useLayoutEffect(() => {
-    checkRoomId(roomId, history);
+    checkHashId(hashId, history);
+    checkRoomId(roomId, hashId, history);
+    console.log("roomId:", roomId);
+    console.log("hashId:", hashId);
 
-    getBasicData(history, dispatch, "chat");
+    getBasicData(history, roomId, hashId, dispatch, "chat");
   }, []);
 
   useEffect(() => {

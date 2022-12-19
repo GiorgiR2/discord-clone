@@ -5,6 +5,8 @@ const { saveModel } = require("./saveModel");
 
 const mongoose = require("mongoose");
 
+var sha1 = require("sha1");
+
 const checkUser = (username) => {
   let user = UserModel.find({
     username: username,
@@ -16,6 +18,11 @@ const checkUser = (username) => {
   return {};
 };
 
+const bufferData = (username, password) => {
+  let hash = sha1(`${username}${password}`);
+  return hash;
+};
+
 const registerUser = async (username, password0, password1, res) => {
   const doc = await UserModel.find({
     username: username,
@@ -25,7 +32,8 @@ const registerUser = async (username, password0, password1, res) => {
     let user = new UserModel({
       _id: new mongoose.Types.ObjectId(),
       username: username,
-      password: password0, // hash: buffer_data,
+      password: password0,
+      hash: bufferData(username, password0),
       ip: "",
     });
 
@@ -83,19 +91,46 @@ const checkIp = async (ip) => {
   } else return { status: "0" };
 };
 
+const checkData = async (hashId) => {
+  // console.log("checking id...", hashId);
+  const doc = await UserModel.find({
+    hashId: hashId,
+  }).exec();
+
+  if (doc.length !== 0) {
+    let cats = await catOps.loadCats();
+
+    return {
+      status: "success",
+      username: doc[0].username,
+      categories: cats,
+      authentication: doc[0]._id,
+    };
+  } else return { status: "0" };
+};
+
 const checkLogin = async (username, password) => {
   let doc = await UserModel.find({
     username: username,
   }).exec();
 
-  if (doc[0] == undefined) return "try again";
-  else {
+  // console.log("\n checking \n");
+  if (doc[0] == undefined) {
+    return "try again";
+  } else {
     let pswrd = String(doc[0].password);
-    console.log(pswrd === password);
-    if (password === pswrd)
-      // return doc[0].hash;
-      return "done";
-    else return "try again";
+    //console.log(pswrd === password);
+    if (password === pswrd) {
+      let hash = doc[0].hashId;
+      // console.log("hashId:", doc[0]);
+      return {
+        status: "done",
+        roomId: "61ed960432479c682956838e",
+        hashId: hash,
+      };
+    } else {
+      return "try again";
+    }
   }
 };
 
@@ -124,5 +159,6 @@ module.exports = {
   checkLogin,
   removeIp,
   checkIp,
+  checkData,
   usersStatus,
 };

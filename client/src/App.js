@@ -14,7 +14,8 @@ const App = () => {
         <Route exact path="/" component={Login} />
         <Route path="/signup" component={SignUp} />
         {/* <Route exact path="/chat/id=:id" component={Chat} /> */}
-        <Route path="/chat/:roomId" component={Chat} />
+        {/*<Route path="/chat(/:roomId)(/:hash)" component={Chat} />*/}
+        <Route path="/chat/:roomId/:hashId" component={Chat} />
         <Route component={Chat} />
       </Switch>
     </Router>

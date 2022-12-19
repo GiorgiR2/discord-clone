@@ -3,56 +3,57 @@
 @import '../../styles/_variables'
 
 .webrtc
+    flex: 1 1 auto
     margin: 0 auto
-    height: 100%
+    height: calc(100vh - 48px)
     width: 98%
+    overflow: hidden
+    
+    background-color: #2e4153
 
     .windows
-        // width: 100%
-        height: calc(100% - 95px)
-        overflow: hidden
-        overflow-y: scroll
-        background-color: #283848
-        padding: 0 5px 0 5px
+      height: calc(100% - 60px)
+      overflow: hidden
+      overflow-y: scroll
+      background-color: #283848
+      padding: 0 5px 0 5px
 
-        // display: flex
-        // flex-direction:	column
-        // justify-content: space-between
+      // display: flex
+      // flex-direction:	column
+      // justify-content: space-between
 
-        display: grid
-        column-gap: 10px
-        grid-template-columns: 50% 50%
+      display: grid
+      column-gap: 10px
+      grid-template-columns: 50% 50%
 
-        .frame
-            width: 100%//300px
-            height: 160px
-            // background-color: red
+      .frame
+          width: 100%
+          height: 160px
 
-            .name
-                font-size: 16px
+          .name
+              font-size: 16px
+          
+          .video
+              position: relative
+              top: -20px
+              margin-top: 25px
+              width: 100%
+              height: 90%
 
-            .video
-                position: relative
-                top: -20px
-                margin-top: 25px
-                width: 100%
-                height: 90%
-
-            .statusLabel
-                position: relative
-                color: $fg-color
-                top: -100px
-                left: calc(50% - 35px)
-                z-index: 3
-                font-size: 0.8em
-                // height: 140px
-                // width: 190px
-                // text-align: center
-                // background-color: red
-
+          .statusLabel
+              position: relative
+              color: $fg-color
+              top: -100px
+              left: calc(50% - 35px)
+              z-index: 3
+              font-size: 0.8em
+              // height: 140px
+              // width: 190px
+              // text-align: center
 
     .bottom
         display: flex
+        justify-content: space-between
         
         .icons
             margin-left: 5px
@@ -79,8 +80,21 @@
                     fill: $fg-color
 
         .egress
-            display: table
+            // display: table
             height: 40px
             width: 100px
-            margin: 8px 0 2px calc(50% - 160px)
+            margin-top: 8px
             cursor: pointer
+
+        .p2p
+          font-size: 0.8rem
+
+@media screen and (max-width: 850px)
+  body .messages .webrtc
+    width: 100% !important
+    height: calc(100vh - 90px) !important
+    // background-color: red !important
+
+    .windows
+        // background-color: red !important
+

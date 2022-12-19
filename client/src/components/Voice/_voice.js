@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { socket } from "../js/_socketSide";
 import { useSelector, useDispatch } from "react-redux";
 
+import { useHistory, useParams } from "react-router-dom";
+
 import Peer from "simple-peer";
 
 import {
@@ -17,8 +19,8 @@ import {
 
 import "./_voice.sass";
 
-const egress = (history) => {
-  history.push("/");
+const egress = (history, roomId, hashId) => {
+  history.push(`/chat/61ed960432479c682956838e/${hashId}`);
 };
 
 const Frame = ({ name, status, videoStream }) => (
@@ -93,6 +95,9 @@ const VoiceFrame = () => {
       });
   }, [mediaData]);
 
+  const history = useHistory();
+  let { roomId, hashId } = useParams();
+
   return (
     <div className="webrtc">
       <div className="windows">
@@ -120,9 +125,16 @@ const VoiceFrame = () => {
 
           <ScreenShareOn mediaData={mediaData} setMediaData={setMediaData} />
         </div>
-        <button className="egress" onClick={() => egress()}>
+        <a
+          className="egress"
+          onClick={() => {
+            history.push(`/chat/61ed960432479c682956838e/${hashId}`);
+            window.location.reload();
+          }}
+        >
           egress
-        </button>
+        </a>
+        <h4 className="p2p">p2p connection</h4>
       </div>
     </div>
   );

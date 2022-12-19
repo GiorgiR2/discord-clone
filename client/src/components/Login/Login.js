@@ -31,8 +31,9 @@ const Login = () => {
     axios
       .post(`${apiLink}/api/users/login`, data, config)
       .then((res) => {
-        if (res.data.data === "done") {
-          history.push("/chat"); // /?id=${res.data.data}
+        if (res.data.status === "done") {
+          // console.log("data !!!!!!!!!!!!!!!!!!!!:", res.data);
+          history.push(`/chat/${res.data.roomId}/${res.data.hashId}`); // /?id=${res.data.data}
         } else {
           alert("Try again...");
         }
@@ -53,7 +54,7 @@ const Login = () => {
       alert("registration is done...");
     }
 
-    getBasicData(history);
+    getBasicData(history, undefined, undefined);
   }, []);
 
   return (

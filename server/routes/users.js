@@ -5,6 +5,8 @@ const router = express.Router();
 
 const ops = require("../js/userOperations.js");
 
+const usersModel = require("../models/user.model");
+
 router.use(bp.json());
 router.use(bp.urlencoded({ extended: true }));
 
@@ -30,9 +32,12 @@ router.post("/api/users/login", async (req, res) => {
   let password = await req.body.password;
 
   let data = await ops.checkLogin(username, password);
-  if (data === "done") await ops.addIp(username, ip);
-
-  await res.send({ data: data });
+  if (data.status === "done") {
+    await ops.addIp(username, ip);
+    await res.send(data);
+  } else {
+    res.send({ status: "tryAgain" });
+  }
 });
 
 router.post("/api/users/logout", async (req, res) => {
@@ -43,10 +48,28 @@ router.post("/api/users/logout", async (req, res) => {
 });
 
 router.post("/api/users/status", async (req, res) => {
+  // do nothing, authentication using ip address doesn't really works
+  return;
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
   const data = await ops.checkIp(ip); //  { status: "0" } or "1"(with other params)
   res.send(data);
+});
+
+router.post("/api/users/hashId", async (req, res) => {
+  try {
+    let name = await usersModel
+      .find({
+        hashId: req.body.hashId,
+      })
+      .exec();
+
+    const data = await ops.checkData(req.body.hashId);
+    await res.send(data);
+    console.log("user hash successfully authenticated:", data, req.body.hash);
+  } catch {
+    await res.send({ roomName: "IncorrectHash" });
+  }
 });
 
 module.exports = router;
