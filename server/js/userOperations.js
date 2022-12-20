@@ -33,7 +33,7 @@ const registerUser = async (username, password0, password1, res) => {
       _id: new mongoose.Types.ObjectId(),
       username: username,
       password: password0,
-      hash: bufferData(username, password0),
+      hashId: bufferData(username, password0),
       ip: "",
     });
 
