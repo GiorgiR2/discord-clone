@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
 import axios from "axios";
 
-import { getBasicData } from "../js/_getBasicData";
+import { getBasicData } from "../../scripts/_getBasicData";
 
 import "./_login.sass";
 import packageJson from "../../../package.json";

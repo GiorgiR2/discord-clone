@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 
-import { getBasicData } from "../js/_getBasicData";
+import { getBasicData } from "../../scripts/_getBasicData";
 import packageJson from "../../../package.json";
 
 import "./_sign-up.sass";

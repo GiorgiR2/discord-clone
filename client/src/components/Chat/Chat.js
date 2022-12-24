@@ -22,18 +22,18 @@ import DeleteDiv from "./deleteDiv/deleteDiv";
 
 import "./_chat.sass";
 
-import getTime from "../js/getTime";
+import getTime from "../../scripts/getTime";
 import packageJson from "../../../package.json";
-import { getBasicData } from "../js/_getBasicData";
-import * as socks from "../js/_socketSide";
+import { getBasicData } from "../../scripts/_getBasicData";
+import * as socks from "../../scripts/_socketSide";
 
 // import { WebRTCFrame } from '../WebRTCInteractive/WebRTCInteractive';
 import { VoiceFrame } from "../Voice/_voice";
 import { PopupEditCat, PopupAddCat } from "./editCategory/_editCat";
 import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
-import egressSVG from "../../icons/egress.svg";
-import sendSVG from "../../icons/send-24px.svg";
-import fileSVG from "../../icons/fileIcon.svg";
+import egressSVG from "../../assets/egress.svg";
+import sendSVG from "../../assets/send-24px.svg";
+import fileSVG from "../../assets/fileIcon.svg";
 
 const apiLink = packageJson.proxy;
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { socket } from "../js/_socketSide";
+import { socket } from "../../scripts/_socketSide";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useHistory, useParams } from "react-router-dom";
@@ -27,7 +27,8 @@ const Frame = ({ name, status, videoStream }) => (
   <div className="frame">
     <h4 className="name">{name}:</h4>
     {/* style={{height: 150, width: 100}} */}
-    <video className="video" autoPlay controls ref={videoStream} />
+    <video className="video" ref={videoStream} autoPlay playsInLine />
+    {/*controls*/}
     <h4 className="statusLabel">{status}</h4>
   </div>
 );
@@ -75,7 +76,6 @@ const VoiceFrame = () => {
     navigator.mediaDevices
       .getUserMedia(mediaData)
       .then((stream) => {
-        // console.log(stream);
         setMediaStream(stream);
         videoStreams[0].current.srcObject = stream;
 
@@ -140,27 +140,15 @@ const VoiceFrame = () => {
   );
 };
 
-const screenShareOn = () => {
+const toggleScreenShare = () => {
   // pass
 };
 
-const screenShareOff = () => {
+const toggleWebCam = () => {
   // pass
 };
 
-const webCamOn = () => {
-  // pass
-};
-
-const webCamOff = () => {
-  // pass
-};
-
-const micOn = () => {
-  // pass
-};
-
-const micOff = () => {
+const toggleMic = () => {
   // pass
 };
 

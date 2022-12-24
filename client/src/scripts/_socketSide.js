@@ -1,14 +1,14 @@
 import io from "socket.io-client";
 
 import getTime from "./getTime";
-import packageJson from "../../../package.json";
+import packageJson from "../../package.json";
 
 import {
   setOnline,
   setOffline,
   addMessage,
   removeMessage,
-} from "../../features/users";
+} from "../features/users";
 
 const main = (reduxData, dispatch) => {
   if (socket.disconnected) socket = io.connect(domain);

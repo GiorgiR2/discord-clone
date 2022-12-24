@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { closeContext } from "../../../features/interface";
 import { removeMessage } from "../../../features/users";
 
-import { sendDeleteStatus } from "../../js/_socketSide";
+import { sendDeleteStatus } from "../../../scripts/_socketSide";
 
 import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
 
