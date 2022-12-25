@@ -5,17 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useHistory, useParams } from "react-router-dom";
 
-import Peer from "simple-peer";
+import MicOff from "../../styles/SVGs/micOff.svg";
+import MicOn from "../../styles/SVGs/micOn.svg";
+import CamOff from "../../styles/SVGs/camOff.svg";
+import CamOn from "../../styles/SVGs/camOn.svg";
 
-import {
-  MicSVGOff,
-  MicSVGOn,
-  CamSVGOff,
-  CamSVGOn,
-  ScreenShareOff,
-  ScreenShareOn,
-  FullScreen,
-} from "../../styles/SVGs/_SVGs";
+// import Peer from "simple-peer";
+
+import { changeMode } from "./_functions";
+import { ScreenShareOn } from "../../styles/SVGs/_SVGs";
 
 import "./_voice.sass";
 
@@ -112,16 +110,16 @@ const VoiceFrame = () => {
 
       <div className="bottom">
         <div className="icons">
-          {mediaData.audio ? (
-            <MicSVGOn mediaData={mediaData} setMediaData={setMediaData} />
-          ) : (
-            <MicSVGOff mediaData={mediaData} setMediaData={setMediaData} />
-          )}
-          {mediaData.video ? (
-            <CamSVGOn mediaData={mediaData} setMediaData={setMediaData} />
-          ) : (
-            <CamSVGOff mediaData={mediaData} setMediaData={setMediaData} />
-          )}
+          <img
+            className="svg micon"
+            src={mediaData.audio ? MicOn : MicOff}
+            onClick={() => changeMode(mediaData, setMediaData, "audio")}
+          />
+          <img
+            className="svg camon"
+            src={mediaData.video ? CamOn : CamOff}
+            onClick={() => changeMode(mediaData, setMediaData, "video")}
+          />
 
           <ScreenShareOn mediaData={mediaData} setMediaData={setMediaData} />
         </div>
@@ -138,18 +136,6 @@ const VoiceFrame = () => {
       </div>
     </div>
   );
-};
-
-const toggleScreenShare = () => {
-  // pass
-};
-
-const toggleWebCam = () => {
-  // pass
-};
-
-const toggleMic = () => {
-  // pass
 };
 
 const checkMode = (voiceMode, setStatusLabel) => {
