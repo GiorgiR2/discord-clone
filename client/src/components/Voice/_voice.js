@@ -5,15 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useHistory, useParams } from "react-router-dom";
 
-import MicOff from "../../styles/SVGs/micOff.svg";
-import MicOn from "../../styles/SVGs/micOn.svg";
-import CamOff from "../../styles/SVGs/camOff.svg";
-import CamOn from "../../styles/SVGs/camOn.svg";
+import MicOff from "../../assets/voice/micOff.svg";
+import MicOn from "../../assets/voice/micOn.svg";
+import CamOff from "../../assets/voice/camOff.svg";
+import CamOn from "../../assets/voice/camOn.svg";
+import ScreenShare from "../../assets/voice/screenShare.svg";
 
 // import Peer from "simple-peer";
 
 import { changeMode } from "./_functions";
-import { ScreenShareOn } from "../../styles/SVGs/_SVGs";
 
 import "./_voice.sass";
 
@@ -120,8 +120,8 @@ const VoiceFrame = () => {
             src={mediaData.video ? CamOn : CamOff}
             onClick={() => changeMode(mediaData, setMediaData, "video")}
           />
-
-          <ScreenShareOn mediaData={mediaData} setMediaData={setMediaData} />
+          
+          <img className="svg screenon" src={ScreenShare} />
         </div>
         <a
           className="egress"

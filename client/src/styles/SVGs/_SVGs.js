@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Edit from "./edit.svg";
 import Trash from "./trash.svg";
-import ScreenShare from "./screenShare.svg";
 
 import packageJson from "../../../package.json";
 
@@ -62,8 +61,4 @@ const TrashSVG = ({ id, typeE }) => {
   );
 };
 
-const ScreenShareOn = ({ mediaData, setMediaData }) => (
-  <img className="svg screenon" src={ScreenShare} />
-);
-
-export { EditSVG, TrashSVG, ScreenShareOn };
+export { EditSVG, TrashSVG };
