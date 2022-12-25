@@ -50,7 +50,6 @@ cd client && npm i && npm start
 | video/audio chat                          | p2p connection (using webrtc/simple-peer)         | under development      |
 | add/edit/delete rooms                     | -                                                 | done                   |
 | edit/delete messages                      | -                                                 | -                      |
-| p2p audio/video chat                      | -                                                 | -                      |
 
 ## Screens
 ...
@@ -77,7 +76,7 @@ Sign Up window
 
 ## Future Plans
 
-Rewrite it all in Next.ts
+Rewrite everything in Typescript
 
 ## Contact
 
