@@ -16,7 +16,7 @@ const getBasicData = (history, roomId, hashId, dispatch, frame = "none") => {
       .post(`${apiLink}/api/users/hashId`, { hashId: hashId })
       .then((res) => {
         if (res.data.status === "success") {
-          console.log("success");
+          // console.log("success");
           // if (frame !== "chat") history.push(`/chat/${roomId}/${hashId}`);
           // else {
           let username = res.data.username;
@@ -25,8 +25,7 @@ const getBasicData = (history, roomId, hashId, dispatch, frame = "none") => {
           dispatch(addRooms({ rooms: res.data.categories }));
           // }
         } else {
-          console.log("status:", res.data.status);
-          console.log("pizdec", hashId);
+          // console.log("status:", res.data.status);
           history.push("/");
         }
       })
@@ -35,33 +34,6 @@ const getBasicData = (history, roomId, hashId, dispatch, frame = "none") => {
       });
   }
   return;
-  axios
-    .post(`${apiLink}/api/users/status`, { junk: "" }, config)
-    .then((res) => {
-      // console.log(`pathname: '${history.location.pathname}'`);
-      if (res.data.status === "1") {
-        if (frame !== "chat") history.push("/chat");
-        else {
-          // else if (setAuthentication) // no idea why I had this
-          let username = res.data.username;
-          dispatch(setAuthentication(res.data.authentication));
-          dispatch(addUserName({ username: username }));
-          //setUserName(username);
-
-          console.log(res.data.categories);
-          dispatch(addRooms({ rooms: res.data.categories }));
-        }
-      } else if (history.location.pathname !== "/signup") {
-        history.push("/");
-      } // else {
-      // history.push("/");
-      //}
-      // console.log(`path: "${history.location.pathname}"`);
-    })
-    .catch((err) => {
-      console.error("error", err);
-      // history.push('/');
-    });
 };
 
 export { getBasicData };

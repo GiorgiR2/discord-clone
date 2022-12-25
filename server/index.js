@@ -155,7 +155,9 @@ const main = (connectedUsers, usersInVoice) => {
       });
     });
 
-    // voice
+    // #################################
+    // #      WebRTC Signalling        #
+    // #################################
 
     socket.on("join voice", (data, callback) => {
       let room = data.roomId;
@@ -181,36 +183,6 @@ const main = (connectedUsers, usersInVoice) => {
         });
       }
     });
-
-    // signaling webRTC
-
-    // socket.on('join voice', (data, callback) => { // { roomId }
-    //     let id = socket.id;
-    //     let room = data.room;
-    //     let iceCandidate = data.iceCandidate;
-
-    //     let payload = {
-    //         id: id,
-    //         iceCandidate: iceCandidate,
-    //     }
-
-    //     if (usersInVoice[room])
-    //         usersInVoice[room].push(payload);
-    //     else
-    //         usersInVoice[room] = [payload];
-
-    //     // element[0] === id
-    //     const otherUsers = usersInVoice[room].filter(element => element.id !== id);
-    //     if (otherUsers) {
-    //         // send data to user just connected
-    //         socket.emit("users online", otherUsers); // [[socket.id, ice-candidate], [], []]
-
-    //         // send new user data to all others
-    //         otherUsers.forEach(user => {
-    //             socket.to(user).emit("user joined", payload);
-    //         });
-    //     }
-    // });
   });
 
   server.listen(PORT, () => console.log(`Server is on PORT: ${PORT}`));

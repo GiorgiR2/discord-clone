@@ -78,11 +78,13 @@ const Login = () => {
         onChange={(event) => setPassword(event.target.value)}
       />
 
-      <form onSubmit={(event) => sendLoginData(event, userName, password)}>
-        <button type="submit" className="go-button">
-          GO
-        </button>
-      </form>
+      <button
+        type="submit"
+        className="go-button"
+        onClick={(event) => sendLoginData(event, userName, password)}
+      >
+        GO
+      </button>
 
       {/* <a href="/signup" className="sign-up-button">
         Sign up
