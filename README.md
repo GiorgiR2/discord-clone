@@ -4,52 +4,39 @@
 * React.js - front-end
 * Redux - state managment
 * Node - back-end
-* socket.io - sending messages / status bar data
+* socket.io - sending messages (and some other kind of data)
 * RestAPI
 * WebRTC - p2p audio/video transfer
 
 ## Overview
 ...
 
-## Getting Started
-
-1. clone repo
-```sh
-git clone https://github.com/GiorgiR2/discord-clone.git
-```
-
-2. cd directory
-```sh
-cd discord-mern
-```
-
-3. add server/.env file with PORT && MONGO_ADDRESS
+## .env setup
+Add server/.env file with PORT && MONGO_ADDRESS ```touch server/.env```
 
 Example:
-
 ```sh
 PORT = 5000
 MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 ```
 
-4. Install Packages && Run Server-Side
-```sh
-cd server && npm i && npm start
-```
+## Installations
 
-5. Install Packages && Run Client-Side
-```sh
-cd client && npm i && npm start
-```
+1. ```git clone https://github.com/GiorgiR2/discord-clone.git```
+2. ```cd discord-mern```
+3. Install Packages && Run back-end ```cd server && npm i && npm start```
+4. Install Packages && Run front-end ```cd client && npm i && npm start```
+
 
 ## Functions
 
 | Function                                  | Description                                       | Status                 |
 |-------------------------------------------|---------------------------------------------------|------------------------|
 | send messages/files                       | -                                                 | done                   |
-| video/audio chat                          | p2p connection (using webrtc/simple-peer)         | under development      |
+| video/audio group chat                    | p2p connection (using webrtc/simple-peer)         | under development      |
 | add/edit/delete rooms                     | -                                                 | done                   |
 | edit/delete messages                      | -                                                 | -                      |
+| hash based authentication                 | -                                                 | done                   |
 
 ## Screens
 ...
