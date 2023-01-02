@@ -10,7 +10,11 @@ const config = {
 };
 
 const getBasicData = (history, roomId, hashId, dispatch, frame = "none") => {
-  if (hashId !== undefined) {
+  if (hashId === undefined && localStorage.getItem("hashId") !== null) {
+    roomId = "61ed960432479c682956802b";
+    hashId = localStorage.getItem("hashId");
+    history.push(`/chat/${roomId}/${hashId}`);
+  } else if (hashId !== undefined) {
     console.log("hashId:", hashId);
     axios
       .post(`${apiLink}/api/users/hashId`, { hashId: hashId })
