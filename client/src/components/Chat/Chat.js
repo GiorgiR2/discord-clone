@@ -42,7 +42,10 @@ const logOut = (e, history, dispatch) => {
   axios
     .post(`${apiLink}/api/users/logout`, { junk: "" })
     .then((res) => {
-      if (res.data.status === "done") history.push(`/`);
+      if (res.data.status === "done") {
+        localStorage.removeItem("hashId");
+        history.push(`/`);
+      }
     })
     .catch((err) => console.error(err));
 
@@ -50,7 +53,8 @@ const logOut = (e, history, dispatch) => {
   socks.disconnect();
 };
 
-const NewMessage = ({ user, msg, date, isFile, originalName, id }) => {
+// user, msg, date, isFile, originalName, id, editMode,
+const MessagesDivs = ({ reduxData }) => {
   const handleContextMenu = (e, id) => {
     e.preventDefault();
 
@@ -61,32 +65,49 @@ const NewMessage = ({ user, msg, date, isFile, originalName, id }) => {
       })
     );
   };
-  // msg may be a text / a multiline text or a fileID
-  let link = `${apiLink}/file/${msg}`; // msg === Id
+  const handleOnInput = (event) => {
+    //pass
+  };
+  const handleOnBlur = (event, id) => {
+    //Todo: get p content, update that specific line and then send post request
+  };
 
   const dispatch = useDispatch();
 
-  return (
-    <div
-      className="element messageDiv"
-      onContextMenu={(event) => handleContextMenu(event, id)}
-    >
-      <div className="author">{user}</div>
-      <div className="message">
-        {isFile ? (
-          <div className="fileDiv">
-            <img src={fileSVG} className="fileSVG" />
-            <a href={link} rel="noreferrer" target="_blank" className="name">
-              {originalName}
-            </a>
-          </div>
-        ) : (
-          msg.split("\n").map((line) => <div>{line}</div>)
-        )}
+  return reduxData.messages.map((el) => {
+    // msg may be a text / a multiline text or a fileID
+    let link = `${apiLink}/file/${el[1]}`; // msg === Id
+
+    return (
+      <div
+        className="element messageDiv"
+        onContextMenu={(event) => handleContextMenu(event, el[5])}
+      >
+        <div className="author">{el[0]}</div>
+        <div className="message">
+          {el[3] ? (
+            <div className="fileDiv">
+              <img src={fileSVG} className="fileSVG" />
+              <a href={link} rel="noreferrer" target="_blank" className="name">
+                {el[4]}
+              </a>
+            </div>
+          ) : (
+            el[1].split("\n").map((line) => (
+              <p
+                onInput={(event) => handleOnInput(event)}
+                onBlur={(event) => handleOnBlur(event, el[5])}
+                contentEditable={el[6]}
+              >
+                {line}
+              </p>
+            ))
+          )}
+        </div>
+        <div className="date">{el[2]}</div>
       </div>
-      <div className="date">{date}</div>
-    </div>
-  );
+    );
+  });
 };
 
 const Chat = () => {
@@ -243,16 +264,7 @@ const Chat = () => {
               <div>date</div>
             </div>
           </div>
-          {reduxData.messages.map((el) => (
-            <NewMessage
-              user={el[0]}
-              msg={el[1]}
-              date={el[2]}
-              isFile={el[3]}
-              originalName={el[4]}
-              id={el[5]}
-            />
-          ))}
+          <MessagesDivs reduxData={reduxData} />
           <div id="last-element"></div>
         </div>
         <div id="input">

@@ -4,39 +4,34 @@
 @import '../../styles/go-button'
 
 .login
-    min-width: 360px
-
     display: grid
-    grid-template-columns: 90px 200px 30px
+    // grid-template-columns: 90px 200px 30px
     grid-column-gap: 3px
     grid-row-gap: 4px
 
     position: absolute
     top: 50%
     left: 50%
-    transform: translate(-170px, -70px)
-
-    a
-        text-decoration: none
-        grid-area: 4 / 2
+    transform: translate(-50%, -50%)
 
     h2
-        font-size: 17px
+      font-size: 0.85rem
 
-    .title
-        font-size: 20px
-        grid-area: 1 / 1
-        margin-bottom: 10px
+    .label
+      margin-top: 8px
+      margin-right: 15px
 
-    .username
-        grid-column: 1
-        grid-row: 2
-        margin-top: 2px
+    .LogInTitle
+      font-size: 24px
+      color: #fff
+      grid-area: 1 / 1
+      margin-bottom: 10px
 
-    .password
-        grid-column: 1
-        grid-row: 3
-        margin-top: 4px
+    .usernameLabel
+        grid-area: 2 / 1
+
+    .passwordLabel
+        grid-area: 3 / 1
 
     input
         resize: none
@@ -45,8 +40,9 @@
         height: 28px
 
     .go-button
-        grid-area: 3 / 3
-        width: 42px
+      grid-area: 3 / 3
+      font-size: 0.8rem
+      height: 25px
 
     .e-name
         grid-area: 2 / 2
@@ -54,10 +50,57 @@
     .e-pass
         grid-area: 3 / 2
 
-    .sign-up-button
-        color: darken($fg-color, 20%)
-        transition: .2s
+    .rememberMe
+      display: flex
+      grid-area: 4 / 2
 
-        &:hover,
-        &:active
-            color: lighten($fg-color, 5%)
+      input
+        height: 20px
+        width: 20px
+        margin-right: 8px
+
+
+    .sign-up-button
+      grid-area: 6 / 2
+      color: #000
+      background-color: #f4f4f4
+      text-decoration: none
+
+      padding: 5px 10px 5px 0px
+      width: 200px
+
+      text-align: center
+
+      transition: .2s
+    
+      &:hover,
+      &:active
+        color: lighten($fg-color, 5%)
+
+@media screen and (max-width: 500px)
+  .login
+    .LogInTitle
+      grid-area: 1 / 1
+
+    .usernameLabel
+      grid-area: 2 / 1
+
+    .e-name
+      grid-area: 3 / 1
+
+    .passwordLabel
+      grid-area: 4 / 1
+
+    .e-pass
+      grid-area: 5 / 1
+
+    .rememberMe
+      grid-area: 6 / 1
+
+    .go-button
+      grid-area: 7 / 1
+      margin: 0
+
+    .sign-up-button
+      grid-area: 8 / 1
+      margin-top: 100px

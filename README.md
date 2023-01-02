@@ -20,7 +20,7 @@ PORT = 5000
 MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 ```
 
-## Installations
+## Installation
 
 1. ```git clone https://github.com/GiorgiR2/discord-clone.git```
 2. ```cd discord-mern```
@@ -35,8 +35,10 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 | send messages/files                       | -                                                 | done                   |
 | video/audio group chat                    | p2p connection (using webrtc/simple-peer)         | under development      |
 | add/edit/delete rooms                     | -                                                 | done                   |
-| edit/delete messages                      | -                                                 | -                      |
+| edit/delete messages                      | -                                                 | done                   |
 | hash based authentication                 | -                                                 | done                   |
+| end-to-end encryption                     | -                                                 | not yet                |
+| auto login (remember logged in users)     | use localstorage to store authentication hash     | not yet                |
 
 ## Screens
 ...

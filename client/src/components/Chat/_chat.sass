@@ -113,7 +113,6 @@ svg
                 padding-left: 6px
 
                 li
-                    // font-size: 1em
                     font: 20px Lato, Arial, Sans-Serif
                     margin-top: .15em
                     padding-left: .4em
@@ -126,10 +125,11 @@ svg
                     .svgs
                       display: flex
 
-                      svg, img
+                      img
                         opacity: 0
                         width: 25px
                         height: 25px
+                        cursor: pointer
 
                 li:hover,
                 li:active
@@ -137,21 +137,17 @@ svg
                     border-radius: 5px
 
                     a
-                        color: $fg-color
+                      color: $fg-color
 
                     svg, img
-                        opacity: 1
+                      opacity: 1
 
     .messages
       display: flex
       flex-direction: column
       width: 62vw
         
-      // height: calc(100vh - 10px)
       background-color: #2e4153
-      // background-color: $bg-color
-      // height: -webkit-fill-available
-      // padding: 1px
 
       #top
         flex: 0 1 auto
@@ -213,7 +209,7 @@ svg
                 margin-top: 9px
                 margin-left: 2px
 
-            div
+            div, p
               width: 100%
               word-break: break-word
 

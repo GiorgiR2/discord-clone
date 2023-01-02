@@ -43,10 +43,10 @@ const SignUp = () => {
 
   return (
     <div className="sign-up">
-      <h2 className="sign-up-title">sign up</h2>
-      <h2 className="username">UserName:</h2>
-      <h2 className="password00">Password:</h2>
-      <h2 className="password01">Repeat Password:</h2>
+      <h2 className="signUpTitle">sign up</h2>
+      <h2 className="usernameLabel label">UserName:</h2>
+      <h2 className="passwordLabel0 label">Password:</h2>
+      <h2 className="passwordLabel1 label">Repeat Password:</h2>
 
       <input
         type="text"

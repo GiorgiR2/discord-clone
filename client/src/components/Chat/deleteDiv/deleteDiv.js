@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { useDispatch } from "react-redux";
 import { closeContext } from "../../../features/interface";
-import { removeMessage } from "../../../features/users";
+import { removeMessage, enterEditMode } from "../../../features/users";
 
 import { sendDeleteStatus } from "../../../scripts/_socketSide";
 
@@ -46,6 +46,7 @@ const DeleteDiv = ({ x, y, id }) => {
   const editMSG = (id) => {
     //Todo: send edit message using sockets
     console.log("edit:", id);
+    dispatch(enterEditMode({ _id: id }));
 
     closeContextMenu();
   };

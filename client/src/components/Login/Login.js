@@ -21,6 +21,10 @@ const config = {
 };
 
 const Login = () => {
+  const rememberUser = (hashId) => {
+    console.log(`remember hashId: ${hashId}`);
+    localStorage.setItem("hashId", hashId);
+  };
   const sendLoginData = (e, user, pswrd) => {
     e.preventDefault();
     let data = {
@@ -32,7 +36,10 @@ const Login = () => {
       .post(`${apiLink}/api/users/login`, data, config)
       .then((res) => {
         if (res.data.status === "done") {
-          // console.log("data !!!!!!!!!!!!!!!!!!!!:", res.data);
+          if (remember === true) {
+            rememberUser(res.data.hashId);
+          }
+
           history.push(`/chat/${res.data.roomId}/${res.data.hashId}`); // /?id=${res.data.data}
         } else {
           alert("Try again...");
@@ -40,11 +47,14 @@ const Login = () => {
       })
       .catch((err) => console.error("error...", err));
   };
+
   document.title = "login section";
 
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
   const history = useHistory();
+
+  const [remember, setRemember] = useState(false);
 
   const queryParams = new URLSearchParams(window.location.search);
   // console.log(queryParams.get('status')===null);
@@ -59,9 +69,9 @@ const Login = () => {
 
   return (
     <div className="login">
-      <h2 className="title">Login</h2>
-      <h2 className="username">UserName:</h2>
-      <h2 className="password">Password:</h2>
+      <h2 className="LogInTitle">Login</h2>
+      <h2 className="usernameLabel label">UserName:</h2>
+      <h2 className="passwordLabel label">Password:</h2>
 
       <input
         type="text"
@@ -89,8 +99,18 @@ const Login = () => {
       {/* <a href="/signup" className="sign-up-button">
         Sign up
 </a>*/}
+      <div className="rememberMe">
+        <input
+          type="checkbox"
+          id="remember"
+          onChange={(event) => setRemember(event.target.checked)}
+          checked={remember}
+        />
+        <label>remember me</label>
+      </div>
+
       <Link to="/signup" className="sign-up-button">
-        Sign Up
+        SIGN UP
       </Link>
     </div>
   );
