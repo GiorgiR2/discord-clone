@@ -45,7 +45,7 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 
 Main Chat Window
 
-![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/discord-mern.png)
+![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/main.png)
 
 Responsive View
 
@@ -61,7 +61,7 @@ Login Window
 
 Sign Up window
 
-![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/SignUp.png)
+![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/signup.png)
 
 ## Future Plans
 
