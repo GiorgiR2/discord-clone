@@ -38,7 +38,7 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 | edit/delete messages                      | -                                                 | done                   |
 | hash based authentication                 | -                                                 | done                   |
 | end-to-end encryption                     | -                                                 | not yet                |
-| auto login (remember logged in users)     | use localstorage to store authentication hash     | not yet                |
+| auto login (remember logged in users)     | use localstorage to store authentication hash     | done                   |
 
 ## Screens
 ...
@@ -61,7 +61,7 @@ Login Window
 
 Sign Up window
 
-![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/signUp.png)
+![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/SignUp.png)
 
 ## Future Plans
 
