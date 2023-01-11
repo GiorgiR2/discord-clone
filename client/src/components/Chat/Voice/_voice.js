@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setMediaData } from "../../../features/voice";
 
+import { toggleVideo, toggleAudio } from "./_functions";
+
 import { useHistory, useParams } from "react-router-dom";
 
 import MicOff from "../../../assets/voice/micOff.svg";
@@ -42,7 +44,7 @@ const Frame = ({ name, status, id }) => {
 
 const VoiceFrame = () => {
   const changeMode = (button) => {
-    // "data" should be immutable (send a new array each time)
+    // "data" should be immutable
     let data = {
       audio: voiceRedux.mediaData.audio,
       video: voiceRedux.mediaData.video,
@@ -50,37 +52,23 @@ const VoiceFrame = () => {
 
     if (button === "video") {
       data.video = !voiceRedux.mediaData.video;
+      toggleVideo(data.video);
     } else if (button === "audio") {
       data.audio = !voiceRedux.mediaData.audio;
+      toggleAudio(data.audio);
     }
 
-    dispatch(setMediaData(data));
+    dispatch(setMediaData({ data: data }));
   };
 
-  const dispatch = useDispatch();
   const history = useHistory();
+
   let { roomId, hashId } = useParams();
+
+  const dispatch = useDispatch();
 
   const voiceRedux = useSelector((state) => state.voice.value);
   const userRedux = useSelector((state) => state.users.value);
-
-  // const localStream = useRef();
-
-  useEffect(() => {
-    // navigator.mediaDevices
-    //   .getUserMedia(mediaData)
-    //   .then((stream) => {
-    //     localStream.current = stream;
-    //     document.getElementById("currentVideo").srcObject = localStream.current;
-    //     if (!mediaData.video) {
-    //       setCurrentUserL([reduxData.currentUser, "No Video"]);
-    //     } else setCurrentUserL([reduxData.currentUser, ""]);
-    //   })
-    //   .catch((err) => {
-    //     localStream.current.getTracks().forEach((track) => track.stop());
-    //     setCurrentUserL([reduxData.currentUser, "No Video"]);
-    //   });
-  }, [voiceRedux.mediaData]);
 
   useEffect(() => {
     document.getElementById("currentVideo").srcObject = voiceRedux.localStream;

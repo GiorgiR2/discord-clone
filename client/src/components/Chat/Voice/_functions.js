@@ -2,7 +2,7 @@
 import io from "socket.io-client";
 import packageJson from "../../../../package.json";
 
-import {
+import voice, {
   addRemoteUser,
   addStream,
   addLocalStream,
@@ -23,10 +23,45 @@ const servers = {
 };
 
 const init = async (voiceRedux, dispatch) => {
-  localStream = await navigator.mediaDevices.getUserMedia(voiceRedux.mediaData);
+  localStream = await navigator.mediaDevices.getUserMedia({
+    audio: false,
+    video: true,
+  });
   dispatch(addLocalStream({ stream: localStream }));
 
   // document.getElementById("currentVideo").srcObject = localStream;
+};
+
+const toggleVideo = (bool) => {
+  const videoTrack = localStream
+    .getTracks()
+    .find((track) => track.kind === "video");
+  videoTrack.enabled = bool;
+  // if (!bool) {
+  //   localStream.getTracks().forEach((track) => track.stop());
+  // } else {
+  //   init(voiceRedux, dispatch);
+  //   if (!localStream) {
+  //     localStream = await navigator.mediaDevices.getUserMedia({
+  //       audio: false,
+  //       video: true,
+  //     });
+  //     // document.getElementById("currentVideo").srcObject = localStream;
+  //   }
+  //   localStream.getTracks().forEach((track) => {
+  //     peerConnections.map((peer) => {
+  //       peer[1].addTrack(track, localStream);
+  //     });
+  //   });
+  // }
+  // videoTrack.enabled = bool;
+};
+
+const toggleAudio = (bool) => {
+  const audioTrack = localStream
+    .getTracks()
+    .find((track) => track.kind === "audio");
+  audioTrack.enabled = bool;
 };
 
 const generateIceCandidates = async (id) => {
@@ -58,10 +93,10 @@ const createPeerConnection = async (voiceRedux, dispatch, id) => {
 
   if (!localStream) {
     localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
       audio: false,
+      video: true,
     });
-    document.getElementById("currentVideo").srcObject = localStream;
+    // document.getElementById("currentVideo").srcObject = localStream;
   }
 
   await generateIceCandidates(id);
@@ -187,8 +222,4 @@ const voiceMain = (voiceRedux, userData, dispatch) => {
   init(voiceRedux, dispatch);
 };
 
-const cameraOff = () => {
-  //pass
-};
-
-export { voiceMain };
+export { voiceMain, toggleVideo, toggleAudio };
