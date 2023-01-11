@@ -1,21 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initalStateValue = {
-  users: [
-    { name: "giorgir0", camOn: false, minOn: false, remoteScreen: false },
-    { name: "giorgir1", camOn: false, minOn: false, remoteScreen: false },
-  ],
-  servers: {
-    iceServers: [
-      {
-        urls: [
-          "stun:stun1.l.google.com:19302",
-          "stun:stun2.l.google.com:19302",
-        ],
-      },
-    ],
-    iceCandidatePoolSize: 10,
-  },
+  currentStatus: "No Video",
+  localStream: null,
+  mediaData: { audio: false, video: true },
+  remoteUsers: [], // {id: "", name: "", status: ""}
+  remoteStreams: [], // [..., [id, stream]] // "id": stream
 };
 
 export const userSlice = createSlice({
@@ -24,15 +14,38 @@ export const userSlice = createSlice({
     value: initalStateValue,
   },
   reducers: {
-    addUser: (state, action) => {
-      state.value.users = action.payload.newUser;
+    addRemoteUser: (state, action) => {
+      state.value.remoteUsers = [...state.value.remoteUsers, action.payload];
     },
-    removeUser: (state, action) => {
+    removeRemoteUser: (state, action) => {
       //pass
+    },
+    setLocalStream: (state, action) => {
+      //pass
+    },
+    setMediaData: (state, action) => {
+      state.value.mediaData = action.payload.data;
+    },
+    addStream: (state, action) => {
+      state.value.remoteStreams = [
+        ...state.value.remoteStreams,
+        action.payload.stream,
+      ];
+      // state.value.remoteStreams[action.payload.stream[0]] =
+      //   action.payload.stream[1];
+    },
+    addLocalStream: (state, action) => {
+      state.value.localStream = action.payload.stream;
     },
   },
 });
 
-export const { addUser, removeUser } = userSlice.actions;
+export const {
+  addRemoteUser,
+  removeRemoteUser,
+  setMediaData,
+  addStream,
+  addLocalStream,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -8,11 +8,13 @@ import { Provider } from "react-redux";
 
 import userReducer from "./features/users";
 import interfaceReducer from "./features/interface";
+import voiceReducer from "./features/voice";
 
 const store = configureStore({
   reducer: {
     users: userReducer,
     interfaces: interfaceReducer,
+    voice: voiceReducer,
   },
 });
 

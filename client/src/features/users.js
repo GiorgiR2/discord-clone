@@ -9,8 +9,8 @@ const initialStateValue = {
   online: [],
   offline: [],
   messages: [
-    // name, message, date, isFile=false, id
-    // ["name", "message", "date", false, 000001],
+    // name,     message,   date,  isFile, id,    editMode
+    // ["name", "message", "date", false, 000001, false],
   ],
   displayEdit: false,
   editingCatId: "",
@@ -44,6 +44,9 @@ export const userSlice = createSlice({
     },
     setRoomName: (state, action) => {
       state.value.currentRoom = action.payload.name;
+    },
+    setRoomId: (state, action) => {
+      state.value.currentRoomId = action.payload.roomId;
     },
     setAuthentication: (state, action) => {
       state.value.authentication = action.payload.authentication;
@@ -94,6 +97,16 @@ export const userSlice = createSlice({
         (el) => el[5] !== action.payload._id
       );
     },
+    enterEditMode: (state, action) => {
+      state.value.messages = state.value.messages.map((message) => {
+        if (message[5] === action.payload._id) {
+          let newMessage = message;
+          newMessage[6] = true; // editMode = true
+
+          return newMessage;
+        } else return message;
+      });
+    },
 
     clearAll: (state) => {
       state.value = initialStateValue;
@@ -109,6 +122,7 @@ export const {
   addRooms,
   addRoom,
   setRoomName,
+  setRoomId,
 
   setAuthentication,
   setVoiceMode,
@@ -118,6 +132,7 @@ export const {
 
   addMessage,
   removeMessage,
+  enterEditMode,
 
   clearAll,
 } = userSlice.actions;

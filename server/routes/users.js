@@ -66,10 +66,17 @@ router.post("/api/users/hashId", async (req, res) => {
 
     const data = await ops.checkData(req.body.hashId);
     await res.send(data);
-    console.log("user hash successfully authenticated:", data, req.body.hash);
+    // console.log("user hash successfully authenticated:", data, req.body.hash);
   } catch {
     await res.send({ roomName: "IncorrectHash" });
   }
+});
+
+router.post("/api/users/usernameByHashId", async (req, res) => {
+  // console.log("/api/users/usernameByHashId:", req.body.hashId);
+  let user = await usersModel.find({ hashId: req.body.hashId }).exec();
+  console.log("sent!!!!!!!!", user[0].username);
+  await res.send({ username: user[0].username });
 });
 
 module.exports = router;

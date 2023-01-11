@@ -5,17 +5,14 @@ import axios from "axios";
 import FormData from "form-data";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  togglePopupAdd,
-  setRoomName,
-  setVoiceMode,
-  clearAll,
-} from "../../features/users";
+import { togglePopupAdd, clearAll, addUserName } from "../../features/users";
 import {
   toggleLeft,
   toggleRight,
   setContextMenu,
 } from "../../features/interface";
+
+import { checkRoomId } from "../js/checkData";
 
 import Panel from "../../styles/sidePanel/sidePanel";
 import DeleteDiv from "./deleteDiv/deleteDiv";
@@ -27,8 +24,9 @@ import packageJson from "../../../package.json";
 import { getBasicData } from "../../scripts/_getBasicData";
 import * as socks from "../../scripts/_socketSide";
 
-// import { WebRTCFrame } from '../WebRTCInteractive/WebRTCInteractive';
-import { VoiceFrame } from "../Voice/_voice";
+import { VoiceFrame } from "./Voice/_voice";
+import { voiceMain } from "./Voice/_functions";
+
 import { PopupEditCat, PopupAddCat } from "./editCategory/_editCat";
 import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
 import egressSVG from "../../assets/egress.svg";
@@ -111,39 +109,6 @@ const MessagesDivs = ({ reduxData }) => {
 };
 
 const Chat = () => {
-  const checkHashId = (hashId, history) => {
-    return;
-    if (hashId !== undefined) {
-      axios
-        .post(`${apiLink}/api/users/hashId`, { hashId: hashId })
-        .then((res) => {
-          if (res.data.status !== "success") {
-            history.push("/");
-          }
-        });
-    } else {
-      history.push("/");
-    }
-  };
-  const checkRoomId = (roomId, hashId, history) => {
-    if (roomId === undefined || hashId === undefined)
-      history.push(`/chat/61ed960432479c682956802b/${hashId}`); // roomId = "61ed960432479c682956802b";
-
-    axios
-      .post(`${apiLink}/api/roomId`, { id: roomId })
-      .then((res) => {
-        if (res.data.roomName !== "try_again") {
-          dispatch(setRoomName({ name: res.data.roomName }));
-          if (res.data.voiceMode) dispatch(setVoiceMode({ bool: true }));
-        } else {
-          history.push(`/chat/61ed960432479c682956802b/${hashId}`); // roomId = "61ed960432479c682956802b";
-          dispatch(setRoomName({ name: "room 1" }));
-          dispatch(setVoiceMode({ bool: false }));
-        }
-      })
-      .catch((err) => console.error(err));
-  };
-
   const Categories = () => {
     const CategoriesJSX = () =>
       reduxData.rooms.map((room) => (
@@ -241,14 +206,12 @@ const Chat = () => {
       axios
         .post(url, formData, config)
         .then((res) => {
-          console.log("send file; res:", res.data);
+          // console.log("send file; res:", res.data);
           if (res.data === "done") sendFileData();
         })
         .catch((err) => sendFileData());
 
       // console.log("!!!!!!!!!!", file.name, file.size, typeof file.size);
-
-      // socket send
     };
 
     const [file, setFile] = useState();
@@ -362,19 +325,17 @@ const Chat = () => {
     </div>
   );
 
-  // redux
   const dispatch = useDispatch();
   const reduxData = useSelector((state) => state.users.value);
+  const voiceRedux = useSelector((state) => state.voice.value);
   const interfacesRedux = useSelector((state) => state.interfaces.value);
 
   let { roomId, hashId } = useParams();
   const history = useHistory();
 
   useLayoutEffect(() => {
-    checkHashId(hashId, history);
-    checkRoomId(roomId, hashId, history);
-    console.log("roomId:", roomId);
-    console.log("hashId:", hashId);
+    // checkHashId(hashId, history);
+    checkRoomId(dispatch, apiLink, roomId, hashId, history);
 
     getBasicData(history, roomId, hashId, dispatch, "chat");
   }, []);
@@ -384,6 +345,7 @@ const Chat = () => {
   }, [reduxData.currentUser]);
 
   useEffect(() => {
+    // scroll to the newest message
     try {
       let el = document.getElementById("last-element");
       el.scrollIntoView();
@@ -391,6 +353,33 @@ const Chat = () => {
       //pass
     }
   }, [reduxData.messages]);
+
+  useEffect(() => {
+    if (reduxData.voiceMode && reduxData.currentUser === "") {
+      axios
+        .post(`${apiLink}/api/users/usernameByHashId`, { hashId: hashId })
+        .then((res) => {
+          // console.log("res.data.username:", res.data.username);
+          dispatch(addUserName({ username: res.data.username }));
+          let userData = {
+            currentRoom: reduxData.currentRoom,
+            currentRoomId: reduxData.currentRoomId,
+            currentUser: res.data.username,
+          };
+          voiceMain(voiceRedux, userData, dispatch);
+        })
+        .catch((err) => console.error(err));
+    } else if (reduxData.voiceMode) {
+      // console.log(
+      //   `reduxData:
+      //   "${reduxData.currentRoom}",
+      //   "${reduxData.currentRoomId}",
+      //   "${reduxData.currentUser === ""}"
+      //   "${hashId}"`
+      // );
+      voiceMain(voiceRedux, reduxData, dispatch);
+    }
+  }, [reduxData.voiceMode]);
 
   return (
     <div className="chat">

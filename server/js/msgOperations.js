@@ -35,6 +35,8 @@ const addToMongoose = (data) => {
     });
 
   saveModel(newMessageModel);
+
+  return newMessageModel._id;
 };
 
 const removeMessage = (hash) => {

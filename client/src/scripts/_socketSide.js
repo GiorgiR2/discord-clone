@@ -34,6 +34,8 @@ const main = (reduxData, dispatch) => {
         data.date,
         data.isFile,
         data.isFile ? data.originalName : "",
+        data._id,
+        false,
       ],
     ];
 
@@ -49,6 +51,7 @@ const main = (reduxData, dispatch) => {
         el.isFile,
         el.isFile ? el.originalName : "",
         el._id,
+        false,
       ];
     });
     dispatch(addMessage({ messageList: msgList })); // message/messages
@@ -88,7 +91,6 @@ const sendDeleteStatus = (id) => {
 };
 
 const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
-  // e.preventDefault();
   const data = {
     user: reduxData.currentUser,
     room: reduxData.currentRoom,
@@ -101,8 +103,6 @@ const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
 
   socket.emit("file", data);
   console.log("sent...........", data);
-
-  // e.preventDefault();
 };
 
 const sendMessage = (e, reduxData, roomId, device, inputRef) => {
