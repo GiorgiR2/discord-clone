@@ -155,6 +155,7 @@ const PopupAddCat = () => {
           columns="20"
           ref={newNameRef}
           className="nameInput"
+          placeholder="name"
         />{" "}
         {/*
             placeholder="not supported"
