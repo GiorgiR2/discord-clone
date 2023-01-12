@@ -239,7 +239,7 @@ const Chat = () => {
             onKeyPress={(e) =>
               socks.sendMessage(e, reduxData, roomId, "desktop", inputRef)
             }
-            autoFocus
+            autoFocus={window.innerWidth <= 850 ? false : true}
           ></textarea>
           <form onSubmit={handleSubmit} className="inputForm">
             <input
