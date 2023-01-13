@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setMediaData } from "../../../features/voice";
+import { setCurrentStatus, setMediaData } from "../../../features/voice";
 
 import { toggleVideo, toggleAudio } from "./_functions";
+
+import { socket } from "./_functions";
 
 import { useHistory, useParams } from "react-router-dom";
 
@@ -53,9 +55,21 @@ const VoiceFrame = () => {
     if (button === "video") {
       data.video = !voiceRedux.mediaData.video;
       toggleVideo(data.video);
+
+      socket.emit("toggleVideo", {
+        status: data.video ? "" : "No Video",
+        roomId: userRedux.currentRoomId,
+      });
+
+      dispatch(setCurrentStatus({ status: data.video ? "" : "No Video" }));
     } else if (button === "audio") {
       data.audio = !voiceRedux.mediaData.audio;
       toggleAudio(data.audio);
+
+      // socket.emit("toggleAudio", {
+      //   on: data.audio,
+      //   roomId: userRedux.currentRoomId,
+      // });
     }
 
     dispatch(setMediaData({ data: data }));
@@ -71,13 +85,19 @@ const VoiceFrame = () => {
   const userRedux = useSelector((state) => state.users.value);
 
   useEffect(() => {
+    // toggleVideo(voiceRedux.mediaData.video);
+    // let videoTrack = voiceRedux.localStream
+  }, [voiceRedux.mediaData]);
+
+  useEffect(() => {
     document.getElementById("currentVideo").srcObject = voiceRedux.localStream;
+    document.getElementById("currentVideo").muted = true;
   }, [voiceRedux.localStream]);
 
   useEffect(() => {
-    console.log(voiceRedux.remoteStreams);
+    // console.log(voiceRedux.remoteStreams);
     voiceRedux.remoteStreams.map((stream) => {
-      console.log("stream:", stream[0], stream[1]);
+      // console.log("stream:", stream[0], stream[1]);
       document.getElementById(stream[0]).srcObject = stream[1];
     });
   }, [voiceRedux.remoteStreams]);

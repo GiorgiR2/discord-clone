@@ -6,6 +6,8 @@ import voice, {
   addRemoteUser,
   addStream,
   addLocalStream,
+  disconnectRemoteUser,
+  changeRemoteStatus,
 } from "../../../features/voice";
 
 const domain = packageJson.proxy;
@@ -24,7 +26,7 @@ const servers = {
 
 const init = async (voiceRedux, dispatch) => {
   localStream = await navigator.mediaDevices.getUserMedia({
-    audio: false,
+    audio: true,
     video: true,
   });
   dispatch(addLocalStream({ stream: localStream }));
@@ -37,24 +39,6 @@ const toggleVideo = (bool) => {
     .getTracks()
     .find((track) => track.kind === "video");
   videoTrack.enabled = bool;
-  // if (!bool) {
-  //   localStream.getTracks().forEach((track) => track.stop());
-  // } else {
-  //   init(voiceRedux, dispatch);
-  //   if (!localStream) {
-  //     localStream = await navigator.mediaDevices.getUserMedia({
-  //       audio: false,
-  //       video: true,
-  //     });
-  //     // document.getElementById("currentVideo").srcObject = localStream;
-  //   }
-  //   localStream.getTracks().forEach((track) => {
-  //     peerConnections.map((peer) => {
-  //       peer[1].addTrack(track, localStream);
-  //     });
-  //   });
-  // }
-  // videoTrack.enabled = bool;
 };
 
 const toggleAudio = (bool) => {
@@ -93,7 +77,7 @@ const createPeerConnection = async (voiceRedux, dispatch, id) => {
 
   if (!localStream) {
     localStream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
+      audio: true,
       video: true,
     });
     // document.getElementById("currentVideo").srcObject = localStream;
@@ -190,7 +174,7 @@ const voiceMain = (voiceRedux, userData, dispatch) => {
       addRemoteUser({
         from: data.from,
         username: data.username,
-        status: "No Video",
+        status: "",
       })
     );
     console.log("user joined", data.from);
@@ -201,7 +185,7 @@ const voiceMain = (voiceRedux, userData, dispatch) => {
       addRemoteUser({
         from: data.from,
         username: userData.currentUser,
-        status: "No Video",
+        status: "",
       })
     );
     console.log("receive offer from:", data.from);
@@ -216,10 +200,15 @@ const voiceMain = (voiceRedux, userData, dispatch) => {
     handleMessageFromPeer(voiceRedux, dispatch, data.text, data.from);
   });
   socket.on("peerDisconnected", (data) => {
-    //pass
+    console.log("received peerDisconnected...", data.id);
+    dispatch(disconnectRemoteUser({ id: data.id }));
+  });
+  socket.on("changeStatus", (data) => {
+    console.log("received changeStatus...", data.id, data.status);
+    dispatch(changeRemoteStatus({ id: data.id, status: data.status }));
   });
 
   init(voiceRedux, dispatch);
 };
 
-export { voiceMain, toggleVideo, toggleAudio };
+export { socket, voiceMain, toggleVideo, toggleAudio };

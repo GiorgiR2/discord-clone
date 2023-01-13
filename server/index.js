@@ -108,7 +108,21 @@ const main = (connectedUsers) => {
       }
 
       console.log("disconnect", userNN, socket.id);
-      // let roomId;
+      // emit disconnect message for voice chat users
+      roomIds.forEach((roomid) => {
+        usersInVoice[roomid].forEach((user) => {
+          if (user.id === socket.id) {
+            usersInVoice[roomid].forEach((user0) => {
+              if (user0.id !== socket.id) {
+                console.log("'peerDisconnected' emitted...");
+                io.to(user0.id).emit("peerDisconnected", { id: socket.id });
+              }
+            });
+          }
+        });
+      });
+
+      // Todo: implement new code to pip out disconnected users
       socketIds = socketIds.filter((id, n) => {
         if (id !== socket.id) {
           return id;
@@ -178,7 +192,7 @@ const main = (connectedUsers) => {
 
     socket.on("joinVoice", (data, callback) => {
       if (data.username === "") {
-        console.log("no username !!!!!!!!!!!");
+        // console.log("no username !!!!!!!!!!!");
         return;
       }
       let room = data.room;
@@ -204,9 +218,7 @@ const main = (connectedUsers) => {
       #            RoomID: ${roomId}            #
       #            Room: ${room}                    ${" ".repeat(11)}#
       ##########################################################\n`);
-      }
 
-      if (socketIds.includes(socket.id) === false) {
         // console.log("sent 0");
         socketIds.push(socket.id);
         roomIds.push(roomId);
@@ -258,12 +270,20 @@ const main = (connectedUsers) => {
       });
     });
 
-    socket.on("toggleMic", (data) => {
-      //pass
+    socket.on("toggleVideo", (data) => {
+      // console.log(`users in ${data.roomId}: ${usersInVoice[data.roomId]}`);
+      usersInVoice[data.roomId].forEach((user) => {
+        if (user.id !== socket.id) {
+          io.to(user.id).emit("changeStatus", {
+            id: socket.id,
+            status: data.status,
+          });
+        }
+      });
     });
 
-    socket.on("toggleCam", (data) => {
-      //pass
+    socket.on("toggleAudio", (data) => {
+      // console.log(`users in ${data.roomId}: ${usersInVoice[data.roomId]}`);
     });
   });
 
