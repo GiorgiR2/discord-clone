@@ -9,7 +9,8 @@
 * WebRTC - p2p audio/video transfer
 
 ## Overview
-...
+
+live demo: [https://giorgir2.github.io/discord-clone/](https://giorgir2.github.io/discord-clone/)
 
 ## .env setup
 Add server/.env file with PORT && MONGO_ADDRESS ```touch server/.env```
@@ -33,7 +34,7 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 | Function                                  | Description                                       | Status                 |
 |-------------------------------------------|---------------------------------------------------|------------------------|
 | send messages/files                       | -                                                 | done                   |
-| video/audio group chat                    | p2p connection (using webrtc/simple-peer)         | under development      |
+| video/audio group chat                    | p2p connection (using webrtc/simple-peer)         | done                   |
 | add/edit/delete rooms                     | -                                                 | done                   |
 | edit/delete messages                      | -                                                 | done                   |
 | hash based authentication                 | -                                                 | done                   |
