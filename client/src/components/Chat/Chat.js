@@ -33,6 +33,8 @@ import egressSVG from "../../assets/egress.svg";
 import sendSVG from "../../assets/send-24px.svg";
 import fileSVG from "../../assets/fileIcon.svg";
 
+import userSVG from "../../assets/chat/user-flat.svg";
+
 const apiLink = packageJson.proxy;
 
 const logOut = (e, history, dispatch) => {
@@ -78,31 +80,43 @@ const MessagesDivs = ({ reduxData }) => {
 
     return (
       <div
-        className="element messageDiv"
-        onContextMenu={(event) => handleContextMenu(event, el[5])}
+        className={`element messageDiv ${el.editMode ? "focus" : null}`}
+        onContextMenu={(event) => handleContextMenu(event, el.id)}
       >
-        <div className="author">{el[0]}</div>
-        <div className="message">
-          {el[3] ? (
-            <div className="fileDiv">
-              <img src={fileSVG} className="fileSVG" />
-              <a href={link} rel="noreferrer" target="_blank" className="name">
-                {el[4]}
-              </a>
+        <img src={userSVG} />
+        <div className="main">
+          <div className="topInfo">
+            <div className="author">
+              {el.username} <span>{el.date}</span>
             </div>
-          ) : (
-            el[1].split("\n").map((line) => (
-              <p
-                onInput={(event) => handleOnInput(event)}
-                onBlur={(event) => handleOnBlur(event, el[5])}
-                contentEditable={el[6]}
-              >
-                {line}
-              </p>
-            ))
-          )}
+            {/*<div className="date">{el.date}</div>*/}
+          </div>
+          <div className="message">
+            {el.isFile ? (
+              <div className="fileDiv">
+                <img src={fileSVG} className="fileSVG" />
+                <a
+                  href={link}
+                  rel="noreferrer"
+                  target="_blank"
+                  className="name"
+                >
+                  {el.fileName}
+                </a>
+              </div>
+            ) : (
+              el.message.split("\n").map((line) => (
+                <p
+                  onInput={(event) => handleOnInput(event)}
+                  onBlur={(event) => handleOnBlur(event, el.id)}
+                  contentEditable={el.editMode}
+                >
+                  {line}
+                </p>
+              ))
+            )}
+          </div>
         </div>
-        <div className="date">{el[2]}</div>
       </div>
     );
   });
@@ -220,13 +234,11 @@ const Chat = () => {
     return (
       <>
         <div id="chat-screen">
-          <div className="element">
+          {/*<div className="element">
             <div className="author">user</div>
             <div className="message">message</div>
-            <div className="date">
-              <div>date</div>
-            </div>
-          </div>
+            <div className="date">date</div>
+        </div>*/}
           <MessagesDivs reduxData={reduxData} />
           <div id="last-element"></div>
         </div>

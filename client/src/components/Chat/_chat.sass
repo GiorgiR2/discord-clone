@@ -181,47 +181,94 @@ svg
         overflow: hidden
         overflow-y: scroll
 
-        .messageDiv
-          &:hover,
-          &:active
-            background-color: lighten($bg-color, 20%)
+        .focus
+          background-color: lighten($bg-color, 20%)
 
-        div
+        .messageDiv
           display: flex
           font-size: 14px
           justify-content: space-between
           height: fit-content
           padding: 2px 0 1px 0
+          // height: 600px
 
-          .author
-            width: 90px //8%
-            margin-left: 4px
-            vertical-align: top
+          &:hover,
+          &:active
+            background-color: lighten($bg-color, 20%)
 
-          .message
-            width: calc(100% - 180px)//80%
-            // margin-left: 4px
-            vertical-align: top
-            display: inline-block
+          img
+            margin: 10px 10px 14px 8px
+            width: 32px
+            height: 32px
 
-            .fileDiv
-              .name
-                margin-top: 9px
-                margin-left: 2px
+          .main
+            display: flex
+            flex-direction: column
+            width: calc(100% - 35px)
+            height: fit-content
 
-            div, p
-              width: 100%
-              word-break: break-word
+            .topInfo
+              display: flex
+              height: 17px
+              width: 100%//calc(100% - 45px)
+              margin-bottom: 8px
+
+              .author
+                margin-right: 12px
+                color: darken(#fff, 15%)
+                width: fit-content
+
+                span
+                  margin-left: 10px
+                  width: fit-content
+                  color: darken(#fff, 30%)
+
+              .date
+                width: fit-content
+                color: darken(#fff, 30%)
+          
+            .message
+              width: calc(100% - 45px)
+              vertical-align: top
+              display: inline-block
+              
+              .fileDiv
+                .name
+                  margin-top: 9px
+                  margin-left: 2px
+
+          // .author
+          //   width: 90px //8%
+          //   margin-left: 4px
+          //   vertical-align: top
+
+          //   img
+          //     width: 24px
+
+          // .message
+          //   width: calc(100% - 180px)//80%
+          //   // margin-left: 4px
+          //   vertical-align: top
+          //   display: inline-block
+
+          //   .fileDiv
+          //     .name
+          //       margin-top: 9px
+          //       margin-left: 2px
+
+            // div, p
+            //   width: 100%
+            //   word-break: break-word
 
             a
               cursor: pointer
               width: 100%
               word-break: break-word
 
-          .date
-            width: 90px//11%
-            vertical-align: top
-            text-align: left
+          // .date
+          //   width: 90px//11%
+          //   vertical-align: top
+          //   text-align: left
 
       #input
         flex: 0 1 65px
