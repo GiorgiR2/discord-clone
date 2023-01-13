@@ -77,7 +77,6 @@ const MessagesDivs = ({ reduxData }) => {
   return reduxData.messages.map((el) => {
     // msg may be a text / a multiline text or a fileID
     let link = `${apiLink}/file/${el[1]}`; // msg === Id
-
     return (
       <div
         className={`element messageDiv ${el.editMode ? "focus" : null}`}
@@ -85,11 +84,8 @@ const MessagesDivs = ({ reduxData }) => {
       >
         <img src={userSVG} />
         <div className="main">
-          <div className="topInfo">
-            <div className="author">
-              {el.username} <span>{el.date}</span>
-            </div>
-            {/*<div className="date">{el.date}</div>*/}
+          <div className="author">
+            {el.username} <span>{el.date}</span>
           </div>
           <div className="message">
             {el.isFile ? (
@@ -234,11 +230,6 @@ const Chat = () => {
     return (
       <>
         <div id="chat-screen">
-          {/*<div className="element">
-            <div className="author">user</div>
-            <div className="message">message</div>
-            <div className="date">date</div>
-        </div>*/}
           <MessagesDivs reduxData={reduxData} />
           <div id="last-element"></div>
         </div>

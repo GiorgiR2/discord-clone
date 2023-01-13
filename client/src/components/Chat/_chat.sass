@@ -207,68 +207,45 @@ svg
             width: calc(100% - 35px)
             height: fit-content
 
-            .topInfo
+            .author
               display: flex
               height: 17px
               width: 100%//calc(100% - 45px)
               margin-bottom: 8px
+              margin-right: 12px
+              color: darken(#fff, 15%)
+              width: fit-content
 
-              .author
-                margin-right: 12px
-                color: darken(#fff, 15%)
-                width: fit-content
-
-                span
-                  margin-left: 10px
-                  width: fit-content
-                  color: darken(#fff, 30%)
-
-              .date
+              span
+                margin-left: 10px
                 width: fit-content
                 color: darken(#fff, 30%)
           
             .message
               width: calc(100% - 45px)
-              vertical-align: top
-              display: inline-block
+              height: fit-content
+              // vertical-align: top
+              // display: inline-block
               
               .fileDiv
+                display: flex
+
+                .fileSVG
+                  height: 42px
+                  margin: 2px 0 0 0
+
                 .name
-                  margin-top: 9px
                   margin-left: 2px
-
-          // .author
-          //   width: 90px //8%
-          //   margin-left: 4px
-          //   vertical-align: top
-
-          //   img
-          //     width: 24px
-
-          // .message
-          //   width: calc(100% - 180px)//80%
-          //   // margin-left: 4px
-          //   vertical-align: top
-          //   display: inline-block
-
-          //   .fileDiv
-          //     .name
-          //       margin-top: 9px
-          //       margin-left: 2px
+                  margin-top: 20px
 
             // div, p
             //   width: 100%
             //   word-break: break-word
 
-            a
-              cursor: pointer
-              width: 100%
-              word-break: break-word
-
-          // .date
-          //   width: 90px//11%
-          //   vertical-align: top
-          //   text-align: left
+            // a
+            //   cursor: pointer
+            //   width: 100%
+            //   word-break: break-word
 
       #input
         flex: 0 1 65px
@@ -276,7 +253,6 @@ svg
         width: 100%
         // height: 80px
         // margin: 1%
-        // background: lighten(red, 30%)
           
         textarea
           position: absolute
