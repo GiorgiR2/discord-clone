@@ -163,6 +163,18 @@ const main = (connectedUsers) => {
       socket.in(data.room).emit("messageDeleted", { _id: data._id });
     });
 
+    socket.on("editMessage", async (data) => {
+      let filter = { _id: data._id };
+      let msg = data.messageHTML
+        .replace("</div><div>", "<br>")
+        .replace("<div>", "")
+        .replace("</div>", "<br>");
+      msg = msg.substring(0, msg.length - 4).replaceAll("<br>", "\n");
+
+      let update = { message: msg };
+      Message.findOneAndUpdate(filter, update).exec();
+    });
+
     socket.on("file", async (data) => {
       let authentication = data.authentication;
 
