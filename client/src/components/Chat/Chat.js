@@ -5,7 +5,13 @@ import axios from "axios";
 import FormData from "form-data";
 import { useSelector, useDispatch } from "react-redux";
 
-import { togglePopupAdd, clearAll, addUserName } from "../../features/users";
+import {
+  togglePopupAdd,
+  clearAll,
+  addUserName,
+  exitEditMode,
+  editMessage,
+} from "../../features/users";
 import {
   toggleLeft,
   toggleRight,
@@ -65,18 +71,23 @@ const MessagesDivs = ({ reduxData }) => {
       })
     );
   };
-  const handleOnInput = (event) => {
-    //pass
+  const handleOnInput = (event, id) => {
+    // console.log("OnInput:", event.target.innerHTML, id);
   };
   const handleOnBlur = (event, id) => {
     //Todo: get p content, update that specific line and then send post request
+    // console.log("OnBlur");
+    dispatch(editMessage({ messageHTML: event.target.innerHTML, _id: id }));
+    dispatch(exitEditMode({ _id: id }));
+    socks.editMessage(event.target.innerHTML, id);
   };
 
   const dispatch = useDispatch();
 
   return reduxData.messages.map((el) => {
     // msg may be a text / a multiline text or a fileID
-    let link = `${apiLink}/file/${el[1]}`; // msg === Id
+    let link = `${apiLink}/file/${el.message}`; // msg === Id
+    // console.log(el.message);
     return (
       <div
         className={`element messageDiv ${el.editMode ? "focus" : null}`}
@@ -84,8 +95,11 @@ const MessagesDivs = ({ reduxData }) => {
       >
         <img src={userSVG} />
         <div className="main">
-          <div className="author">
-            {el.username} <span>{el.date}</span>
+          <div className="top">
+            <div className="author">
+              {el.username} <span>{el.date}</span>
+            </div>
+            {/*<h4 className="encryption">No Encryption</h4>*/}
           </div>
           <div className="message">
             {el.isFile ? (
@@ -101,15 +115,18 @@ const MessagesDivs = ({ reduxData }) => {
                 </a>
               </div>
             ) : (
-              el.message.split("\n").map((line) => (
-                <p
-                  onInput={(event) => handleOnInput(event)}
-                  onBlur={(event) => handleOnBlur(event, el.id)}
-                  contentEditable={el.editMode}
-                >
-                  {line}
-                </p>
-              ))
+              <p
+                onInput={(event) => handleOnInput(event, el.id)}
+                onBlur={(event) => handleOnBlur(event, el.id)}
+                contentEditable={el.editMode}
+              >
+                {el.message.split("\n").map((line) => (
+                  <>
+                    {line}
+                    <br />
+                  </>
+                ))}
+              </p>
             )}
           </div>
         </div>
@@ -175,7 +192,7 @@ const Chat = () => {
   };
 
   const Messages = () => {
-    const handleSubmit = (e) => {
+    const handleSubmit = (e, file) => {
       const sendFileData = () => {
         socks.sendFileData(
           e,
@@ -244,7 +261,10 @@ const Chat = () => {
             }
             autoFocus={window.innerWidth <= 850 ? false : true}
           ></textarea>
-          <form onSubmit={handleSubmit} className="inputForm">
+          <form
+            onSubmit={(event) => handleSubmit(event, file)}
+            className="inputForm"
+          >
             <input
               type="file"
               id="file"

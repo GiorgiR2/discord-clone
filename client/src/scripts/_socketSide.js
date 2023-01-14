@@ -18,25 +18,18 @@ const main = (reduxData, dispatch) => {
     username: reduxData.currentUser,
   });
   console.log("sent join", reduxData.currentRoom, reduxData.currentUser);
-  // socket.on('connect', () => {
-  // console.log("connected", room, username);
-  // socket.emit('join', {
-  //     room: room,
-  //     username: username,
-  // });
-  // });
 
   socket.on("M_S_O", (data) => {
     let msgList = [
-      [
-        data.user,
-        data.isFile ? data._id : data.message,
-        data.date,
-        data.isFile,
-        data.isFile ? data.originalName : "",
-        data._id,
-        false,
-      ],
+      {
+        username: data.user,
+        message: data.isFile ? data._id : data.message,
+        date: data.date,
+        isFile: data.isFile,
+        fileName: data.isFile ? data.originalName : "",
+        id: data._id,
+        editMode: false,
+      },
     ];
 
     dispatch(addMessage({ messageList: msgList })); // message/messages
@@ -44,15 +37,15 @@ const main = (reduxData, dispatch) => {
 
   socket.on("messagesData", (data) => {
     let msgList = data.map((el) => {
-      return [
-        el.user,
-        el.isFile ? el._id : el.message,
-        el.date,
-        el.isFile,
-        el.isFile ? el.originalName : "",
-        el._id,
-        false,
-      ];
+      return {
+        username: el.user,
+        message: el.isFile ? el._id : el.message,
+        date: el.date,
+        isFile: el.isFile,
+        fileName: el.isFile ? el.originalName : "",
+        id: el._id,
+        editMode: false,
+      };
     });
     dispatch(addMessage({ messageList: msgList })); // message/messages
   });
@@ -85,6 +78,10 @@ const main = (reduxData, dispatch) => {
 //     return `</a12>${url}</a12>`;
 //   });
 // };
+
+const editMessage = (messageHTML, id) => {
+  socket.emit("editMessage", { messageHTML: messageHTML, _id: id });
+};
 
 const sendDeleteStatus = (id) => {
   socket.emit("deleteMessage", { _id: id });
@@ -143,5 +140,6 @@ export {
   sendMessage,
   sendFileData,
   sendDeleteStatus,
+  editMessage,
   disconnect,
 };

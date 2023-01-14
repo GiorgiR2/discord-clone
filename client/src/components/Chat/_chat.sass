@@ -168,7 +168,7 @@ svg
           &:hover,
           &:active
             cursor: pointer
-            color: darken(white, 30)
+            color: darken(white, 15%)
 
       #chat-screen
         flex: 1 1 auto
@@ -207,19 +207,25 @@ svg
             width: calc(100% - 35px)
             height: fit-content
 
-            .author
+            .top
               display: flex
+              justify-content: space-between
               height: 17px
               width: 100%//calc(100% - 45px)
               margin-bottom: 8px
-              margin-right: 12px
-              color: darken(#fff, 15%)
-              width: fit-content
-
-              span
-                margin-left: 10px
+              // margin-right: 12px
+              
+              .author
+                color: darken(#fff, 15%)
                 width: fit-content
-                color: darken(#fff, 30%)
+
+                span
+                  margin-left: 10px
+                  width: fit-content
+                  color: darken(#fff, 30%)
+
+              .encryption
+                padding-right: 6px
           
             .message
               width: calc(100% - 45px)
@@ -242,10 +248,10 @@ svg
             //   width: 100%
             //   word-break: break-word
 
-            // a
-            //   cursor: pointer
-            //   width: 100%
-            //   word-break: break-word
+            a
+              cursor: pointer
+              width: 100%
+              word-break: break-word
 
       #input
         flex: 0 1 65px
@@ -348,8 +354,6 @@ svg
         div
           background-color: #000
 
-
-
 ::-webkit-scrollbar
     width: 10px
     background: none
@@ -375,20 +379,16 @@ svg
           width: 260px !important
           
         .categories
-          // display: none !important
           position: absolute
-          // width: fit-content
           z-index: 10
           
           .top .topl .x
             display: block !important
 
         .status-bar
-          // display: none !important
           position: absolute
           right: 0px
           padding-left: 8px
-          // width: fit-content
           z-index: 10
 
           .top
@@ -396,14 +396,12 @@ svg
               display: block !important
 
         .messages
-            // width: 100vw !important
             width: 100% !important
 
             #top
               margin-top: 2px
               padding-top: 11px
               height: 45px !important
-              // position: absolute
 
               .panel
                 display: block
@@ -413,15 +411,7 @@ svg
 
             #chat-screen
               height: calc(100vh - 160px) !important
-              // margin-top: 20px !important
               width: 100% !important
-
-              div
-                .author
-                  width: 14% !important
-                  
-                .message
-                  width: 74% !important
 
             #input
               textarea

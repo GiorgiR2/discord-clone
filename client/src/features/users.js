@@ -9,8 +9,7 @@ const initialStateValue = {
   online: [],
   offline: [],
   messages: [
-    // name,     message,   date,  isFile, id,    editMode
-    // ["name", "message", "date", false, 000001, false],
+    // username, message, date, isFile, fileName, id, editMode
   ],
   displayEdit: false,
   editingCatId: "",
@@ -87,23 +86,49 @@ export const userSlice = createSlice({
       }
     },
     addMessage: (state, action) => {
-      state.value.messages = [
-        ...state.value.messages,
-        ...action.payload.messageList,
-      ];
+      action.payload.messageList.forEach((message) => {
+        state.value.messages.push(message);
+      });
+      // state.value.messages = [
+      //   ...state.value.messages,
+      //   ...action.payload.messageList,
+      // ];
     },
     removeMessage: (state, action) => {
+      // state.value.messages = state.value.messages.filter(
+      //   (el) => el[5] !== action.payload._id
+      // );
       state.value.messages = state.value.messages.filter(
-        (el) => el[5] !== action.payload._id
+        (el) => el.id !== action.payload._id
       );
     },
     enterEditMode: (state, action) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message[5] === action.payload._id) {
-          let newMessage = message;
-          newMessage[6] = true; // editMode = true
-
-          return newMessage;
+        if (message.id === action.payload._id) {
+          return { ...message, editMode: true };
+        } else return message;
+      });
+    },
+    exitEditMode: (state, action) => {
+      state.value.messages = state.value.messages.map((message) => {
+        if (message.id === action.payload._id) {
+          return { ...message, editMode: false };
+        } else return message;
+      });
+    },
+    editMessage: (state, action) => {
+      state.value.messages = state.value.messages.map((message) => {
+        if (message.id === action.payload._id) {
+          // do not touch this part
+          let msg = action.payload.messageHTML
+            .replace("</div><div>", "<br>")
+            .replace("<div>", "")
+            .replace("</div>", "<br>");
+          // console.log(msg);
+          return {
+            ...message,
+            message: msg.substring(0, msg.length - 4).replaceAll("<br>", "\n"),
+          };
         } else return message;
       });
     },
@@ -133,6 +158,8 @@ export const {
   addMessage,
   removeMessage,
   enterEditMode,
+  exitEditMode,
+  editMessage,
 
   clearAll,
 } = userSlice.actions;
