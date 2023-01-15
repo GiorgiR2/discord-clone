@@ -37,33 +37,6 @@ const init = async (voiceRedux, dispatch) => {
 const shareScreen = async (voiceRedux, dispatch) => {
   localStream = await navigator.mediaDevices.getDisplayMedia({ cursor: true });
   dispatch(addLocalStream({ stream: localStream }));
-
-  // replaceTracks
-  const screenTracks = localStream.getTracks()[0];
-  localStream
-    .getTracks()
-    .find((track) => track.kind === "video")
-    .replaceTrack(localStream.getTracks()[1]);
-  // screenTracks.onended = () => {
-  //   localStream
-  //     .getTracks()
-  //     .find((track) => track.kind === "video")
-  //     .replaceTrack(localStream.getTracks()[1]);
-  // };
-};
-
-const shareScreen0 = (voiceRedux, dispatch) => {
-  navigator.mediaDevices.getDisplayMedia({ cursor: true }).then((stream) => {
-    const screenTrack = stream.getTracks()[0];
-    localStream
-      .find((sender) => sender.track.kind === "video")
-      .replaceTrack(screenTrack);
-    screenTrack.onended = function () {
-      senders.current
-        .find((sender) => sender.track.kind === "video")
-        .replaceTrack(localStream.getTracks()[1]);
-    };
-  });
 };
 
 const toggleVideo = (bool) => {

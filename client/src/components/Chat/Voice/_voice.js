@@ -3,9 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentStatus, setMediaData } from "../../../features/voice";
 
-import { toggleVideo, toggleAudio } from "./_functions";
-
-import { socket } from "./_functions";
+import {
+  socket,
+  toggleVideo,
+  toggleAudio,
+  shareScreen,
+} from "./_webRTCfunctions";
 
 import { useHistory, useParams } from "react-router-dom";
 
@@ -24,12 +27,32 @@ const egress = (history, roomId, hashId) => {
   history.push(`/chat/61ed960432479c682956838e/${hashId}`);
 };
 
+const launchIntoFullscreen = (element) => {
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if (element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  } else {
+    element.classList.toggle("fullscreen");
+  }
+};
+
 const Frame = ({ name, status, id }) => {
   // const videoRef = useRef();
   return (
     <div className="frame">
       {/* style={{height: 150, width: 100}} */}
-      <video className="video" id={id} autoPlay playsInLine />
+      <video
+        className="video"
+        id={id}
+        autoPlay
+        playsInLine
+        isFullscreen={true}
+      />
       {/*controls*/}
       <h5 className="statusLabel">{status}</h5>
       <div className="bottom">
@@ -37,7 +60,11 @@ const Frame = ({ name, status, id }) => {
         <div className="icons">
           <img className="speaker" src={Speaker} />
 
-          <img className="fullScreen" src={FullScreen} />
+          <img
+            className="fullScreen"
+            src={FullScreen}
+            onClick={() => launchIntoFullscreen(document.getElementById(id))}
+          />
         </div>
       </div>
     </div>
@@ -133,6 +160,7 @@ const VoiceFrame = () => {
           <img
             className="svg screenon"
             src={ScreenShare}
+            onClick={() => shareScreen(voiceRedux, dispatch)}
             title="share screen"
           />
         </div>

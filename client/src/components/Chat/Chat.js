@@ -31,7 +31,7 @@ import { getBasicData } from "../../scripts/_getBasicData";
 import * as socks from "../../scripts/_socketSide";
 
 import { VoiceFrame } from "./Voice/_voice";
-import { voiceMain } from "./Voice/_functions";
+import { voiceMain } from "./Voice/_webRTCfunctions";
 
 import { PopupEditCat, PopupAddCat } from "./editCategory/_editCat";
 import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
