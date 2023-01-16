@@ -3,8 +3,8 @@ import "./deleteDiv.sass";
 import { useEffect, useRef } from "react";
 
 import { useDispatch } from "react-redux";
-import { closeContext } from "../../../features/interface";
-import { removeMessage, enterEditMode } from "../../../features/users";
+import { closeContext } from "../../../features/toggle";
+import { removeMessage, enterEditMode } from "../../../features/interfaces";
 
 import { sendDeleteStatus } from "../../../scripts/_socketSide";
 

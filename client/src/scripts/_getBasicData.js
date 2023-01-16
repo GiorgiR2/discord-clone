@@ -1,7 +1,11 @@
 import axios from "axios";
 import packageJson from "../../package.json";
 
-import { addUserName, setAuthentication, addRooms } from "../features/users";
+import {
+  addUserName,
+  setAuthentication,
+  addRooms,
+} from "../features/interfaces";
 
 const apiLink = packageJson.proxy;
 const config = {

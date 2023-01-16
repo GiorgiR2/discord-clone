@@ -6,14 +6,14 @@ import App from "./App.js";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
-import userReducer from "./features/users";
-import interfaceReducer from "./features/interface";
+import interfaceReducer from "./features/interfaces";
+import toggleReducer from "./features/toggle";
 import voiceReducer from "./features/voice";
 
 const store = configureStore({
   reducer: {
-    users: userReducer,
     interfaces: interfaceReducer,
+    toggle: toggleReducer,
     voice: voiceReducer,
   },
 });

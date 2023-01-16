@@ -109,7 +109,7 @@ const VoiceFrame = () => {
   const dispatch = useDispatch();
 
   const voiceRedux = useSelector((state) => state.voice.value);
-  const userRedux = useSelector((state) => state.users.value);
+  const userRedux = useSelector((state) => state.interfaces.value);
 
   useEffect(() => {
     // toggleVideo(voiceRedux.mediaData.video);

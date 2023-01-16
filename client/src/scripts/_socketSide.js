@@ -8,7 +8,7 @@ import {
   setOffline,
   addMessage,
   removeMessage,
-} from "../features/users";
+} from "../features/interfaces";
 
 const main = (reduxData, dispatch) => {
   if (socket.disconnected) socket = io.connect(domain);

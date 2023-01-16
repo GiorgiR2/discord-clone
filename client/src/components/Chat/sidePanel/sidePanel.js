@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useDispatch } from "react-redux";
-import { toggleLeft, toggleRight } from "../../features/interface";
+import { toggleLeft, toggleRight } from "../../../features/toggle";
 
 import "./sidePanel.sass";
 

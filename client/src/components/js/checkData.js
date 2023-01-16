@@ -1,4 +1,8 @@
-import { setVoiceMode, setRoomName, setRoomId } from "../../features/users";
+import {
+  setVoiceMode,
+  setRoomName,
+  setRoomId,
+} from "../../features/interfaces";
 
 import axios from "axios";
 

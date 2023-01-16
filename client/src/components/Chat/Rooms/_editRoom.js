@@ -4,20 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import packageJson from "../../../../package.json";
 
-import {
-  togglePopupAdd,
-  togglePopupEdit,
-  addRooms,
-  addRoom,
-} from "../../../features/users";
+import { addRooms, addRoom } from "../../../features/interfaces";
+import { togglePopupAdd, togglePopupEdit } from "../../../features/toggle";
 
-import "./_editCat.sass";
+import "./_editRoom.sass";
 
 const apiLink = packageJson.proxy;
 
-const PopupEditCat = () => {
+const PopupEditRoom = () => {
   const sendEditCommand = (event, newName) => {
-    let elementId = reduxData.editingCatId;
+    let elementId = toggleData.editingCatId;
     if (newName !== "") {
       axios
         .post(`${apiLink}/api/editCategory`, {
@@ -52,14 +48,15 @@ const PopupEditCat = () => {
   };
   const newNameRef = useRef();
 
-  const reduxData = useSelector((state) => state.users.value);
+  const reduxData = useSelector((state) => state.interfaces.value);
+  const toggleData = useSelector((state) => state.toggle.value);
   const dispatch = useDispatch();
 
   const [defValue, setDefValue] = useState();
 
   useEffect(() => {
     reduxData.rooms.forEach((el) => {
-      if (el._id === reduxData.editingCatId) {
+      if (el._id === toggleData.editingCatId) {
         setDefValue(el.name);
         return;
       }
@@ -96,7 +93,7 @@ const PopupEditCat = () => {
   );
 };
 
-const PopupAddCat = () => {
+const PopupAddRoom = () => {
   const voiceChat = () => {
     return options.voice;
   };
@@ -141,7 +138,7 @@ const PopupAddCat = () => {
   };
   const newNameRef = useRef();
 
-  const reduxData = useSelector((state) => state.users.value);
+  // const reduxData = useSelector((state) => state.interfaces.value);
   const dispatch = useDispatch();
 
   const [options, setOptions] = useState({ chat: true, voice: false });
@@ -196,4 +193,4 @@ const PopupAddCat = () => {
   );
 };
 
-export { PopupEditCat, PopupAddCat };
+export { PopupEditRoom, PopupAddRoom };
