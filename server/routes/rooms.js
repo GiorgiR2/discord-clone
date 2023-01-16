@@ -2,7 +2,7 @@ const express = require("express");
 const bp = require("body-parser");
 const mongoose = require("mongoose");
 
-const Categories = require("../models/categories.model");
+const RoomsModel = require("../models/rooms.model");
 const { saveModel } = require("../js/saveModel");
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
 
 router.post("/api/roomId", async (req, res) => {
   try {
-    let name = await Categories.find({
+    let name = await RoomsModel.find({
       _id: req.body.id,
     }).exec();
 
@@ -36,7 +36,7 @@ router.post("/api/editCategory", async (req, res) => {
   // console.log("catId:", catId);
   // console.log("newCatName:", newCatName);
   try {
-    await Categories.updateOne(
+    await RoomsModel.updateOne(
       {
         _id: catId,
       },
@@ -56,10 +56,10 @@ router.post("/api/editCategory", async (req, res) => {
 router.post("/api/addCategory", async (req, res) => {
   // try {
   let roomsN;
-  Categories.count({}, async (err, count) => {
+  RoomsModel.count({}, async (err, count) => {
     // console.log(count);
     // roomsN = count;
-    let newCategoryModel = new Categories({
+    let newRoomModel = new RoomsModel({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       position: count + 1,
@@ -67,11 +67,11 @@ router.post("/api/addCategory", async (req, res) => {
     });
 
     // console.log(newCategoryModel._id);
-    await saveModel(newCategoryModel);
+    await saveModel(newRoomModel);
     await res.send({
       status: "done",
       _id: newCategoryModel._id,
-      position: newCategoryModel.position,
+      position: newRoomModel.position,
     });
   });
   // console.log("count:", roomsN);
@@ -81,9 +81,63 @@ router.post("/api/addCategory", async (req, res) => {
   // }
 });
 
+router.post("/api/changeRoomPosition", async (req, res) => {
+  let roomId = req.body.roomId;
+  let draggingRoomIndex = req.body.draggingRoomIndex;
+  let finalIndex = req.body.finalIndex;
+
+  if (finalIndex === draggingRoomIndex) {
+    return;
+  }
+
+  let filter = { _id: roomId };
+  let update = { position: 1001 };
+  console.log(
+    `draggingRoomIndex: ${draggingRoomIndex}; finalIndex: ${finalIndex};`
+  );
+  await RoomsModel.findOneAndUpdate(filter, update).exec();
+
+  let doc = await RoomsModel.find().sort({ position: 1 }).exec();
+  if (finalIndex > draggingRoomIndex) {
+    doc.forEach((room, n) => {
+      if (
+        room.position > draggingRoomIndex &&
+        room.position <= finalIndex + 1
+      ) {
+        // filter = { _id: room._id };
+        // update = { position: room.position - 1 };
+        // Categories.findOneAndUpdate(filter, update).exec();
+        RoomsModel.findOneAndUpdate(
+          { _id: room._id },
+          { position: room.position - 1 }
+        ).exec();
+      }
+    });
+  } else {
+    doc.forEach((room, n) => {
+      if (
+        room.position >= finalIndex &&
+        room.position < draggingRoomIndex + 1
+      ) {
+        RoomsModel.findOneAndUpdate(
+          { _id: room._id },
+          { position: room.position + 1 }
+        ).exec();
+      }
+    });
+  }
+  RoomsModel.findOneAndUpdate(
+    { _id: roomId },
+    { position: finalIndex + 1 }
+  ).exec();
+
+  res.send({ status: "done" });
+});
+
 router.post("/api/deleteCategory", (req, res) => {
-  Categories.find({ _id: req.body.deleteId }).remove().exec();
+  RoomsModel.find({ _id: req.body.deleteId }).remove().exec();
   res.send({ status: "deleted" });
+  // also resort by position
 });
 
 router.post("/move", (req, res) => {

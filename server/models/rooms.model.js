@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
-const categoriesSchema = new mongoose.Schema(
+const roomsSchema = new mongoose.Schema(
   {
     _id: String,
     name: {
       type: String,
       trim: true,
-      unique: true,
+      unique: false,
       required: [true, "Please add a name"],
     },
     position: {
       type: Number,
-      unique: true,
+      unique: false,
       required: false,
     },
     voice: {
@@ -24,6 +24,6 @@ const categoriesSchema = new mongoose.Schema(
   }
 );
 
-const categories = mongoose.model("Categories", categoriesSchema);
+const rooms = mongoose.model("Rooms", roomsSchema);
 
-module.exports = categories;
+module.exports = rooms;

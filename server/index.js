@@ -10,7 +10,7 @@ const corsOptions = {
 
 const usersRouter = require("./routes/users.js");
 const messagesRouter = require("./routes/messages.js");
-const categoriesRouter = require("./routes/categories.js");
+const roomsRouter = require("./routes/rooms.js");
 
 const userOps = require("./js/userOperations");
 const msgOps = require("./js/msgOperations");
@@ -304,5 +304,5 @@ const main = (connectedUsers) => {
   app.use(cors(corsOptions));
   app.use(usersRouter);
   app.use(messagesRouter);
-  app.use(categoriesRouter);
+  app.use(roomsRouter);
 };

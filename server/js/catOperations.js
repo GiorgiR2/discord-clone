@@ -1,13 +1,12 @@
-const CategoryModel = require("../models/categories.model");
-
+const RoomsModel = require("../models/rooms.model");
 const { saveModel } = require("./saveModel");
 
 const mongoose = require("mongoose");
 
 const addCats = (name, voiceBool) => {
-  let position = CategoryModel.findAll().length + 1;
+  let position = RoomsModel.findAll().length + 1;
 
-  const newCat = new CategoryModel({
+  const newCat = new RoomsModel({
     _id: new mongoose.Types.ObjectId(),
     name: name,
     position: position,
@@ -29,13 +28,13 @@ const loadCats = async () => {
   // addCats(`voice 2`, 9);
   // addCats(`voice 3`, 10);
 
-  return await CategoryModel.find().sort({ position: 1 }).exec();
+  return await RoomsModel.find().sort({ position: 1 }).exec();
 };
 
 const getVoiceRooms = async () => {
   let voices = {};
 
-  await CategoryModel.find({ voice: true })
+  await RoomsModel.find({ voice: true })
     .exec()
     .then((doc) => {
       doc.map((el) => {
