@@ -6,7 +6,7 @@
 * Node - back-end
 * socket.io - sending messages (and some other kind of data)
 * RestAPI
-* WebRTC - p2p audio/video transfer + screen share
+* WebRTC - p2p audio/video transfer + screen sharing
 
 ## Overview
 
@@ -35,11 +35,10 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 |-------------------------------------------|---------------------------------------------------|------------------------|
 | send messages/files                       | -                                                 | done                   |
 | video/audio group chat                    | webRTC p2p connection                             | done                   |
-| screen share                              | -                                                 | not yet                |
+| screen share                              | -                                                 | done                   |
 | add/edit/delete rooms                     | -                                                 | done                   |
 | edit/delete messages                      | -                                                 | done                   |
 | hash based authentication                 | -                                                 | done                   |
-| end-to-end encryption                     | -                                                 | not yet                |
 | auto login (remember logged in users)     | use localstorage to store authentication hash     | done                   |
 
 ## Screens
