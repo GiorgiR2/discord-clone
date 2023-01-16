@@ -70,7 +70,7 @@ router.post("/api/addCategory", async (req, res) => {
     await saveModel(newRoomModel);
     await res.send({
       status: "done",
-      _id: newCategoryModel._id,
+      _id: newRoomModel._id,
       position: newRoomModel.position,
     });
   });
