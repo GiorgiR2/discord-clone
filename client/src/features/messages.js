@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-//messages: [...{name: "", message: "", date: "", isFile: false, id: ""}, ]
 const initialStateValue = {
-  messages: [],
+  messages: [
+    // username, message, date, isFile, fileName, id, editMode
+  ],
 };
 
 export const userSlice = createSlice({

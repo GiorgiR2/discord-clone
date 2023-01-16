@@ -5,15 +5,14 @@ const initialStateValue = {
   currentUser: "",
   currentRoom: "",
   currentRoomId: "",
-  rooms: [], // all mongoose rooms
+  rooms: [], // all mongoose rooms {_id: string, name: string, position: int, voice: bool}
+  draggingRoomId: null,
+  draggingRoomIndex: null,
   online: [],
   offline: [],
   messages: [
     // username, message, date, isFile, fileName, id, editMode
   ],
-  displayEdit: false,
-  editingCatId: "",
-  displayAdd: false,
   voiceMode: false,
 };
 
@@ -23,15 +22,6 @@ export const userSlice = createSlice({
     value: initialStateValue,
   },
   reducers: {
-    togglePopupEdit: (state) => {
-      state.value.displayEdit = !state.value.displayEdit;
-    },
-    togglePopupAdd: (state) => {
-      state.value.displayAdd = !state.value.displayAdd;
-    },
-    addEditingCatId: (state, action) => {
-      state.value.editingCatId = action.payload.id;
-    },
     addUserName: (state, action) => {
       state.value.currentUser = action.payload.username;
     },
@@ -136,13 +126,40 @@ export const userSlice = createSlice({
     clearAll: (state) => {
       state.value = initialStateValue;
     },
+
+    rememberDraggingRoom: (state, action) => {
+      state.value.draggingRoomId = action.payload.id;
+      state.value.draggingRoomIndex = action.payload.index;
+    },
+    // changePosition: (state, action) => {
+    //   state.value.draggingRoomIndex = action.payload.index;
+    // },
+    modifyPosition: (state, action) => {
+      if (action.payload.index === state.value.draggingRoomIndex) {
+        return;
+      }
+
+      let focusRoom = state.value.rooms[state.value.draggingRoomIndex];
+      let newRooms = state.value.rooms.filter(
+        (room) => room._id !== state.value.draggingRoomId
+      );
+      let newRooms1 = [];
+      newRooms.forEach((room, n) => {
+        if (n === action.payload.index && room._id !== action.payload._id) {
+          newRooms1.push(focusRoom);
+        }
+        newRooms1.push(room);
+      });
+
+      if (newRooms1.length === action.payload.index) {
+        newRooms1.push(focusRoom);
+      }
+      state.value.rooms = newRooms1;
+    },
   },
 });
 
 export const {
-  togglePopupEdit,
-  togglePopupAdd,
-  addEditingCatId,
   addUserName,
   addRooms,
   addRoom,
@@ -160,6 +177,10 @@ export const {
   enterEditMode,
   exitEditMode,
   editMessage,
+
+  rememberDraggingRoom,
+  changePosition,
+  modifyPosition,
 
   clearAll,
 } = userSlice.actions;

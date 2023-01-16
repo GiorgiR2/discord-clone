@@ -6,35 +6,36 @@ import FormData from "form-data";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
-  togglePopupAdd,
   clearAll,
   addUserName,
   exitEditMode,
   editMessage,
-} from "../../features/users";
+} from "../../features/interfaces";
 import {
+  togglePopupAdd,
   toggleLeft,
   toggleRight,
   setContextMenu,
-} from "../../features/interface";
+} from "../../features/toggle";
 
 import { checkRoomId } from "../js/checkData";
 
-import Panel from "../../styles/sidePanel/sidePanel";
+import Panel from "./sidePanel/sidePanel";
 import DeleteDiv from "./deleteDiv/deleteDiv";
 
 import "./_chat.sass";
 
 import getTime from "../../scripts/getTime";
-import packageJson from "../../../package.json";
 import { getBasicData } from "../../scripts/_getBasicData";
 import * as socks from "../../scripts/_socketSide";
 
 import { VoiceFrame } from "./Voice/_voice";
 import { voiceMain } from "./Voice/_webRTCfunctions";
 
-import { PopupEditCat, PopupAddCat } from "./editCategory/_editCat";
-import { EditSVG, TrashSVG } from "../../styles/SVGs/_SVGs";
+import { PopupEditRoom, PopupAddRoom } from "./Rooms/_editRoom";
+import RoomsJSX from "./Rooms/_roomsJSX";
+
+import packageJson from "../../../package.json";
 import egressSVG from "../../assets/egress.svg";
 import sendSVG from "../../assets/send-24px.svg";
 import fileSVG from "../../assets/fileIcon.svg";
@@ -136,34 +137,11 @@ const MessagesDivs = ({ reduxData }) => {
 };
 
 const Chat = () => {
-  const Categories = () => {
-    const CategoriesJSX = () =>
-      reduxData.rooms.map((room) => (
-        <li className="category" id={room._id}>
-          <a
-            className="hyperlink"
-            onClick={() => {
-              history.push(`/chat/${room._id}/${hashId}`);
-              window.location.reload();
-            }}
-          >
-            # {room.name}
-          </a>
-          {/* <Link to={`/chat/${room._id}`}>
-            # {room.name}
-          </Link> */}
-          <div className="svgs">
-            <EditSVG id={room._id} typeE="room" />{" "}
-            {/* set redux editingCatId as id */}
-            <TrashSVG id={room._id} typeE="room" />
-          </div>
-        </li>
-      ));
-
+  const Rooms = () => {
     return (
       <div
         className={`categories ${
-          interfacesRedux.toggleLeft === false ? "hidden" : ""
+          toggleRedux.toggleLeft === false ? "hidden" : ""
         }`}
       >
         <div className="top">
@@ -183,7 +161,7 @@ const Chat = () => {
 
           <nav>
             <ul id="ul-id">
-              <CategoriesJSX />
+              <RoomsJSX />
             </ul>
           </nav>
         </div>
@@ -311,7 +289,7 @@ const Chat = () => {
     // { online, offline }
     <div
       className={`status-bar ${
-        interfacesRedux.toggleRight === false ? "hidden" : ""
+        toggleRedux.toggleRight === false ? "hidden" : ""
       }`}
     >
       <div className="top">
@@ -349,9 +327,9 @@ const Chat = () => {
   );
 
   const dispatch = useDispatch();
-  const reduxData = useSelector((state) => state.users.value);
+  const reduxData = useSelector((state) => state.interfaces.value);
   const voiceRedux = useSelector((state) => state.voice.value);
-  const interfacesRedux = useSelector((state) => state.interfaces.value);
+  const toggleRedux = useSelector((state) => state.toggle.value);
 
   let { roomId, hashId } = useParams();
   const history = useHistory();
@@ -406,17 +384,17 @@ const Chat = () => {
 
   return (
     <div className="chat">
-      {reduxData.displayEdit ? <PopupEditCat /> : null}
-      {reduxData.displayAdd ? <PopupAddCat /> : null}
+      {toggleRedux.displayEdit ? <PopupEditRoom /> : null}
+      {toggleRedux.displayAdd ? <PopupAddRoom /> : null}
 
-      <Categories />
+      <Rooms />
       <Center />
       <StatusBar />
-      {interfacesRedux.contextMenu.show ? (
+      {toggleRedux.contextMenu.show ? (
         <DeleteDiv
-          x={interfacesRedux.contextMenu.x}
-          y={interfacesRedux.contextMenu.y}
-          id={interfacesRedux.contextMenu.id}
+          x={toggleRedux.contextMenu.x}
+          y={toggleRedux.contextMenu.y}
+          id={toggleRedux.contextMenu.id}
         />
       ) : null}
     </div>
