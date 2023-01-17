@@ -76,11 +76,11 @@ const DeleteDiv = ({ x, y, id }) => {
       <nav>
         <ul>
           <li id="edit" onClick={() => editMSG(id)}>
-            <h3 className="edit">edit</h3>
+            <h3 className="edit">Edit Message</h3>
             <EditSVG id="001" typeE="message" />
           </li>
           <li id="delete" onClick={() => deleteMSG(id)}>
-            <h3 className="delete">delete</h3>
+            <h3 className="delete">Delete Message</h3>
             <TrashSVG id="001" typeE="message" />
           </li>
         </ul>
