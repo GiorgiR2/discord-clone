@@ -134,10 +134,24 @@ router.post("/api/changeRoomPosition", async (req, res) => {
   res.send({ status: "done" });
 });
 
-router.post("/api/deleteCategory", (req, res) => {
-  RoomsModel.find({ _id: req.body.deleteId }).remove().exec();
+router.post("/api/deleteCategory", async (req, res) => {
+  let doc = await RoomsModel.find({ _id: req.body.deleteId });
+  let position = doc[0].position;
+
+  console.log("position:", position);
+  await doc[0].remove();
   res.send({ status: "deleted" });
-  // also resort by position
+
+  // renumber rooms (positions)
+  let rooms = await RoomsModel.find().sort({ position: 1 }).exec();
+  rooms.forEach((room, n) => {
+    if (room.position > position) {
+      RoomsModel.findOneAndUpdate(
+        { _id: room._id },
+        { position: room.position - 1 }
+      ).exec();
+    }
+  });
 });
 
 router.post("/move", (req, res) => {
