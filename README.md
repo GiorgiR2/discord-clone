@@ -25,7 +25,7 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 
 1. ```git clone https://github.com/GiorgiR2/discord-clone.git```
 2. ```cd discord-mern```
-3. Install Packages && Run back-end ```cd server && npm i && npm start```
+3. Install Packages && Run back-end ```cd server && npm i && npm run build && npm start```
 4. Install Packages && Run front-end ```cd client && npm i && npm start```
 
 
@@ -63,10 +63,6 @@ Login Window
 Sign Up window
 
 ![alt text](https://raw.githubusercontent.com/GiorgiR2/discord-clone/master/screens/signup.png)
-
-## Future Plans
-
-Rewrite everything in Typescript
 
 ## Contact
 
