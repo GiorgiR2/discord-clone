@@ -1,6 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose, { Types } from "mongoose";
+import mongodb from "mongodb";
 
-const messageSchema = new mongoose.Schema(
+// mongoose.Document
+export interface messageSchemaI extends mongoose.Document {
+  _id: Types.ObjectId;
+  date: string;
+  message?: string;
+  user: string;
+  room: string;
+  roomId: string;
+  isFile?: boolean;
+  path?: string;
+  originalName?: string;
+  downloadCount?: number;
+  size?: number;
+  edited?: boolean;
+}
+
+const messageSchema = new mongoose.Schema<messageSchemaI>(
   {
     _id: mongoose.Schema.Types.ObjectId,
     date: {
@@ -59,12 +76,31 @@ const messageSchema = new mongoose.Schema(
       unique: false,
       required: false,
     },
+    edited: {
+      type: Boolean,
+      unique: false,
+      required: false,
+    },
   },
   {
     timestamps: false,
   }
 );
 
-const Message = mongoose.model("Message", messageSchema);
+const Message = mongoose.model<messageSchemaI>("Message", messageSchema);
 
-module.exports = Message;
+// module.exports = Message;
+export default Message;
+
+// export function findOneAndUpdate(filter: { _id: any; }, update: { message: any; }) {
+//   throw new Error("Function not implemented.");
+// }
+
+// export function find(arg0: { _id: any; }) {
+//   throw new Error("Function not implemented.");
+// }
+
+// export function findOne(arg0: { size: string; originalName: string; }) {
+//   throw new Error("Function not implemented.");
+// }
+// export { messageSchemaI };

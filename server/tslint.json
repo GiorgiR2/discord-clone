@@ -1,0 +1,9 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "rules": {
+    "semicolon": true,
+    "trailing-comma": true,
+    "only-arrow-functions": true
+  }
+}

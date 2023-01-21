@@ -1,13 +1,15 @@
-const MessageModel = require("../models/message.model");
+import MessageModel from "../models/message.model.cjs";
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const { saveModel } = require("./saveModel");
+import saveModel from "./saveModel.cjs";
 
-const addToMongoose = (data) => {
+import { addToMongooseDataI } from "../types/types.cjs";
+
+const addToMongoose = (data: addToMongooseDataI ): string => {
   // authentication, username, message, datetime, room
   // console.log("data", data);
-  let newMessageModel;
+  let newMessageModel: any;
   // console.log("data to save: ", data);
 
   if (data.isFile)
@@ -39,17 +41,17 @@ const addToMongoose = (data) => {
   return newMessageModel._id;
 };
 
-const removeMessage = (hash) => {
+const removeMessage = (hash: string) => {
   // pass
 };
 
-const loadMessages = (socket, room) => {
+const loadMessages = (socket: any, room: string) => {
   MessageModel.find({
     room: room,
     // isFile: false,
   })
     .exec()
-    .then((doc) => {
+    .then((doc: any) => {
       socket.emit("messagesData", doc);
       // console.log(doc);
     });
@@ -57,4 +59,5 @@ const loadMessages = (socket, room) => {
   //   return messages;
 };
 
-module.exports = { addToMongoose, removeMessage, loadMessages };
+// module.exports = { addToMongoose, removeMessage, loadMessages };
+export { addToMongoose, removeMessage, loadMessages };

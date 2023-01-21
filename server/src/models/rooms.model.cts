@@ -1,6 +1,13 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const roomsSchema = new mongoose.Schema(
+interface roomsSchemaI extends mongoose.Document{
+  _id: string;
+  name: string;
+  position: number;
+  voice?: boolean;
+}
+
+const roomsSchema = new mongoose.Schema<roomsSchemaI>(
   {
     _id: String,
     name: {
@@ -24,6 +31,8 @@ const roomsSchema = new mongoose.Schema(
   }
 );
 
-const rooms = mongoose.model("Rooms", roomsSchema);
+const rooms = mongoose.model<roomsSchemaI>("Rooms", roomsSchema);
 
-module.exports = rooms;
+// module.exports = rooms;
+export default rooms;
+export { roomsSchemaI };

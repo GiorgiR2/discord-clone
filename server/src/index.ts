@@ -1,63 +1,56 @@
-const express = require("express");
-const http = require("http");
-const socketio = require("socket.io");
-const cors = require("cors");
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import cors from "cors";
+
 const corsOptions = {
   origin: "*",
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
 
-const usersRouter = require("./routes/users.js");
-const messagesRouter = require("./routes/messages.js");
-const roomsRouter = require("./routes/rooms.js");
+const usersRouter = require("./routes/users.cjs");
+const messagesRouter = require("./routes/messages.cjs");
+const roomsRouter = require("./routes/rooms.cjs");
 
-const userOps = require("./js/userOperations");
-const msgOps = require("./js/msgOperations");
-const catOps = require("./js/catOperations");
+import { usersStatus } from "./ts/userOperations.cjs";
+import { loadMessages, addToMongoose } from "./ts/msgOperations.cjs";
+// import catOps from "./ts/catOperations.cjs";
 
-const Message = require("./models/message.model");
+import MessageModel from "./models/message.model.cjs";
 
-require("./mongooseAPI.js");
+import "./mongooseAPI.cjs";
 
-require("dotenv").config(); // variables
+// types
+import { connectedUsersI, usersInVoiceI } from "./types/types.cjs";
+
+import dotenv from "dotenv";
+dotenv.config(); // .env variables
 
 const PORT = process.env.PORT || 5000;
 
-const app = express();
+const app: express.Application = express();
 const server = http.createServer(app);
-const io = socketio(server, {
+const io = new Server(server, {
   cors: {
-    origins: "*:*",
-    credentials: true, //access-control-allow-credentials:true
-    optionSuccessStatus: 200,
-    //     origin: [
-    //         "http://localhost:3000",
-    //         "http://192.168.100.8:3000",
-    //         "https://admin.socket.io/",
-    //     ]
+    // origins: "*:*",
+    credentials: true,
+    // optionSuccessStatus: 200,
   },
 });
 
-var usersInVoice = {};
-var socketIds = [];
-var roomIds = [];
+var usersInVoice: usersInVoiceI = {};
+var socketIds: string[] = [];
+var roomIds: string[] = [];
 
-(async () => {
-  const connectedUsers = await userOps.usersStatus();
-  // const usersInVoice = await catOps.getVoiceRooms();
-  // console.log("usersInVoice:", usersInVoice);
-  main(connectedUsers);
-})();
-
-const main = (connectedUsers) => {
-  io.on("connection", (socket) => {
-    let userNN;
+const main = (connectedUsers: connectedUsersI[]) => {
+  io.on("connection", (socket: any) => {
+    let username: string;
     console.log("new connection", socket.id);
 
-    socket.on("join", (data, callback) => {
+    socket.on("join", (data: any) => {
       console.log("join", data);
-      userNN = data.username;
+      username = data.username;
 
       const newAccount = connectedUsers
         .map((data) => data.username)
@@ -71,13 +64,13 @@ const main = (connectedUsers) => {
         });
       else
         for (var i in connectedUsers) {
-          let userData = connectedUsers[i];
+          let userData: connectedUsersI = connectedUsers[i];
           if (userData.username == data.username) {
             if (userData.tabsOpen === 0) {
               userData.status = "online";
 
               socket.broadcast.emit("online", {
-                username: userNN,
+                username: username,
               });
               userData.tabsOpen = 1;
             } else userData.tabsOpen += 1;
@@ -87,19 +80,19 @@ const main = (connectedUsers) => {
 
       socket.emit("status", connectedUsers);
 
-      msgOps.loadMessages(socket, data.room);
+      loadMessages(socket, data.room);
 
       socket.join(data.room);
     });
 
-    socket.on("disconnect", (data, callback) => {
+    socket.on("disconnect", (data: any) => {
       for (var i in connectedUsers) {
-        let userData = connectedUsers[i];
-        if (userData.username == userNN) {
+        let userData: connectedUsersI = connectedUsers[i];
+        if (userData.username === username) {
           userData.tabsOpen -= 1;
           if (userData.tabsOpen === 0) {
             socket.broadcast.emit("offline", {
-              username: userNN,
+              username: username,
             });
             userData.status = "offline";
           }
@@ -107,7 +100,7 @@ const main = (connectedUsers) => {
         }
       }
 
-      console.log("disconnect", userNN, socket.id);
+      console.log("disconnect", username, socket.id);
       // emit disconnect message for voice chat users
       roomIds.forEach((roomid) => {
         usersInVoice[roomid].forEach((user) => {
@@ -135,16 +128,16 @@ const main = (connectedUsers) => {
       });
     });
 
-    socket.on("message", async (data, callback) => {
-      let authentication = data.authentication;
+    socket.on("message", async (data: any) => {
+      let authentication: string = data.authentication;
 
-      let user = data.username;
-      let message = data.message;
+      let user: string = data.username;
+      let message: string = data.message;
 
-      let datetime = data.datetime;
-      let room = data.room;
+      let datetime: string = data.datetime;
+      let room: string = data.room;
 
-      let _id = msgOps.addToMongoose({ ...data, isFile: false }); // authentication, username, message, datetime, room
+      let _id = addToMongoose({ ...data, isFile: false }); // authentication, username, message, datetime, room
 
       let sdata = {
         user: user,
@@ -155,15 +148,15 @@ const main = (connectedUsers) => {
       };
       socket.emit("M_S_O", sdata);
       socket.in(room).emit("M_S_O", sdata);
-      // console.log("sent (1)", room, message, "from", userNN);
+      // console.log("sent (1)", room, message, "from", username);
     });
 
-    socket.on("deleteMessage", async (data) => {
-      Message.find({ _id: data._id }).remove().exec();
+    socket.on("deleteMessage", async (data: any): Promise<void> => {
+      MessageModel.find({ _id: data._id }).remove().exec();
       socket.in(data.room).emit("messageDeleted", { _id: data._id });
     });
 
-    socket.on("editMessage", async (data) => {
+    socket.on("editMessage", async (data: any) => {
       let filter = { _id: data._id };
       let msg = data.messageHTML
         .replace("</div><div>", "<br>")
@@ -172,20 +165,20 @@ const main = (connectedUsers) => {
       msg = msg.substring(0, msg.length - 4).replaceAll("<br>", "\n");
 
       let update = { message: msg };
-      Message.findOneAndUpdate(filter, update).exec();
+      MessageModel.findOneAndUpdate(filter, update).exec();
     });
 
-    socket.on("file", async (data) => {
+    socket.on("file", async (data: any) => {
       let authentication = data.authentication;
 
-      let user = data.user;
-      let datetime = data.datetime;
-      let room = data.room;
-      let roomId = data.roomId;
-      let size = data.size;
-      let filename = data.filename;
+      let user: string = data.user;
+      let datetime: string = data.datetime;
+      let room: string = data.room;
+      let roomId: string = data.roomId;
+      let size: string = data.size;
+      let filename: string = data.filename;
 
-      Message.findOne({ size: size, originalName: filename }).then((doc) => {
+      MessageModel.findOne({ size: size, originalName: filename }).then((doc: any) => {
         // let sdata = {
         //   user: user,
         //   _id: file._id,
@@ -202,14 +195,14 @@ const main = (connectedUsers) => {
     // #      WebRTC Signalling        #
     // #################################
 
-    socket.on("joinVoice", (data, callback) => {
+    socket.on("joinVoice", (data: any) => {
       if (data.username === "") {
         // console.log("no username !!!!!!!!!!!");
         return;
       }
-      let room = data.room;
-      let roomId = data.roomId;
-      let username = data.username;
+      let room: string = data.room;
+      let roomId: string = data.roomId;
+      let username: string = data.username;
       let payload = {
         id: socket.id,
         username: username,
@@ -252,7 +245,7 @@ const main = (connectedUsers) => {
       }
     });
 
-    socket.on("offer", (data) => {
+    socket.on("offer", (data: any) => {
       // {id, text, roomId}
       console.log(`* offer generated by: ${socket.id}; for: ${data.id}`);
       io.to(data.id).emit("offer", {
@@ -262,7 +255,7 @@ const main = (connectedUsers) => {
       });
     });
 
-    socket.on("candidate", (data) => {
+    socket.on("candidate", (data: any) => {
       console.log(
         `* ice candidates generated by: ${socket.id}; for: ${data.id}`
       );
@@ -273,7 +266,7 @@ const main = (connectedUsers) => {
       });
     });
 
-    socket.on("answer", (data) => {
+    socket.on("answer", (data: any) => {
       console.log(`* answer generated by: ${socket.id}; for: ${data.to}`);
       io.to(data.to).emit("answer", {
         text: data.text,
@@ -282,7 +275,7 @@ const main = (connectedUsers) => {
       });
     });
 
-    socket.on("toggleVideo", (data) => {
+    socket.on("toggleVideo", (data: any) => {
       // console.log(`users in ${data.roomId}: ${usersInVoice[data.roomId]}`);
       usersInVoice[data.roomId].forEach((user) => {
         if (user.id !== socket.id) {
@@ -294,9 +287,9 @@ const main = (connectedUsers) => {
       });
     });
 
-    socket.on("toggleAudio", (data) => {
+    // socket.on("toggleAudio", (data) => {
       // console.log(`users in ${data.roomId}: ${usersInVoice[data.roomId]}`);
-    });
+    // });
   });
 
   server.listen(PORT, () => console.log(`Server is on PORT: ${PORT}`));
@@ -306,3 +299,8 @@ const main = (connectedUsers) => {
   app.use(messagesRouter);
   app.use(roomsRouter);
 };
+
+(async () => {
+  const connectedUsers: connectedUsersI[] = await usersStatus();
+  main(connectedUsers);
+})();

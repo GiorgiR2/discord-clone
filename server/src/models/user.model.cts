@@ -1,7 +1,16 @@
-const { kStringMaxLength } = require("buffer");
-const mongoose = require("mongoose");
+// const { kStringMaxLength } = require("buffer");
+import mongoose, { Types } from "mongoose";
 
-const userSchema = new mongoose.Schema(
+interface userSchemaI extends mongoose.Document {
+  _id: Types.ObjectId;
+  username: string;
+  password: string;
+  status: Number;
+  ip: string;
+  hashId: string;
+}
+
+const userSchema = new mongoose.Schema<userSchemaI>(
   {
     _id: mongoose.Schema.Types.ObjectId,
     username: {
@@ -36,11 +45,12 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timestamp: true,
+    timestamps: true,
   }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<userSchemaI>("User", userSchema);
 
-module.exports = User;
-
+// module.exports = User;
+export default User;
+export { userSchemaI };
