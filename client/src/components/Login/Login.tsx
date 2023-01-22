@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
+import { useHistory, Link, useLocation } from "react-router-dom"; // { Link, Redirect }
 import axios from "axios";
 
 import { getBasicData } from "../../scripts/_getBasicData";
@@ -7,29 +7,23 @@ import { getBasicData } from "../../scripts/_getBasicData";
 import "./_login.sass";
 import packageJson from "../../../package.json";
 
-// const startPoint =
-//   window.location.href.toString().includes("localhost") ||
-//   window.location.href.toString().includes("127.0.0.1")
-//     ? ""
-//     : "/discord-clone-react"; //packageJson.homepage;
+const apiLink = packageJson.proxy;
 
-const apiLink = packageJson.proxy; // "http://127.0.0.1:5000";
-
-const config = {
+const config: { [key: string]: string } = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
 };
 
 const Login = () => {
-  const rememberUser = (hashId) => {
+  const rememberUser = (hashId: string) => {
     console.log(`remember hashId: ${hashId}`);
     localStorage.setItem("hashId", hashId);
   };
-  const sendLoginData = (e, user, pswrd) => {
+  const sendLoginData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, user: string, password: string) => {
     e.preventDefault();
     let data = {
       username: user,
-      password: pswrd,
+      password: password,
     };
 
     axios
@@ -40,7 +34,9 @@ const Login = () => {
             rememberUser(res.data.hashId);
           }
 
+          console.log("data:", res.data.roomId, res.data.hashId);
           history.push(`/chat/${res.data.roomId}/${res.data.hashId}`); // /?id=${res.data.data}
+          window.location.reload();
         } else {
           alert("Try again...");
         }
@@ -50,8 +46,8 @@ const Login = () => {
 
   document.title = "login section";
 
-  const [userName, setUserName] = useState();
-  const [password, setPassword] = useState();
+  const [userName, setUserName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const history = useHistory();
 
   const [remember, setRemember] = useState(false);
@@ -64,7 +60,7 @@ const Login = () => {
       alert("registration is done...");
     }
 
-    getBasicData(history, undefined, undefined);
+    getBasicData({ history });
   }, []);
 
   return (
@@ -75,14 +71,14 @@ const Login = () => {
 
       <input
         type="text"
-        className="e-name"
+        className="e-name" // @ts-expect-error
         rows="1"
         cols="20"
         onChange={(event) => setUserName(event.target.value)}
       />
       <input
         type="password"
-        className="e-pass"
+        className="e-pass" // @ts-expect-error
         rows="1"
         cols="20"
         onChange={(event) => setPassword(event.target.value)}

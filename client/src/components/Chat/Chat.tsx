@@ -36,15 +36,25 @@ import { PopupEditRoom, PopupAddRoom } from "./Rooms/_editRoom";
 import RoomsJSX from "./Rooms/_roomsJSX";
 
 import packageJson from "../../../package.json";
-import egressSVG from "../../assets/egress.svg";
-import sendSVG from "../../assets/send-24px.svg";
-import fileSVG from "../../assets/fileIcon.svg";
 
-import userSVG from "../../assets/chat/user-flat.svg";
+import { messageI, interfaceInitialStateValueI, userDataI } from "../../types/types";
+import { AppDispatch, RootState } from "../..";
+
+import { History } from "history";
+
+// import egressSVG from "-!svg-react-loader!../../assets/egress.svg";
+// import sendSVG from "-!svg-react-loader!../../assets/send-24px.svg";
+// import fileSVG from "-!svg-react-loader!../../assets/fileIcon.svg";
+// import userSVG from "-!svg-react-loader!../../assets/chat/user-flat.svg";
+
+const egressSVG: string = require("../../assets/egress.svg").default;
+const sendSVG: string = require("../../assets/send-24px.svg").default;
+const fileSVG: string = require("../../assets/fileIcon.svg").default;
+const userSVG: string = require("../../assets/chat/user-flat.svg").default;
 
 const apiLink = packageJson.proxy;
 
-const logOut = (e, history, dispatch) => {
+const logOut = (e: React.MouseEvent<HTMLHeadingElement, MouseEvent>, history: History, dispatch: AppDispatch) => {
   e.preventDefault();
   axios
     .post(`${apiLink}/api/users/logout`, { junk: "" })
@@ -52,6 +62,7 @@ const logOut = (e, history, dispatch) => {
       if (res.data.status === "done") {
         localStorage.removeItem("hashId");
         history.push(`/`);
+        window.location.reload();
       }
     })
     .catch((err) => console.error(err));
@@ -61,8 +72,8 @@ const logOut = (e, history, dispatch) => {
 };
 
 // user, msg, date, isFile, originalName, id, editMode,
-const MessagesDivs = ({ reduxData }) => {
-  const handleContextMenu = (e, id) => {
+const MessagesDivs = ({ reduxData }: {reduxData: interfaceInitialStateValueI}): JSX.Element => {
+  const handleContextMenu = (e: any, id: string) => {
     e.preventDefault();
 
     const { pageX, pageY } = e;
@@ -72,10 +83,10 @@ const MessagesDivs = ({ reduxData }) => {
       })
     );
   };
-  const handleOnInput = (event, id) => {
+  const handleOnInput = (event: any, id: string) => {
     // console.log("OnInput:", event.target.innerHTML, id);
   };
-  const handleOnBlur = (event, id) => {
+  const handleOnBlur = (event: any, id: string) => {
     //Todo: get p content, update that specific line and then send post request
     // console.log("OnBlur");
     dispatch(editMessage({ messageHTML: event.target.innerHTML, _id: id }));
@@ -85,20 +96,21 @@ const MessagesDivs = ({ reduxData }) => {
 
   const dispatch = useDispatch();
 
-  return reduxData.messages.map((el) => {
+  return<>{
+    reduxData.messages.map((el: messageI) => {
     // msg may be a text / a multiline text or a fileID
     let link = `${apiLink}/file/${el.message}`; // msg === Id
     // console.log(el.message);
     return (
       <div
         className={`element messageDiv ${el.editMode ? "focus" : null}`}
-        onContextMenu={(event) => handleContextMenu(event, el.id)}
+        onContextMenu={(event) => handleContextMenu(event, el._id)}
       >
         <img src={userSVG} />
         <div className="main">
           <div className="top">
             <div className="author">
-              {el.username} <span>{el.date}</span>
+              {el.user} <span>{el.date}</span>
             </div>
             {/*<h4 className="encryption">No Encryption</h4>*/}
           </div>
@@ -117,11 +129,11 @@ const MessagesDivs = ({ reduxData }) => {
               </div>
             ) : (
               <p
-                onInput={(event) => handleOnInput(event, el.id)}
-                onBlur={(event) => handleOnBlur(event, el.id)}
+                onInput={(event) => handleOnInput(event, el._id)}
+                onBlur={(event) => handleOnBlur(event, el._id)}
                 contentEditable={el.editMode}
               >
-                {el.message.split("\n").map((line) => (
+                {el.message.split("\n").map((line: string) => (
                   <>
                     {line}
                     <br />
@@ -133,10 +145,11 @@ const MessagesDivs = ({ reduxData }) => {
         </div>
       </div>
     );
-  });
+  })}
+  </>;
 };
 
-const Chat = () => {
+const Chat: React.FC = () => {
   const Rooms = () => {
     return (
       <div
@@ -170,16 +183,10 @@ const Chat = () => {
   };
 
   const Messages = () => {
-    const handleSubmit = (e, file) => {
+    // type fileT = FileList | null;
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>, file: any) => {
       const sendFileData = () => {
-        socks.sendFileData(
-          e,
-          reduxData,
-          roomId,
-          datetime,
-          file.size,
-          file.name
-        );
+        socks.sendFileData({ reduxData, roomId, datetime, size: file.size, filename: file.name });
       };
 
       e.preventDefault();
@@ -219,8 +226,8 @@ const Chat = () => {
       // console.log("!!!!!!!!!!", file.name, file.size, typeof file.size);
     };
 
-    const [file, setFile] = useState();
-    const inputRef = useRef(null); // inputRef.current.value
+    const [file, setFile] = useState<any>();
+    const inputRef = useRef<HTMLTextAreaElement>(null);
 
     return (
       <>
@@ -231,11 +238,10 @@ const Chat = () => {
         <div id="input">
           <textarea
             id="text-area"
-            type="text"
             placeholder={`Message #${reduxData.currentRoom}`}
             ref={inputRef}
-            onKeyPress={(e) =>
-              socks.sendMessage(e, reduxData, roomId, "desktop", inputRef)
+            onKeyPress={(event) =>
+              socks.sendMessage({ event, reduxData, roomId, device: "desktop", inputRef })
             }
             autoFocus={window.innerWidth <= 850 ? false : true}
           ></textarea>
@@ -245,7 +251,7 @@ const Chat = () => {
           >
             <input
               type="file"
-              id="file"
+              id="file" // @ts-expect-error
               onChange={(e) => setFile(e.target.files[0])}
             />
             <button className="submit" type="submit">
@@ -257,7 +263,7 @@ const Chat = () => {
             src={sendSVG}
             alt="send"
             onClick={(event) =>
-              socks.sendMessage(event, reduxData, roomId, "mobile", inputRef)
+              socks.sendMessage({ event, reduxData, roomId, device: "mobile", inputRef })
             }
           />
         </div>
@@ -310,14 +316,14 @@ const Chat = () => {
         </h1>
       </div>
       <h3 className="titleON">ACTIVE - {reduxData.online.length}</h3>
-      {reduxData.online.map((el) => (
+      {reduxData.online.map((el: string) => (
         <h3 className="online">
           <div />
           {el}
         </h3>
       ))}
       <h3 className="titleOFF">OFFLINE - {reduxData.offline.length}</h3>
-      {reduxData.offline.map((el) => (
+      {reduxData.offline.map((el: string) => (
         <h3 className="offline">
           <div />
           {el}
@@ -326,19 +332,19 @@ const Chat = () => {
     </div>
   );
 
-  const dispatch = useDispatch();
-  const reduxData = useSelector((state) => state.interfaces.value);
-  const voiceRedux = useSelector((state) => state.voice.value);
-  const toggleRedux = useSelector((state) => state.toggle.value);
+  const dispatch: AppDispatch = useDispatch();
+  const reduxData = useSelector((state: RootState) => state.interfaces.value);
+  const voiceRedux = useSelector((state: RootState) => state.voice.value);
+  const toggleRedux = useSelector((state: RootState) => state.toggle.value);
 
-  let { roomId, hashId } = useParams();
+  let { roomId, hashId } = useParams<{ roomId: string; hashId: string; }>();
   const history = useHistory();
 
   useLayoutEffect(() => {
     // checkHashId(hashId, history);
     checkRoomId(dispatch, apiLink, roomId, hashId, history);
 
-    getBasicData(history, roomId, hashId, dispatch, "chat");
+    getBasicData({history, roomId, hashId, dispatch});
   }, []);
 
   useEffect(() => {
@@ -348,7 +354,7 @@ const Chat = () => {
   useEffect(() => {
     // scroll to the newest message
     try {
-      let el = document.getElementById("last-element");
+      let el: any = document.getElementById("last-element");
       el.scrollIntoView();
     } catch {
       //pass
@@ -362,7 +368,7 @@ const Chat = () => {
         .then((res) => {
           // console.log("res.data.username:", res.data.username);
           dispatch(addUserName({ username: res.data.username }));
-          let userData = {
+          let userData: userDataI = {
             currentRoom: reduxData.currentRoom,
             currentRoomId: reduxData.currentRoomId,
             currentUser: res.data.username,
@@ -371,13 +377,6 @@ const Chat = () => {
         })
         .catch((err) => console.error(err));
     } else if (reduxData.voiceMode) {
-      // console.log(
-      //   `reduxData:
-      //   "${reduxData.currentRoom}",
-      //   "${reduxData.currentRoomId}",
-      //   "${reduxData.currentUser === ""}"
-      //   "${hashId}"`
-      // );
       voiceMain(voiceRedux, reduxData, dispatch);
     }
   }, [reduxData.voiceMode]);

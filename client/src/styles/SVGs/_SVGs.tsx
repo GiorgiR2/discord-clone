@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 
 import { togglePopupEdit, addEditingCatId } from "../../features/toggle";
@@ -6,17 +5,24 @@ import { addRooms } from "../../features/interfaces";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import Edit from "./edit.svg";
-import Trash from "./trash.svg";
-
 import packageJson from "../../../package.json";
+import { roomI } from "../../types/types";
+import { RootState } from "../..";
 
-const changeMode = (a, b, c) => {};
+const Edit: string = require("./edit.svg").default;
+const Trash: string = require("./trash.svg").default;
+
+// const changeMode = (a, b, c) => {};
+
 const apiLink = packageJson.proxy;
 
-const EditSVG = ({ id, typeE }) => {
-  // typeE === "room" || "message" // ignore on "message"
-  const editCat = (e) => {
+interface svgI {
+  id: string;
+  typeE: "room" | "message";
+}
+
+const EditSVG = ({ id, typeE }: svgI): JSX.Element => {
+  const editCat = () => {
     dispatch(addEditingCatId({ id: id }));
     dispatch(togglePopupEdit());
   };
@@ -25,22 +31,22 @@ const EditSVG = ({ id, typeE }) => {
 
   return (
     <img
-      onClick={(event) => (typeE === "room" ? editCat(event) : null)}
+      onClick={() => (typeE === "room" ? editCat() : null)}
       src={Edit}
     />
   );
 };
 
-const TrashSVG = ({ id, typeE }) => {
+const TrashSVG = ({ id, typeE }: svgI): JSX.Element => {
   // typeE === "room" || "message"
-  const trash = (e) => {
+  const trash = () => {
     // e.preventDefault();
     axios
       .post(`${apiLink}/api/deleteCategory`, { deleteId: id })
       .then((res) => {
         if (res.data.status === "deleted") {
-          let newj = [];
-          let newJson = reduxData.rooms.map((cat) => {
+          let newj: roomI[] = [];
+          reduxData.rooms.forEach((cat: roomI) => {
             if (cat._id !== id) newj.push(cat);
           });
 
@@ -49,12 +55,12 @@ const TrashSVG = ({ id, typeE }) => {
       })
       .catch((err) => console.error(err));
   };
-  const reduxData = useSelector((state) => state.interfaces.value);
+  const reduxData = useSelector((state: RootState) => state.interfaces.value);
   const dispatch = useDispatch();
 
   return (
     <img
-      onClick={(event) => (typeE === "room" ? trash(event) : null)}
+      onClick={() => (typeE === "room" ? trash() : null)}
       src={Trash}
     />
   );

@@ -10,7 +10,7 @@ import "./_sign-up.sass";
 const apiLink = packageJson.proxy;
 
 const SignUp = () => {
-  const sendData = (e, username, password0, password1) => {
+  const sendData = (e: React.SyntheticEvent, username: string, password0: string, password1: string) => {
     e.preventDefault();
     const data = {
       username: username,
@@ -28,9 +28,9 @@ const SignUp = () => {
       })
       .catch((err) => console.log(err));
   };
-  const [username, setUsername] = useState();
-  const [password0, setPassword0] = useState();
-  const [password1, setPassword1] = useState();
+  const [username, setUsername] = useState<string>("");
+  const [password0, setPassword0] = useState<string>("");
+  const [password1, setPassword1] = useState<string>("");
 
   const history = useHistory();
   // let { signup } = useParams();
@@ -38,7 +38,7 @@ const SignUp = () => {
   document.title = "sign up";
 
   useEffect(() => {
-    getBasicData(history, undefined, undefined);
+    getBasicData({ history });
   }, []);
 
   return (
@@ -50,7 +50,7 @@ const SignUp = () => {
 
       <input
         type="text"
-        className="e-name"
+        className="e-name" // @ts-expect-error
         rows="1"
         cols="15"
         onChange={(event) => setUsername(event.target.value)}
@@ -58,7 +58,7 @@ const SignUp = () => {
       <input
         type="password"
         className="pass0"
-        autoComplete="on"
+        autoComplete="on" // @ts-expect-error
         rows="1"
         cols="15"
         onChange={(event) => setPassword0(event.target.value)}
@@ -66,7 +66,7 @@ const SignUp = () => {
       <input
         type="password"
         className="pass1"
-        autoComplete="on"
+        autoComplete="on" // @ts-expect-error
         rows="1"
         cols="15"
         onChange={(event) => setPassword1(event.target.value)}

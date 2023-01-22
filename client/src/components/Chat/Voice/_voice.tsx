@@ -12,22 +12,27 @@ import {
 
 import { useHistory, useParams } from "react-router-dom";
 
-import MicOff from "../../../assets/voice/micOff.svg";
-import MicOn from "../../../assets/voice/micOn.svg";
-import CamOff from "../../../assets/voice/camOff.svg";
-import CamOn from "../../../assets/voice/camOn.svg";
-import ScreenShare from "../../../assets/voice/screenShare.svg";
-
-import Speaker from "../../../assets/volume_up_black_24dp.svg";
-import FullScreen from "../../../assets/fullscreen_black_24dp.svg";
+import { History } from "history";
+import { frameI } from "../../../types/types";
 
 import "./_voice.sass";
+import { RootState } from "../../..";
 
-const egress = (history, roomId, hashId) => {
+const MicOff: string = require("../../../assets/voice/micOff.svg").default;
+const MicOn: string = require("../../../assets/voice/micOn.svg").default;
+const CamOff: string = require("../../../assets/voice/camOff.svg").default;
+const CamOn: string = require("../../../assets/voice/camOn.svg").default;
+const ScreenShare: string = require("../../../assets/voice/screenShare.svg").default;
+
+const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
+const FullScreen: string = require("../../../assets/fullscreen_black_24dp.svg").default;
+
+const egress = (history: History, roomId: string, hashId: string) => {
   history.push(`/chat/61ed960432479c682956838e/${hashId}`);
+  window.location.reload();
 };
 
-const launchIntoFullscreen = (element) => {
+const launchIntoFullscreen = (element: any) => {
   if (element.requestFullscreen) {
     element.requestFullscreen();
   } else if (element.mozRequestFullScreen) {
@@ -41,29 +46,29 @@ const launchIntoFullscreen = (element) => {
   }
 };
 
-const Frame = ({ name, status, id }) => {
+const Frame = ({ user, status, from }: frameI) => {
   // const videoRef = useRef();
   return (
     <div className="frame">
       {/* style={{height: 150, width: 100}} */}
       <video
         className="video"
-        id={id}
-        autoPlay
+        id={from}
+        autoPlay // @ts-expect-error
         playsInLine
         isFullscreen={true}
       />
       {/*controls*/}
       <h5 className="statusLabel">{status}</h5>
       <div className="bottom">
-        <h5 className="name">{name}</h5>
+        <h5 className="name">{user}</h5>
         <div className="icons">
           <img className="speaker" src={Speaker} />
 
           <img
             className="fullScreen"
             src={FullScreen}
-            onClick={() => launchIntoFullscreen(document.getElementById(id))}
+            onClick={() => launchIntoFullscreen(document.getElementById(from))}
           />
         </div>
       </div>
@@ -72,7 +77,7 @@ const Frame = ({ name, status, id }) => {
 };
 
 const VoiceFrame = () => {
-  const changeMode = (button) => {
+  const changeMode = (button: "audio" | "video") => {
     // "data" should be immutable
     let data = {
       audio: voiceRedux.mediaData.audio,
@@ -104,12 +109,12 @@ const VoiceFrame = () => {
 
   const history = useHistory();
 
-  let { roomId, hashId } = useParams();
+  let { _, hashId } = useParams<{ _: string; hashId: string; }>();
 
   const dispatch = useDispatch();
 
-  const voiceRedux = useSelector((state) => state.voice.value);
-  const userRedux = useSelector((state) => state.interfaces.value);
+  const voiceRedux = useSelector((state: RootState) => state.voice.value);
+  const userRedux = useSelector((state: RootState) => state.interfaces.value);
 
   useEffect(() => {
     // toggleVideo(voiceRedux.mediaData.video);
@@ -117,7 +122,9 @@ const VoiceFrame = () => {
   }, [voiceRedux.mediaData]);
 
   useEffect(() => {
+    // @ts-expect-error
     document.getElementById("currentVideo").srcObject = voiceRedux.localStream;
+    // @ts-expect-error
     document.getElementById("currentVideo").muted = true;
   }, [voiceRedux.localStream]);
 
@@ -125,6 +132,7 @@ const VoiceFrame = () => {
     // console.log(voiceRedux.remoteStreams);
     voiceRedux.remoteStreams.map((stream) => {
       // console.log("stream:", stream[0], stream[1]);
+      // @ts-expect-error
       document.getElementById(stream[0]).srcObject = stream[1];
     });
   }, [voiceRedux.remoteStreams]);
@@ -133,12 +141,12 @@ const VoiceFrame = () => {
     <div className="webrtc">
       <div className="windows">
         <Frame
-          name={userRedux.currentUser}
+          user={userRedux.currentUser}
           status={voiceRedux.currentStatus}
-          id="currentVideo"
+          from="currentVideo"
         />
         {voiceRedux.remoteUsers.map((user) => (
-          <Frame name={user.username} status={user.status} id={user.from} />
+          <Frame user={user.user} status={user.status} from={user.from} />
         ))}
       </div>
 

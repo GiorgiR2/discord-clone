@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toggleInitialStateValueI } from "../types/types";
 
-const initalStateValues = {
+const initalStateValues: toggleInitialStateValueI = {
   toggleLeft: false,
   toggleRight: false,
   contextMenu: { show: false, x: 0, y: 0, id: null },

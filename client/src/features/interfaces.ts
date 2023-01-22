@@ -1,17 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { interfaceInitialStateValueI, messageI } from "../types/types";
 
-const initialStateValue = {
+const initialStateValue: interfaceInitialStateValueI = {
   authentication: "",
   currentUser: "",
   currentRoom: "",
   currentRoomId: "",
-  rooms: [], // all mongoose rooms {_id: string, name: string, position: int, voice: bool}
+  rooms: [], // all mongoose rooms {_id: string, name: string, position: int, voice: boolean}
   draggingRoomId: null,
-  draggingRoomIndex: null,
+  draggingRoomIndex: -1,
   online: [],
   offline: [],
   messages: [
-    // username, message, date, isFile, fileName, id, editMode
+    // user: string, message: string, date: string, isFile: boolean, fileName: string, _id: string, editMode: boolean
   ],
   voiceMode: false,
 };
@@ -76,7 +77,7 @@ export const userSlice = createSlice({
       }
     },
     addMessage: (state, action) => {
-      action.payload.messageList.forEach((message) => {
+      action.payload.messageList.forEach((message: messageI) => {
         state.value.messages.push(message);
       });
       // state.value.messages = [
@@ -89,26 +90,26 @@ export const userSlice = createSlice({
       //   (el) => el[5] !== action.payload._id
       // );
       state.value.messages = state.value.messages.filter(
-        (el) => el.id !== action.payload._id
+        (el) => el._id !== action.payload._id
       );
     },
     enterEditMode: (state, action) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message.id === action.payload._id) {
+        if (message._id === action.payload._id) {
           return { ...message, editMode: true };
         } else return message;
       });
     },
     exitEditMode: (state, action) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message.id === action.payload._id) {
+        if (message._id === action.payload._id) {
           return { ...message, editMode: false };
         } else return message;
       });
     },
     editMessage: (state, action) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message.id === action.payload._id) {
+        if (message._id === action.payload._id) {
           // do not touch this part
           let msg = action.payload.messageHTML
             .replace("</div><div>", "<br>")
@@ -179,7 +180,7 @@ export const {
   editMessage,
 
   rememberDraggingRoom,
-  changePosition,
+  // changePosition,
   modifyPosition,
 
   clearAll,

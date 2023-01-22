@@ -8,11 +8,13 @@ import { addRooms, addRoom } from "../../../features/interfaces";
 import { togglePopupAdd, togglePopupEdit } from "../../../features/toggle";
 
 import "./_editRoom.sass";
+import { optionsI, roomI } from "../../../types/types";
+import { RootState } from "../../..";
 
 const apiLink = packageJson.proxy;
 
-const PopupEditRoom = () => {
-  const sendEditCommand = (event, newName) => {
+const PopupEditRoom: React.FC = () => {
+  const sendEditCommand = (newName: string | undefined | null) => {
     let elementId = toggleData.editingCatId;
     if (newName !== "") {
       axios
@@ -26,13 +28,12 @@ const PopupEditRoom = () => {
 
             // setDisplay(false);
             dispatch(togglePopupEdit());
-            let newJson = reduxData.rooms.map((cat) => {
+            let newJson = reduxData.rooms.map((cat: roomI) => {
               if (cat._id === elementId) {
-                return {
+                return { //__v: cat.__v,
                   name: newName,
                   position: cat.position,
                   voice: cat.voice,
-                  __v: cat.__v,
                   _id: cat._id,
                 };
               } else return cat;
@@ -46,16 +47,16 @@ const PopupEditRoom = () => {
         .catch((err) => console.error(err));
     }
   };
-  const newNameRef = useRef();
+  const newNameRef = useRef(null);
 
-  const reduxData = useSelector((state) => state.interfaces.value);
-  const toggleData = useSelector((state) => state.toggle.value);
+  const reduxData = useSelector((state: RootState) => state.interfaces.value);
+  const toggleData = useSelector((state: RootState) => state.toggle.value);
   const dispatch = useDispatch();
 
-  const [defValue, setDefValue] = useState();
+  const [defValue, setDefValue] = useState<string>();
 
   useEffect(() => {
-    reduxData.rooms.forEach((el) => {
+    reduxData.rooms.forEach((el: roomI) => {
       if (el._id === toggleData.editingCatId) {
         setDefValue(el.name);
         return;
@@ -68,7 +69,7 @@ const PopupEditRoom = () => {
       <div className="center">
         <h4 className="label">New Name:</h4>
         <input
-          className="nameInput"
+          className="nameInput" // @ts-expect-error
           rows="1"
           columns="20"
           ref={newNameRef}
@@ -81,8 +82,8 @@ const PopupEditRoom = () => {
           </h4>
           <h4
             className="go"
-            onClick={(event) =>
-              sendEditCommand(event, newNameRef.current.value)
+            onClick={(event) => // @ts-expect-error
+              sendEditCommand(newNameRef.current.value)
             }
           >
             GO
@@ -93,11 +94,11 @@ const PopupEditRoom = () => {
   );
 };
 
-const PopupAddRoom = () => {
+const PopupAddRoom: React.FC = () => {
   const voiceChat = () => {
     return options.voice;
   };
-  const handleCheckBox = (event) => {
+  const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     let focusOn = event.target.value;
     if (event.target.checked) {
       if (focusOn === "chat") {
@@ -113,7 +114,7 @@ const PopupAddRoom = () => {
       }
     }
   };
-  const sendAddCommand = (event, name) => {
+  const sendAddCommand = (name: any) => {
     if (name !== "") {
       // alert("function not available...");
       axios
@@ -136,18 +137,18 @@ const PopupAddRoom = () => {
         .catch((err) => console.error(err));
     }
   };
-  const newNameRef = useRef();
+  const newNameRef = useRef(null);
 
   // const reduxData = useSelector((state) => state.interfaces.value);
   const dispatch = useDispatch();
 
-  const [options, setOptions] = useState({ chat: true, voice: false });
+  const [options, setOptions] = useState<optionsI>({ chat: true, voice: false });
 
   return (
     <div className="popup">
       <div className="center">
         <h4 className="label">New Room:</h4>
-        <input
+        <input // @ts-expect-error
           rows="1"
           columns="20"
           ref={newNameRef}
@@ -182,8 +183,8 @@ const PopupAddRoom = () => {
             CANCEL
           </h4>
           <h4
-            className="go"
-            onClick={(event) => sendAddCommand(event, newNameRef.current.value)}
+            className="go" // @ts-expect-error
+            onClick={(event) => sendAddCommand(newNameRef.current.value)}
           >
             GO
           </h4>

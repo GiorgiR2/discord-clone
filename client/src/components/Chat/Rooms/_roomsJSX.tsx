@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,27 +8,28 @@ import packageJson from "../../../../package.json";
 
 import {
   rememberDraggingRoom,
-  changePosition,
   modifyPosition,
 } from "../../../features/interfaces";
 
 import { EditSVG, TrashSVG } from "../../../styles/SVGs/_SVGs";
+import { roomI } from "../../../types/types";
+import { RootState } from "../../..";
 
 const apiLink = packageJson.proxy;
 
-const RoomsJSX = () => {
-  const onDragStart = (event, id, index) => {
+const RoomsJSX = (): JSX.Element => {
+  const onDragStart = (event: React.DragEvent<HTMLLIElement>, id: string, index: number): void => {
     //step 1: redux - add _id as active with its position number
     // console.log("drag started, id:", id);
     dispatch(rememberDraggingRoom({ id: id, index: index }));
   };
-  const onDragEnter = (event, n) => {
+  const onDragEnter = (event: React.DragEvent<HTMLLIElement>, n: number) => {
     // Todo: add underline on current position
     // console.log("drag enter, index:", n);
     setIndex(n);
     // dispatch(changePosition({ index: n }));
   };
-  const onDragEnd = (event) => {
+  const onDragEnd = (event: React.DragEvent<HTMLLIElement>) => {
     //step 2: redux - finally modify list of rooms and send a command to the back-end for changing mongodb data
     // console.log("drag ended");
     axios
@@ -40,21 +41,22 @@ const RoomsJSX = () => {
       .then((res) => {
         if (res.data.status === "done") {
           dispatch(modifyPosition({ index: index }));
-          setIndex(null);
+          setIndex(-1);
         }
       })
       .catch((err) => console.error(err));
   };
 
-  const [index, setIndex] = useState(null);
+  const [index, setIndex] = useState<number>(-1);
 
-  let { _, hashId } = useParams();
+  let { _, hashId } = useParams<{_: string; hashId: string;}>();
   const history = useHistory();
 
   const dispatch = useDispatch();
-  const reduxData = useSelector((state) => state.interfaces.value);
+  const reduxData = useSelector((state: RootState) => state.interfaces.value);
 
-  return reduxData.rooms.map((room, n) => (
+  return <>{
+    reduxData.rooms.map((room: roomI, n: number) => (
     <li
       className={`category ${index === n ? "activePlace" : ""}`}
       id={room._id}
@@ -79,7 +81,8 @@ const RoomsJSX = () => {
         <TrashSVG id={room._id} typeE="room" />
       </div>
     </li>
-  ));
+  ))
+  }</>;
 };
 
 export default RoomsJSX;

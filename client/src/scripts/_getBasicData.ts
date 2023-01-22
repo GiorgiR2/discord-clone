@@ -1,4 +1,6 @@
 import axios from "axios";
+import { History } from "history";
+
 import packageJson from "../../package.json";
 
 import {
@@ -13,7 +15,15 @@ const config = {
   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
 };
 
-const getBasicData = (history, roomId, hashId, dispatch, frame = "none") => {
+interface getBasicDataI {
+  history: History;
+  roomId?: string;
+  hashId?: string | null | undefined;
+  dispatch?: any;
+  frame?: "none" | "chat";
+}
+
+const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): void => {
   if (hashId === undefined && localStorage.getItem("hashId") !== null) {
     roomId = "61ed960432479c682956802b";
     hashId = localStorage.getItem("hashId");
@@ -41,7 +51,6 @@ const getBasicData = (history, roomId, hashId, dispatch, frame = "none") => {
         console.error(error);
       });
   }
-  return;
 };
 
 export { getBasicData };

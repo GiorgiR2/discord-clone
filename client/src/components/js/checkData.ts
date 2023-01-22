@@ -6,7 +6,7 @@ import {
 
 import axios from "axios";
 
-const checkRoomId = (dispatch, apiLink, roomId, hashId, history) => {
+const checkRoomId = (dispatch: any, apiLink: string, roomId: string, hashId: string, history: any) => {
   if (roomId === undefined || hashId === undefined) {
     history.push(`/chat/61ed960432479c682956802b/${hashId}`);
   }

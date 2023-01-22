@@ -1,6 +1,6 @@
 import "./deleteDiv.sass";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { useDispatch } from "react-redux";
 import { closeContext } from "../../../features/toggle";
@@ -11,10 +11,10 @@ import { sendDeleteStatus } from "../../../scripts/_socketSide";
 import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
 
 // This hook is taken out of internet
-const useOnClickOutside = (ref, handler) => {
+const useOnClickOutside = (ref: React.RefObject<HTMLDivElement>, handler: (evnet: any) => void) => {
   useEffect(
     () => {
-      const listener = (event) => {
+      const listener = (event: any) => {
         // Do nothing if clicking ref's element or descendent elements
         if (!ref.current || ref.current.contains(event.target)) {
           return;
@@ -38,19 +38,25 @@ const useOnClickOutside = (ref, handler) => {
   );
 };
 
-const DeleteDiv = ({ x, y, id }) => {
-  const closeContextMenu = () => {
+interface DeleteDivI {
+  x: number;
+  y: number;
+  id: string | null;
+}
+
+const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
+  const closeContextMenu = (): void => {
     dispatch(closeContext());
   };
 
-  const editMSG = (id) => {
+  const editMSG = (id: string | null) => {
     //Todo: send edit message using sockets
     console.log("edit:", id);
     dispatch(enterEditMode({ _id: id }));
 
     closeContextMenu();
   };
-  const deleteMSG = (id) => {
+  const deleteMSG = (id: string | null) => {
     //Todo: remove message from redux states && send delete message using sockets
     console.log("delete:", id);
     dispatch(removeMessage({ _id: id }));
@@ -63,7 +69,7 @@ const DeleteDiv = ({ x, y, id }) => {
 
   const dispatch = useDispatch();
 
-  const contextMenuRef = useRef(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(contextMenuRef, closeContextMenu);
 
   return (

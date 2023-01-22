@@ -1,7 +1,7 @@
-const getTime = () => {
+const getTime = (): string => {
   let currentdate = new Date();
 
-  let datetime = `${
+  let datetime: string = `${
     currentdate.getMonth() + 1
   }/${currentdate.getDate()}/${currentdate.getFullYear()} ${currentdate.getHours()}:${currentdate.getMinutes()}`;
 

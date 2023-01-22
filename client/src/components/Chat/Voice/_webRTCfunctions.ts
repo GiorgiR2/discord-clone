@@ -1,5 +1,6 @@
 // import { socket } from "../../../scripts/_socketSide";
 import io from "socket.io-client";
+import { AppDispatch } from "../../..";
 import packageJson from "../../../../package.json";
 
 import voice, {
@@ -9,12 +10,14 @@ import voice, {
   disconnectRemoteUser,
   changeRemoteStatus,
 } from "../../../features/voice";
+import { interfaceInitialStateValueI, peerConnectionsT, userDataI, voiceInitialStateValueI } from "../../../types/types";
 
 const domain = packageJson.proxy;
+// @ts-expect-error
 var socket = io.connect(domain);
 
-var localStream;
-var peerConnections = [];
+var localStream: any;
+var peerConnections: peerConnectionsT[] = [];
 
 const servers = {
   iceServers: [
@@ -24,7 +27,7 @@ const servers = {
   ],
 };
 
-const init = async (voiceRedux, dispatch) => {
+const init = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch) => {
   localStream = await navigator.mediaDevices.getUserMedia({
     audio: true,
     video: true,
@@ -34,7 +37,8 @@ const init = async (voiceRedux, dispatch) => {
   // document.getElementById("currentVideo").srcObject = localStream;
 };
 
-const shareScreen = async (voiceRedux, dispatch) => {
+const shareScreen = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch) => {
+  // @ts-expect-error
   localStream = await navigator.mediaDevices.getDisplayMedia({ cursor: true });
   dispatch(addLocalStream({ stream: localStream }));
 
@@ -42,7 +46,7 @@ const shareScreen = async (voiceRedux, dispatch) => {
   const screenTracks = localStream.getTracks()[0];
   localStream
     .getTracks()
-    .find((track) => track.kind === "video")
+    .find((track: any) => track.kind === "video")
     .replaceTrack(localStream.getTracks()[1]);
   // screenTracks.onended = () => {
   //   localStream
@@ -52,21 +56,21 @@ const shareScreen = async (voiceRedux, dispatch) => {
   // };
 };
 
-const toggleVideo = (bool) => {
+const toggleVideo = (bool: boolean) => {
   const videoTrack = localStream
     .getTracks()
-    .find((track) => track.kind === "video");
+    .find((track: any) => track.kind === "video");
   videoTrack.enabled = bool;
 };
 
-const toggleAudio = (bool) => {
+const toggleAudio = (bool: boolean) => {
   const audioTrack = localStream
     .getTracks()
-    .find((track) => track.kind === "audio");
+    .find((track: any) => track.kind === "audio");
   audioTrack.enabled = bool;
 };
 
-const generateIceCandidates = async (id) => {
+const generateIceCandidates = async (id: string) => {
   // this will be triggered after we create the offer and setLocalDescription(offer)
   // after this we are going to send the offer with all iceCandidates using sockets
   peerConnections.forEach((peerConnection) => {
@@ -84,7 +88,7 @@ const generateIceCandidates = async (id) => {
   });
 };
 
-const createPeerConnection = async (voiceRedux, dispatch, id) => {
+const createPeerConnection = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch, id: string) => {
   // common part of createOffer and createAnswer functions
   let pc = new RTCPeerConnection(servers);
   peerConnections.push([id, pc]);
@@ -104,7 +108,7 @@ const createPeerConnection = async (voiceRedux, dispatch, id) => {
   await generateIceCandidates(id);
 
   // send local streams
-  localStream.getTracks().forEach((track) => {
+  localStream.getTracks().forEach((track: any) => {
     pc.addTrack(track, localStream);
   });
 
@@ -118,7 +122,7 @@ const createPeerConnection = async (voiceRedux, dispatch, id) => {
   });
 };
 
-const createOffer = async (voiceRedux, dispatch, fromId) => {
+const createOffer = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch, fromId: string) => {
   await createPeerConnection(voiceRedux, dispatch, fromId);
 
   console.log("peerConnections:", peerConnections);
@@ -135,7 +139,7 @@ const createOffer = async (voiceRedux, dispatch, fromId) => {
   });
 };
 
-const createAnswer = async (voiceRedux, dispatch, offer, fromId) => {
+const createAnswer = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch, offer: any, fromId: string) => {
   await createPeerConnection(voiceRedux, dispatch, fromId);
 
   peerConnections.forEach(async (peerConnection) => {
@@ -151,7 +155,7 @@ const createAnswer = async (voiceRedux, dispatch, offer, fromId) => {
   });
 };
 
-const addAnswer = async (answer, id) => {
+const addAnswer = async (answer: any, id: string) => {
   peerConnections.forEach((peerConnection) => {
     if (peerConnection[0] === id) {
       peerConnection[1].setRemoteDescription(answer);
@@ -159,7 +163,7 @@ const addAnswer = async (answer, id) => {
   });
 };
 
-const handleMessageFromPeer = async (voiceRedux, dispatch, text, fromId) => {
+const handleMessageFromPeer = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch, text: any, fromId: string) => {
   let msg = JSON.parse(text);
   if (msg.type === "offer") {
     await createAnswer(voiceRedux, dispatch, msg.offer, fromId);
@@ -174,11 +178,11 @@ const handleMessageFromPeer = async (voiceRedux, dispatch, text, fromId) => {
   }
 };
 
-const handleUserJoined = (voiceRedux, dispatch, fromId) => {
+const handleUserJoined = (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch, fromId: string) => {
   createOffer(voiceRedux, dispatch, fromId);
 };
 
-const voiceMain = (voiceRedux, userData, dispatch) => {
+const voiceMain = (voiceRedux: voiceInitialStateValueI, userData: userDataI, dispatch: AppDispatch) => {
   console.log("voiceMain run");
 
   socket.emit("joinVoice", {
@@ -187,18 +191,18 @@ const voiceMain = (voiceRedux, userData, dispatch) => {
     username: userData.currentUser,
   });
 
-  socket.on("joined", (data) => {
+  socket.on("joined", (data: any) => {
     dispatch(
       addRemoteUser({
         from: data.from,
-        username: data.username,
+        user: data.username,
         status: "",
       })
     );
     console.log("user joined", data.from);
     handleUserJoined(voiceRedux, dispatch, data.from);
   });
-  socket.on("offer", (data) => {
+  socket.on("offer", (data: any) => {
     dispatch(
       addRemoteUser({
         from: data.from,
@@ -209,19 +213,19 @@ const voiceMain = (voiceRedux, userData, dispatch) => {
     console.log("receive offer from:", data.from);
     handleMessageFromPeer(voiceRedux, dispatch, data.text, data.from);
   });
-  socket.on("candidate", (data) => {
+  socket.on("candidate", (data: any) => {
     console.log("receive ice candidate from:", data.from);
     handleMessageFromPeer(voiceRedux, dispatch, data.text, data.from);
   });
-  socket.on("answer", (data) => {
+  socket.on("answer", (data: any) => {
     console.log("receive answer from:", data.from);
     handleMessageFromPeer(voiceRedux, dispatch, data.text, data.from);
   });
-  socket.on("peerDisconnected", (data) => {
+  socket.on("peerDisconnected", (data: any) => {
     console.log("received peerDisconnected...", data.id);
     dispatch(disconnectRemoteUser({ id: data.id }));
   });
-  socket.on("changeStatus", (data) => {
+  socket.on("changeStatus", (data: any) => {
     console.log("received changeStatus...", data.id, data.status);
     dispatch(changeRemoteStatus({ id: data.id, status: data.status }));
   });

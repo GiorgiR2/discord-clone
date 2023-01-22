@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { voiceInitialStateValueI } from "../types/types";
 
-const initalStateValue = {
+const initalStateValue: voiceInitialStateValueI = {
   currentStatus: "", // No Video
   localStream: null,
   mediaData: { audio: true, video: true },
-  remoteUsers: [], // {from: "", name: "", status: ""}
+  remoteUsers: [], // {from: "", user: "", status: ""}
   remoteStreams: [], // [..., [id, stream]] // "id": stream
 };
 

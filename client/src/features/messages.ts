@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { messageI } from "../types/types";
 
-const initialStateValue = {
+interface messagesInitialStateValueI {
+  messages: messageI[];
+}
+
+const initialStateValue: messagesInitialStateValueI = {
   messages: [
     // username, message, date, isFile, fileName, id, editMode
   ],

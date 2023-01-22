@@ -9,9 +9,13 @@ import {
   addMessage,
   removeMessage,
 } from "../features/interfaces";
+import { messageI, statusI, interfaceInitialStateValueI, sendMessageI, sendFileDataI } from "../types/types";
 
-const main = (reduxData, dispatch) => {
-  if (socket.disconnected) socket = io.connect(domain);
+const main = (reduxData: any, dispatch: any) => {
+  if (socket.disconnected){
+    // @ts-expect-error
+    socket = io.connect(domain);
+  }
 
   socket.emit("join", {
     room: reduxData.currentRoom,
@@ -19,15 +23,15 @@ const main = (reduxData, dispatch) => {
   });
   console.log("sent join", reduxData.currentRoom, reduxData.currentUser);
 
-  socket.on("M_S_O", (data) => {
-    let msgList = [
+  socket.on("M_S_O", (data: any) => {
+    let msgList: messageI[] = [
       {
-        username: data.user,
+        user: data.user,
         message: data.isFile ? data._id : data.message,
         date: data.date,
         isFile: data.isFile,
         fileName: data.isFile ? data.originalName : "",
-        id: data._id,
+        _id: data._id,
         editMode: false,
       },
     ];
@@ -35,37 +39,37 @@ const main = (reduxData, dispatch) => {
     dispatch(addMessage({ messageList: msgList })); // message/messages
   });
 
-  socket.on("messagesData", (data) => {
-    let msgList = data.map((el) => {
+  socket.on("messagesData", (data: any) => {
+    let msgList: messageI[] = data.map((el: messageI) => {
       return {
-        username: el.user,
+        user: el.user,
         message: el.isFile ? el._id : el.message,
         date: el.date,
         isFile: el.isFile,
         fileName: el.isFile ? el.originalName : "",
-        id: el._id,
+        _id: el._id,
         editMode: false,
       };
     });
     dispatch(addMessage({ messageList: msgList })); // message/messages
   });
 
-  socket.on("messageDeleted", (data) => {
+  socket.on("messageDeleted", (data: any) => {
     dispatch(removeMessage({ _id: data.id }));
   });
 
-  socket.on("online", (data) => {
+  socket.on("online", (data: any) => {
     console.log("online:", data);
     dispatch(setOnline({ name: data.username }));
   });
 
-  socket.on("offline", (data) => {
+  socket.on("offline", (data: any) => {
     dispatch(setOffline({ name: data.username }));
   });
 
-  socket.on("status", (data) => {
+  socket.on("status", (data: any) => {
     console.log("status:", data);
-    data.forEach((el) => {
+    data.forEach((el: statusI) => {
       if (el.status === "online") dispatch(setOnline({ name: el.username }));
       else dispatch(setOffline({ name: el.username }));
     });
@@ -79,15 +83,15 @@ const main = (reduxData, dispatch) => {
 //   });
 // };
 
-const editMessage = (messageHTML, id) => {
+const editMessage = (messageHTML: string, id: string) => {
   socket.emit("editMessage", { messageHTML: messageHTML, _id: id });
 };
 
-const sendDeleteStatus = (id) => {
+const sendDeleteStatus = (id: string | null) => {
   socket.emit("deleteMessage", { _id: id });
 };
 
-const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
+const sendFileData = ({ reduxData, roomId, datetime, size, filename }: sendFileDataI) => {
   const data = {
     user: reduxData.currentUser,
     room: reduxData.currentRoom,
@@ -102,10 +106,10 @@ const sendFileData = (e, reduxData, roomId, datetime, size, filename) => {
   console.log("sent...........", data);
 };
 
-const sendMessage = (e, reduxData, roomId, device, inputRef) => {
+const sendMessage = ({event, reduxData, roomId, device, inputRef}: sendMessageI) => {
   let input = inputRef.current.value;
   if (
-    ((e.key === "Enter" && e.shiftKey !== true) || device === "mobile") &&
+    ((event.key === "Enter" && event.shiftKey !== true) || device === "mobile") &&
     input !== null &&
     input !== 0
   ) {
@@ -125,13 +129,14 @@ const sendMessage = (e, reduxData, roomId, device, inputRef) => {
     // e.target.value = "";
     inputRef.current.value = "";
     // e.persist();
-    e.preventDefault();
+    event.preventDefault();
   }
 };
 
 const disconnect = () => socket.disconnect();
 
 const domain = packageJson.proxy;
+// @ts-expect-error
 var socket = io.connect(domain);
 
 export {
