@@ -206,7 +206,7 @@ const voiceMain = (voiceRedux: voiceInitialStateValueI, userData: userDataI, dis
     dispatch(
       addRemoteUser({
         from: data.from,
-        username: userData.currentUser,
+        user: userData.currentUser,
         status: "",
       })
     );
