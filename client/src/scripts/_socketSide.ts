@@ -23,7 +23,8 @@ const main = (reduxData: any, dispatch: any) => {
   });
   console.log("sent join", reduxData.currentRoom, reduxData.currentUser);
 
-  socket.on("M_S_O", (data: any) => {
+  type dataIMSG = messageI & { originalName: string };
+  socket.on("M_S_O", (data: dataIMSG) => {
     let msgList: messageI[] = [
       {
         user: data.user,
@@ -33,14 +34,15 @@ const main = (reduxData: any, dispatch: any) => {
         fileName: data.isFile ? data.originalName : "",
         _id: data._id,
         editMode: false,
+        edited: data.edited,
       },
     ];
 
     dispatch(addMessage({ messageList: msgList })); // message/messages
   });
 
-  socket.on("messagesData", (data: any) => {
-    let msgList: messageI[] = data.map((el: messageI) => {
+  socket.on("messagesData", (data: dataIMSG[]) => {
+    let msgList: messageI[] = data.map((el: dataIMSG) => {
       return {
         user: el.user,
         message: el.isFile ? el._id : el.message,
@@ -49,6 +51,7 @@ const main = (reduxData: any, dispatch: any) => {
         fileName: el.isFile ? el.originalName : "",
         _id: el._id,
         editMode: false,
+        edited: el.edited,
       };
     });
     dispatch(addMessage({ messageList: msgList })); // message/messages

@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, Link, useLocation } from "react-router-dom"; // { Link, Redirect }
 import axios from "axios";
 
@@ -19,7 +19,11 @@ const Login = () => {
     console.log(`remember hashId: ${hashId}`);
     localStorage.setItem("hashId", hashId);
   };
-  const sendLoginData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, user: string, password: string) => {
+  const sendLoginData = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    user: string,
+    password: string
+  ) => {
     e.preventDefault();
     let data = {
       username: user,
@@ -52,13 +56,13 @@ const Login = () => {
 
   const [remember, setRemember] = useState(false);
 
-  const queryParams = new URLSearchParams(window.location.search);
+  // const queryParams = new URLSearchParams(window.location.search);
   // console.log(queryParams.get('status')===null);
-  useLayoutEffect(() => {
-    if (queryParams.get("status") === "done") {
-      // successfully registered
-      alert("registration is done...");
-    }
+  useEffect(() => {
+    // if (queryParams.get("status") === "done") {
+    // successfully registered
+    // alert("registration is done...");
+    // }
 
     getBasicData({ history });
   }, []);
@@ -105,7 +109,14 @@ const Login = () => {
         <label>remember me</label>
       </div>
 
-      <Link to="/signup" className="sign-up-button">
+      <Link
+        to="/signup"
+        onClick={() => {
+          history.push("signup");
+          window.location.reload();
+        }}
+        className="sign-up-button"
+      >
         SIGN UP
       </Link>
     </div>

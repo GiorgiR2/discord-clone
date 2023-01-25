@@ -145,6 +145,7 @@ const main = (connectedUsers: connectedUsersI[]) => {
         date: datetime,
         isFile: false,
         _id: _id,
+        edited: false
       };
       socket.emit("M_S_O", sdata);
       socket.in(room).emit("M_S_O", sdata);
@@ -164,7 +165,7 @@ const main = (connectedUsers: connectedUsersI[]) => {
         .replace("</div>", "<br>");
       msg = msg.substring(0, msg.length - 4).replaceAll("<br>", "\n");
 
-      let update = { message: msg };
+      let update = { message: msg, edited: true };
       MessageModel.findOneAndUpdate(filter, update).exec();
     });
 

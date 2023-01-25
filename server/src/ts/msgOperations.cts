@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 import saveModel from "./saveModel.cjs";
 
-import { addToMongooseDataI } from "../types/types.cjs";
+import { addToMongooseDataI, messageI } from "../types/types.cjs";
 
 const addToMongoose = (data: addToMongooseDataI ): string => {
   // authentication, username, message, datetime, room

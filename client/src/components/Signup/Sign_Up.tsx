@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 
@@ -9,13 +9,19 @@ import "./_sign-up.sass";
 
 const apiLink = packageJson.proxy;
 
+interface dataI {
+  username: string;
+  password0: string;
+  password1: string;
+}
+
 const SignUp = () => {
-  const sendData = (e: React.SyntheticEvent, username: string, password0: string, password1: string) => {
+  const sendData = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const data = {
-      username: username,
-      password0: password0,
-      password1: password1,
+    const data: dataI = {
+      username: username.current.value,
+      password0: password0.current.value,
+      password1: password1.current.value,
     };
 
     axios
@@ -23,14 +29,19 @@ const SignUp = () => {
       .then((res) => {
         console.log("res", res.data);
         if (res.data.data === "done") {
-          history.push("/?status=done");
+          username.current.value = "";
+          password0.current.value = "";
+          password1.current.value = "";
+          alert("registration was successful");
+          // history.push("/?status=done");
+          // window.location.reload();
         } else alert("try again, something went wrong...");
       })
       .catch((err) => console.log(err));
   };
-  const [username, setUsername] = useState<string>("");
-  const [password0, setPassword0] = useState<string>("");
-  const [password1, setPassword1] = useState<string>("");
+  const username = useRef<any>("");
+  const password0 = useRef<any>("");
+  const password1 = useRef<any>("");
 
   const history = useHistory();
   // let { signup } = useParams();
@@ -50,10 +61,10 @@ const SignUp = () => {
 
       <input
         type="text"
-        className="e-name" // @ts-expect-error
+        className="e-name 234535353" // @ts-expect-error
         rows="1"
         cols="15"
-        onChange={(event) => setUsername(event.target.value)}
+        ref={username}
       />
       <input
         type="password"
@@ -61,7 +72,7 @@ const SignUp = () => {
         autoComplete="on" // @ts-expect-error
         rows="1"
         cols="15"
-        onChange={(event) => setPassword0(event.target.value)}
+        ref={password0}
       />
       <input
         type="password"
@@ -69,20 +80,22 @@ const SignUp = () => {
         autoComplete="on" // @ts-expect-error
         rows="1"
         cols="15"
-        onChange={(event) => setPassword1(event.target.value)}
+        ref={password1}
       />
-
-      <button
-        className="go-button"
-        onClick={(event) => sendData(event, username, password0, password1)}
-      >
+      <button className="go-button" onClick={(event) => sendData(event)}>
         GO
       </button>
-
       {/*<a href="/" className="go-back-button">
         go back
 </a>*/}
-      <Link to="/" className="go-back-button">
+      <Link
+        to="/"
+        onClick={() => {
+          history.push("/");
+          window.location.reload();
+        }}
+        className="go-back-button"
+      >
         go back
       </Link>
     </div>

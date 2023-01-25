@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+import { Types } from "mongoose";
 
 interface connectedUsersI {
   username: string;
@@ -40,6 +42,17 @@ interface roomI {
   room: string;
   position: number;
   voice: boolean;
+}
+
+interface messageI {
+  _id: Types.ObjectId;
+  room: string;
+  roomId: string;
+  date: string;
+  user: string;
+  message: string;
+  isFile: boolean;
+  edited: boolean;
 }
 
 interface loadCatsI {
@@ -89,4 +102,4 @@ interface SocketData {
   age: number;
 }
 
-export { connectedUsersI, voiceI, usersInVoiceI, addToMongooseDataI, roomI, loadCatsI, checkIpI, checkDataI, checkLoginI };
+export { connectedUsersI, voiceI, usersInVoiceI, addToMongooseDataI, roomI, messageI, loadCatsI, checkIpI, checkDataI, checkLoginI };

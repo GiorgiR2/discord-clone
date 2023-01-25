@@ -2,13 +2,14 @@ import "./deleteDiv.sass";
 
 import React, { useEffect, useRef } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeContext } from "../../../features/toggle";
 import { removeMessage, enterEditMode } from "../../../features/interfaces";
 
 import { sendDeleteStatus } from "../../../scripts/_socketSide";
 
 import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
+import { RootState } from "../../..";
 
 // This hook is taken out of internet
 const useOnClickOutside = (ref: React.RefObject<HTMLDivElement>, handler: (evnet: any) => void) => {
@@ -52,8 +53,15 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
   const editMSG = (id: string | null) => {
     //Todo: send edit message using sockets
     console.log("edit:", id);
-    dispatch(enterEditMode({ _id: id }));
+    let messageUser;
+    reduxData.messages.forEach(msg => msg._id === id ? messageUser = msg.user : null);
+    if (reduxData.currentUser !== messageUser){
+      closeContextMenu();
+      alert("You do not have the privilege to edit that message...");
+      return;
+    }
 
+    dispatch(enterEditMode({ _id: id }));
     closeContextMenu();
   };
   const deleteMSG = (id: string | null) => {
@@ -68,6 +76,7 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
   };
 
   const dispatch = useDispatch();
+  const reduxData = useSelector((state: RootState) => state.interfaces.value);
 
   const contextMenuRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(contextMenuRef, closeContextMenu);

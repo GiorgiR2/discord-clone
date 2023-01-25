@@ -110,7 +110,7 @@ const MessagesDivs = ({ reduxData }: {reduxData: interfaceInitialStateValueI}): 
         <div className="main">
           <div className="top">
             <div className="author">
-              {el.user} <span>{el.date}</span>
+              {el.user} <span>{el.date}</span>{el.edited ? <span>(edited)</span> : null}
             </div>
             {/*<h4 className="encryption">No Encryption</h4>*/}
           </div>

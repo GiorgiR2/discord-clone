@@ -13,7 +13,7 @@ interface messageI {
     fileName: string;
     _id: string;
     editMode: boolean;
-    originalName?: string;
+    edited: boolean;
 }
 
 interface statusI {

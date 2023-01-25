@@ -1,7 +1,6 @@
 import mongoose, { Types } from "mongoose";
-import mongodb from "mongodb";
 
-// mongoose.Document
+// mongoose.Document, mongodb.collection
 export interface messageSchemaI extends mongoose.Document {
   _id: Types.ObjectId;
   date: string;
@@ -14,7 +13,7 @@ export interface messageSchemaI extends mongoose.Document {
   originalName?: string;
   downloadCount?: number;
   size?: number;
-  edited?: boolean;
+  edited: boolean;
 }
 
 const messageSchema = new mongoose.Schema<messageSchemaI>(
@@ -79,7 +78,8 @@ const messageSchema = new mongoose.Schema<messageSchemaI>(
     edited: {
       type: Boolean,
       unique: false,
-      required: false,
+      required: true,
+      default: false,
     },
   },
   {

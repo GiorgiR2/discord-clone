@@ -11,9 +11,7 @@ const initialStateValue: interfaceInitialStateValueI = {
   draggingRoomIndex: -1,
   online: [],
   offline: [],
-  messages: [
-    // user: string, message: string, date: string, isFile: boolean, fileName: string, _id: string, editMode: boolean
-  ],
+  messages: [],
   voiceMode: false,
 };
 
@@ -119,6 +117,7 @@ export const userSlice = createSlice({
           return {
             ...message,
             message: msg.substring(0, msg.length - 4).replaceAll("<br>", "\n"),
+            edited: true
           };
         } else return message;
       });
