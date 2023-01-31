@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { useParams, useHistory, Link } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import axios from "axios";
 import FormData from "form-data";
@@ -106,7 +106,7 @@ const MessagesDivs = ({ reduxData }: {reduxData: interfaceInitialStateValueI}): 
         className={`element messageDiv ${el.editMode ? "focus" : null}`}
         onContextMenu={(event) => handleContextMenu(event, el._id)}
       >
-        <img src={userSVG} />
+        <img src={userSVG} alt="user"/>
         <div className="main">
           <div className="top">
             <div className="author">
@@ -117,7 +117,7 @@ const MessagesDivs = ({ reduxData }: {reduxData: interfaceInitialStateValueI}): 
           <div className="message">
             {el.isFile ? (
               <div className="fileDiv">
-                <img src={fileSVG} className="fileSVG" />
+                <img src={fileSVG} className="fileSVG" alt="file" />
                 <a
                   href={link}
                   rel="noreferrer"

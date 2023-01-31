@@ -9,7 +9,7 @@ import {
   addMessage,
   removeMessage,
 } from "../features/interfaces";
-import { messageI, statusI, interfaceInitialStateValueI, sendMessageI, sendFileDataI } from "../types/types";
+import { messageI, statusI, sendMessageI, sendFileDataI } from "../types/types";
 
 const main = (reduxData: any, dispatch: any) => {
   if (socket.disconnected){

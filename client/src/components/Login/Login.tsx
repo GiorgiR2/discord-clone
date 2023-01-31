@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, Link, useLocation } from "react-router-dom"; // { Link, Redirect }
+import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
 import axios from "axios";
 
 import { getBasicData } from "../../scripts/_getBasicData";

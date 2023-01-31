@@ -10,9 +10,13 @@ import { sendDeleteStatus } from "../../../scripts/_socketSide";
 
 import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
 import { RootState } from "../../..";
+import { messageI } from "../../../types/types";
 
 // This hook is taken out of internet
-const useOnClickOutside = (ref: React.RefObject<HTMLDivElement>, handler: (evnet: any) => void) => {
+const useOnClickOutside = (
+  ref: React.RefObject<HTMLDivElement>,
+  handler: (evnet: any) => void
+) => {
   useEffect(
     () => {
       const listener = (event: any) => {
@@ -53,11 +57,18 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
   const editMSG = (id: string | null) => {
     //Todo: send edit message using sockets
     console.log("edit:", id);
-    let messageUser;
-    reduxData.messages.forEach(msg => msg._id === id ? messageUser = msg.user : null);
-    if (reduxData.currentUser !== messageUser){
+    let messageUser, isFile;
+    reduxData.messages.forEach((msg: messageI) => {
+      if (msg._id === id) {
+        messageUser = msg.user;
+        isFile = msg.isFile;
+      }
+    });
+    if (isFile) {
+      alert("can't edit a file message...");
+    } else if (reduxData.currentUser !== messageUser) {
       alert("You do not have the privilege to edit that message...");
-    } else{
+    } else {
       dispatch(enterEditMode({ _id: id }));
     }
     closeContextMenu();
@@ -66,10 +77,12 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
     //Todo: remove message from redux states && send delete message using sockets
     console.log("delete:", id);
     let messageUser;
-    reduxData.messages.forEach(msg => msg._id === id ? messageUser = msg.user : null);
-    if (reduxData.currentUser !== messageUser){
+    reduxData.messages.forEach((msg) =>
+      msg._id === id ? (messageUser = msg.user) : null
+    );
+    if (reduxData.currentUser !== messageUser) {
       alert("You do not have the privilege to delete that message...");
-    } else{
+    } else {
       dispatch(removeMessage({ _id: id }));
       sendDeleteStatus(id);
     }

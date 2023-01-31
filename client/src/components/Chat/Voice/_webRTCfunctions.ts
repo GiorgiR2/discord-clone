@@ -3,14 +3,14 @@ import io from "socket.io-client";
 import { AppDispatch } from "../../..";
 import packageJson from "../../../../package.json";
 
-import voice, {
+import {
   addRemoteUser,
   addStream,
   addLocalStream,
   disconnectRemoteUser,
   changeRemoteStatus,
 } from "../../../features/voice";
-import { interfaceInitialStateValueI, peerConnectionsT, userDataI, voiceInitialStateValueI } from "../../../types/types";
+import { peerConnectionsT, userDataI, voiceInitialStateValueI } from "../../../types/types";
 
 const domain = packageJson.proxy;
 // @ts-expect-error

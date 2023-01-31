@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentStatus, setMediaData } from "../../../features/voice";
@@ -12,7 +12,6 @@ import {
 
 import { useHistory, useParams } from "react-router-dom";
 
-import { History } from "history";
 import { frameI } from "../../../types/types";
 
 import "./_voice.sass";
@@ -27,10 +26,10 @@ const ScreenShare: string = require("../../../assets/voice/screenShare.svg").def
 const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
 const FullScreen: string = require("../../../assets/fullscreen_black_24dp.svg").default;
 
-const egress = (history: History, roomId: string, hashId: string) => {
-  history.push(`/chat/61ed960432479c682956838e/${hashId}`);
-  window.location.reload();
-};
+// const egress = (history: History, roomId: string, hashId: string) => {
+//   history.push(`/chat/61ed960432479c682956838e/${hashId}`);
+//   window.location.reload();
+// };
 
 const launchIntoFullscreen = (element: any) => {
   if (element.requestFullscreen) {
@@ -63,12 +62,13 @@ const Frame = ({ user, status, from }: frameI) => {
       <div className="bottom">
         <h5 className="name">{user}</h5>
         <div className="icons">
-          <img className="speaker" src={Speaker} />
+          <img className="speaker" src={Speaker} alt="speaker" />
 
           <img
             className="fullScreen"
             src={FullScreen}
             onClick={() => launchIntoFullscreen(document.getElementById(from))}
+            alt="fullscreen"
           />
         </div>
       </div>
@@ -153,23 +153,26 @@ const VoiceFrame = () => {
       <div className="bottom">
         <div className="icons">
           <img
-            className="svg micon"
+            className="svg mic"
             src={voiceRedux.mediaData.audio ? MicOn : MicOff}
             onClick={() => changeMode("audio")}
             title="microphone"
+            alt="mic"
           />
           <img
-            className="svg camon"
+            className="svg cam"
             src={voiceRedux.mediaData.video ? CamOn : CamOff}
             onClick={() => changeMode("video")}
             title="video cam"
+            alt="cam"
           />
 
           <img
-            className="svg screenon"
+            className="svg screen"
             src={ScreenShare}
             onClick={() => shareScreen(voiceRedux, dispatch)}
             title="share screen"
+            alt="screen"
           />
         </div>
         <a

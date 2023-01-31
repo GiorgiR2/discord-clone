@@ -33,6 +33,7 @@ const EditSVG = ({ id, typeE }: svgI): JSX.Element => {
     <img
       onClick={() => (typeE === "room" ? editCat() : null)}
       src={Edit}
+      alt="edit"
     />
   );
 };
@@ -62,6 +63,7 @@ const TrashSVG = ({ id, typeE }: svgI): JSX.Element => {
     <img
       onClick={() => (typeE === "room" ? trash() : null)}
       src={Trash}
+      alt="trash"
     />
   );
 };

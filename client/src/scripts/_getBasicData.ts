@@ -10,10 +10,10 @@ import {
 } from "../features/interfaces";
 
 const apiLink = packageJson.proxy;
-const config = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-};
+// const config = {
+//   "Access-Control-Allow-Origin": "*",
+//   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+// };
 
 interface getBasicDataI {
   history: History;
