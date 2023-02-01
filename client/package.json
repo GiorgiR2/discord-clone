@@ -14,7 +14,6 @@
     "@types/react-dom": "^18.0.10",
     "@types/socket.io-client": "^3.0.0",
     "axios": "^1.2.3",
-    "gh-pages": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
@@ -54,6 +53,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3",
+    "gh-pages": "^5.0.0",
     "node-sass": "^7.0.3"
   },
   "proxy": "http://127.0.0.1:5000",

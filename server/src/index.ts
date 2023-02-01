@@ -163,7 +163,9 @@ const main = (connectedUsers: connectedUsersI[]) => {
         .replace("</div><div>", "<br>")
         .replace("<div>", "")
         .replace("</div>", "<br>");
-      msg = msg.substring(0, msg.length - 4).replaceAll("<br>", "\n");
+      console.log(`%cmsg: ${msg}`, 'color: red');
+      // msg = msg.substring(0, msg.length - 4);
+      msg = replaceAll(msg, "<br>", "\n");
 
       let update = { message: msg, edited: true };
       MessageModel.findOneAndUpdate(filter, update).exec();
@@ -300,6 +302,15 @@ const main = (connectedUsers: connectedUsersI[]) => {
   app.use(messagesRouter);
   app.use(roomsRouter);
 };
+
+// next two functions are taken out of stackoverflow
+const escapeRegExp = (arg: string): string => {
+  return arg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+const replaceAll = (str: string, match: string, replacement: string): string => {
+   return str.replace(new RegExp(escapeRegExp(match), 'g'), ()=>replacement);
+}
 
 (async () => {
   const connectedUsers: connectedUsersI[] = await usersStatus();
