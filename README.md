@@ -28,6 +28,8 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 3. Install Packages && Run back-end ```cd server && npm i && npm run build && npm start```
 4. Install Packages && Run front-end ```cd client && npm i && npm start```
 
+or do the same with ``yarn``
+
 
 ## Functions
 
