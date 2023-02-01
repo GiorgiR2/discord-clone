@@ -37,6 +37,12 @@ export const userSlice = createSlice({
     closeContext: (state) => {
       state.value.contextMenu.show = false;
     },
+    closeLeft: (state) => {
+      state.value.toggleLeft = false;
+    },
+    closeRight: (state) => {
+      state.value.toggleRight = false;
+    },
   },
 });
 
@@ -49,6 +55,8 @@ export const {
   toggleRight,
   setContextMenu,
   closeContext,
+  closeLeft,
+  closeRight,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,6 +1,7 @@
 import "./deleteDiv.sass";
 
 import React, { useEffect, useRef } from "react";
+import { useOnClickOutside } from "../../customHooks/useOnClickOutside";
 
 import { useDispatch, useSelector } from "react-redux";
 import { closeContext } from "../../../features/toggle";
@@ -11,37 +12,6 @@ import { sendDeleteStatus } from "../../../scripts/_socketSide";
 import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
 import { RootState } from "../../..";
 import { messageI } from "../../../types/types";
-
-// This hook is taken out of internet
-const useOnClickOutside = (
-  ref: React.RefObject<HTMLDivElement>,
-  handler: (evnet: any) => void
-) => {
-  useEffect(
-    () => {
-      const listener = (event: any) => {
-        // Do nothing if clicking ref's element or descendent elements
-        if (!ref.current || ref.current.contains(event.target)) {
-          return;
-        }
-        handler(event);
-      };
-      document.addEventListener("mousedown", listener);
-      document.addEventListener("touchstart", listener);
-      return () => {
-        document.removeEventListener("mousedown", listener);
-        document.removeEventListener("touchstart", listener);
-      };
-    },
-    // Add ref and handler to effect dependencies
-    // It's worth noting that because passed in handler is a new ...
-    // ... function on every render that will cause this effect ...
-    // ... callback/cleanup to run every render. It's not a big deal ...
-    // ... but to optimize you can wrap handler in useCallback before ...
-    // ... passing it into this hook.
-    [ref, handler]
-  );
-};
 
 interface DeleteDivI {
   x: number;
