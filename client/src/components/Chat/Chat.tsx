@@ -59,6 +59,7 @@ const egressSVG: string = require("../../assets/egress.svg").default;
 const sendSVG: string = require("../../assets/send-24px.svg").default;
 const fileSVG: string = require("../../assets/fileIcon.svg").default;
 const userSVG: string = require("../../assets/chat/user-flat.svg").default;
+const plusSVG: string = require("../../assets/chat/plus.svg").default;
 
 const apiLink = packageJson.proxy;
 
@@ -209,8 +210,7 @@ const Chat: React.FC = () => {
   };
 
   const Messages = () => {
-    // type fileT = FileList | null;
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>, file: any) => {
+    const handleSubmit = (file: any) => {
       const sendFileData = () => {
         socks.sendFileData({
           reduxData,
@@ -220,9 +220,6 @@ const Chat: React.FC = () => {
           filename: file.name,
         });
       };
-
-      e.preventDefault();
-
       // if (window.innerWidth <= 800) {
       //   socks.sendMessage(e, reduxData, roomId, "mobile", inputRef);
       //   return;
@@ -258,7 +255,6 @@ const Chat: React.FC = () => {
       // console.log("!!!!!!!!!!", file.name, file.size, typeof file.size);
     };
 
-    const [file, setFile] = useState<any>();
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
     return (
@@ -268,48 +264,54 @@ const Chat: React.FC = () => {
           <div id="last-element"></div>
         </div>
         <div id="input">
-          <textarea
-            id="text-area"
-            placeholder={`Message #${reduxData.currentRoom}`}
-            ref={inputRef}
-            onKeyPress={(event) =>
-              socks.sendMessage({
-                event,
-                reduxData,
-                roomId,
-                device: "desktop",
-                inputRef,
-              })
-            }
-            autoFocus={window.innerWidth <= 850 ? false : true}
-          ></textarea>
-          <form
-            onSubmit={(event) => handleSubmit(event, file)}
-            className="inputForm"
-          >
-            <input
-              type="file"
-              id="file" // @ts-expect-error
-              onChange={(e) => setFile(e.target.files[0])}
+          <div className="textInput">
+            <div className="fileUpload">
+              {/* @ts-ignore */}
+              <label for="file">
+                <img src={plusSVG} className="fileSVG" alt="fileSVG"/>
+              </label>
+              <input
+                type="file"
+                id="file"
+                onChange={(e) => {
+                  // @ts-ignore
+                  handleSubmit(e.target.files[0]);
+                }}
+              />
+            </div>
+
+            <textarea
+              id="text-area"
+              placeholder={`Message #${reduxData.currentRoom}`}
+              ref={inputRef}
+              onKeyPress={(event) =>
+                socks.sendMessage({
+                  event,
+                  reduxData,
+                  roomId,
+                  device: "desktop",
+                  inputRef,
+                })
+              }
+              autoFocus={window.innerWidth <= 850 ? false : true}
+            ></textarea>
+
+            <img
+              className="send"
+              src={sendSVG}
+              alt="send"
+              onClick={(event) =>
+                socks.sendMessage({
+                  event,
+                  reduxData,
+                  roomId,
+                  device: "mobile",
+                  inputRef,
+                })
+              }
             />
-            <button className="submit" type="submit">
-              send
-            </button>
-          </form>
-          <img
-            className="send"
-            src={sendSVG}
-            alt="send"
-            onClick={(event) =>
-              socks.sendMessage({
-                event,
-                reduxData,
-                roomId,
-                device: "mobile",
-                inputRef,
-              })
-            }
-          />
+          </div>
+
         </div>
       </>
     );
