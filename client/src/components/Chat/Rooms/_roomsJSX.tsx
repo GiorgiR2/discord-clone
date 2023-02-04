@@ -76,9 +76,9 @@ const RoomsJSX = (): JSX.Element => {
         # {room.name}
       </a>
       <div className="svgs">
-        <EditSVG id={room._id} typeE="room" />{" "}
+        <EditSVG id={room._id} />{" "}
         {/* set redux editingCatId as id */}
-        <TrashSVG id={room._id} typeE="room" />
+        <TrashSVG id={room._id} />
       </div>
     </li>
   ))

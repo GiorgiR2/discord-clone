@@ -9,9 +9,12 @@ import { removeMessage, enterEditMode } from "../../../features/interfaces";
 
 import { sendDeleteStatus } from "../../../scripts/_socketSide";
 
-import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
+// import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
 import { RootState } from "../../..";
 import { messageI } from "../../../types/types";
+
+const Edit: string = require("../../../styles/SVGs/edit.svg").default;
+const Trash: string = require("../../../styles/SVGs/trash.svg").default;
 
 interface DeleteDivI {
   x: number;
@@ -76,11 +79,11 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
         <ul>
           <li id="edit" onClick={() => editMSG(id)}>
             <h3 className="edit">Edit Message</h3>
-            <EditSVG id="001" typeE="message" />
+            <img src={Edit} alt="edit" />
           </li>
           <li id="delete" onClick={() => deleteMSG(id)}>
             <h3 className="delete">Delete Message</h3>
-            <TrashSVG id="001" typeE="message" />
+            <img src={Trash} alt="trash" />
           </li>
         </ul>
       </nav>

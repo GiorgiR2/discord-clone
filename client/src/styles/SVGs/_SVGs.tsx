@@ -16,12 +16,7 @@ const Trash: string = require("./trash.svg").default;
 
 const apiLink = packageJson.proxy;
 
-interface svgI {
-  id: string;
-  typeE: "room" | "message";
-}
-
-const EditSVG = ({ id, typeE }: svgI): JSX.Element => {
+const EditSVG = ({ id }: { id: string }): JSX.Element => {
   const editCat = () => {
     dispatch(addEditingCatId({ id: id }));
     dispatch(togglePopupEdit());
@@ -31,14 +26,14 @@ const EditSVG = ({ id, typeE }: svgI): JSX.Element => {
 
   return (
     <img
-      onClick={() => (typeE === "room" ? editCat() : null)}
+      onClick={() => editCat()}
       src={Edit}
       alt="edit"
     />
   );
 };
 
-const TrashSVG = ({ id, typeE }: svgI): JSX.Element => {
+const TrashSVG = ({ id }: { id: string }): JSX.Element => {
   // typeE === "room" || "message"
   const trash = () => {
     // e.preventDefault();
@@ -61,7 +56,7 @@ const TrashSVG = ({ id, typeE }: svgI): JSX.Element => {
 
   return (
     <img
-      onClick={() => (typeE === "room" ? trash() : null)}
+      onClick={() => trash()}
       src={Trash}
       alt="trash"
     />
