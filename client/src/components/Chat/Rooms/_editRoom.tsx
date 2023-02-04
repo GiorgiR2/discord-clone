@@ -67,7 +67,7 @@ const PopupEditRoom: React.FC = () => {
   return (
     <div className="popup">
       <div className="center">
-        <h4 className="mainTitle">Edit Room Name</h4>
+        <h4 className="mainTitle">rename</h4>
         <div className="inputDiv">
           <h5>#</h5>
           <input // @ts-expect-error
@@ -75,7 +75,7 @@ const PopupEditRoom: React.FC = () => {
             columns="20"
             ref={newNameRef}
             className="nameInput"
-            placeholder="name"
+            defaultValue={defValue}
           />{" "}
         </div>
 

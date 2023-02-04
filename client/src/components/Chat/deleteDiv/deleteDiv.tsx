@@ -1,6 +1,6 @@
 import "./deleteDiv.sass";
 
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useOnClickOutside } from "../../customHooks/useOnClickOutside";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -37,7 +37,7 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
     if (isFile) {
       alert("can't edit a file message...");
     } else if (reduxData.currentUser !== messageUser) {
-      alert("You do not have the privilege to edit that message...");
+      alert("You do not have privileges to edit that message...");
     } else {
       dispatch(enterEditMode({ _id: id }));
     }
@@ -51,7 +51,7 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
       msg._id === id ? (messageUser = msg.user) : null
     );
     if (reduxData.currentUser !== messageUser) {
-      alert("You do not have the privilege to delete that message...");
+      alert("You do not have privileges to delete that message...");
     } else {
       dispatch(removeMessage({ _id: id }));
       sendDeleteStatus(id);
