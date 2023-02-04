@@ -67,27 +67,30 @@ const PopupEditRoom: React.FC = () => {
   return (
     <div className="popup">
       <div className="center">
-        <h4 className="label">New Name:</h4>
-        <input
-          className="nameInput" // @ts-expect-error
-          rows="1"
-          columns="20"
-          ref={newNameRef}
-          defaultValue={defValue}
-        />
+        <h4 className="mainTitle">Edit Room Name</h4>
+        <div className="inputDiv">
+          <h5>#</h5>
+          <input // @ts-expect-error
+            rows="1"
+            columns="20"
+            ref={newNameRef}
+            className="nameInput"
+            placeholder="name"
+          />{" "}
+        </div>
 
         <div className="buttons">
-          <h4 className="cancel" onClick={() => dispatch(togglePopupEdit())}>
+          <h5 className="cancel" onClick={() => dispatch(togglePopupEdit())}>
             CANCEL
-          </h4>
-          <h4
+          </h5>
+          <h5
             className="go"
             onClick={(event) => // @ts-expect-error
               sendEditCommand(newNameRef.current.value)
             }
           >
             GO
-          </h4>
+          </h5>
         </div>
       </div>
     </div>
@@ -147,47 +150,57 @@ const PopupAddRoom: React.FC = () => {
   return (
     <div className="popup">
       <div className="center">
-        <h4 className="label">New Room:</h4>
-        <input // @ts-expect-error
-          rows="1"
-          columns="20"
-          ref={newNameRef}
-          className="nameInput"
-          placeholder="name"
-        />{" "}
-        {/*
-            placeholder="not supported"
-            disabled
-          */}
+        <h4 className="mainTitle">Create Room</h4>
         <form>
-          <input
-            type="checkbox"
-            onChange={handleCheckBox}
-            name="options"
-            value="chat"
-            // defaultChecked={true}
-            checked={options.chat}
-          />
-          chat room
-          <input
-            type="checkbox"
-            onChange={handleCheckBox}
-            name="options"
-            value="voice"
-            checked={options.voice}
-          />
-          voice room
+          <h5>channel type</h5>
+          <span>
+            <div className="title">
+              <h5 className="icon">#</h5>
+              <h5 className="title">chat room</h5>
+            </div>
+            <input
+              type="checkbox"
+              onChange={handleCheckBox}
+              name="options"
+              value="chat"
+              // defaultChecked={true}
+              checked={options.chat}
+            />
+          </span>
+          <span>
+            <div className="title">
+              <h5 className="icon">{"<)"}</h5>
+              <h5 className="title">voice room</h5>
+            </div>
+            <input
+              type="checkbox"
+              onChange={handleCheckBox}
+              name="options"
+              value="voice"
+              checked={options.voice}
+            />
+          </span>
         </form>
+        <div className="inputDiv">
+          <h5>#</h5>
+          <input // @ts-expect-error
+            rows="1"
+            columns="20"
+            ref={newNameRef}
+            className="nameInput"
+            placeholder="name"
+          />{" "}
+        </div>
         <div className="buttons">
-          <h4 className="cancel" onClick={() => dispatch(togglePopupAdd())}>
+          <h5 className="cancel" onClick={() => dispatch(togglePopupAdd())}>
             CANCEL
-          </h4>
-          <h4
+          </h5>
+          <h5
             className="go" // @ts-expect-error
             onClick={(event) => sendAddCommand(newNameRef.current.value)}
           >
             GO
-          </h4>
+          </h5>
         </div>
       </div>
     </div>
