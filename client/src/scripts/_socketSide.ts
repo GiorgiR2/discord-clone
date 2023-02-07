@@ -33,6 +33,7 @@ const main = (reduxData: any, dispatch: any) => {
         isFile: data.isFile,
         fileName: data.isFile ? data.originalName : "",
         _id: data._id,
+        focusMode: false,
         editMode: false,
         edited: data.edited,
       },
@@ -42,6 +43,7 @@ const main = (reduxData: any, dispatch: any) => {
   });
 
   socket.on("messagesData", (data: dataIMSG[]) => {
+    // type msgT = Omit<messageI, "focusMode">;
     let msgList: messageI[] = data.map((el: dataIMSG) => {
       return {
         user: el.user,
@@ -50,6 +52,7 @@ const main = (reduxData: any, dispatch: any) => {
         isFile: el.isFile,
         fileName: el.isFile ? el.originalName : "",
         _id: el._id,
+        focusMode: false,
         editMode: false,
         edited: el.edited,
       };

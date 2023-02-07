@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { interfaceInitialStateValueI, messageI } from "../types/types";
+import { editMessageI, interfaceInitialStateValueI, messageI, modeI } from "../types/types";
 
 const initialStateValue: interfaceInitialStateValueI = {
   authentication: "",
@@ -74,7 +74,7 @@ export const userSlice = createSlice({
         state.value.online = valuesOnline.filter((value) => value !== newName);
       }
     },
-    addMessage: (state, action) => {
+    addMessage: (state, action: { payload: { messageList: messageI[] } }) => {
       action.payload.messageList.forEach((message: messageI) => {
         state.value.messages.push(message);
       });
@@ -83,7 +83,7 @@ export const userSlice = createSlice({
       //   ...action.payload.messageList,
       // ];
     },
-    removeMessage: (state, action) => {
+    removeMessage: (state, action: modeI) => {
       // state.value.messages = state.value.messages.filter(
       //   (el) => el[5] !== action.payload._id
       // );
@@ -91,21 +91,35 @@ export const userSlice = createSlice({
         (el) => el._id !== action.payload._id
       );
     },
-    enterEditMode: (state, action) => {
+    enterFocusMode: (state, action: modeI) => {
+      state.value.messages = state.value.messages.map((message) => {
+        if (message._id === action.payload._id) {
+          return { ...message, focusMode: true };
+        } else return message;
+      });
+    },
+    exitFocusMode: (state, action: modeI) => {
+      state.value.messages = state.value.messages.map((message) => {
+        if (message._id === action.payload._id) {
+          return { ...message, focusMode: false };
+        } else return message;
+      });
+    },
+    enterEditMode: (state, action: modeI) => {
       state.value.messages = state.value.messages.map((message) => {
         if (message._id === action.payload._id) {
           return { ...message, editMode: true };
         } else return message;
       });
     },
-    exitEditMode: (state, action) => {
+    exitEditMode: (state, action: modeI) => {
       state.value.messages = state.value.messages.map((message) => {
         if (message._id === action.payload._id) {
           return { ...message, editMode: false };
         } else return message;
       });
     },
-    editMessage: (state, action) => {
+    editMessage: (state, action: editMessageI) => {
       state.value.messages = state.value.messages.map((message) => {
         if (message._id === action.payload._id) {
           // do not touch this part
@@ -174,6 +188,10 @@ export const {
 
   addMessage,
   removeMessage,
+
+  enterFocusMode,
+  exitFocusMode,
+
   enterEditMode,
   exitEditMode,
   editMessage,

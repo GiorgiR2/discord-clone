@@ -13,6 +13,7 @@ interface messageI {
     fileName: string;
     _id: string;
     editMode: boolean;
+    focusMode: boolean;
     edited: boolean;
 }
 
@@ -88,7 +89,20 @@ interface userDataI {
     currentUser: string;
 }
 
+interface modeI {
+    payload: {
+        _id: string;
+    };
+}
+
+interface editMessageI {
+    payload: {
+        _id: string;
+        messageHTML: string;
+    };
+}
+
 type peerConnectionsT = [string, RTCPeerConnection];
 
 export type { roomI, messageI, optionsI, statusI, voiceInitialStateValueI, toggleInitialStateValueI, interfaceInitialStateValueI,
-    sendFileDataI, sendMessageI, frameI, peerConnectionsT, userDataI };
+    sendFileDataI, sendMessageI, frameI, peerConnectionsT, userDataI, modeI, editMessageI };

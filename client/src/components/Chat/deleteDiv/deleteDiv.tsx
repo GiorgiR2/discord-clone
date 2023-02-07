@@ -5,11 +5,10 @@ import { useOnClickOutside } from "../../customHooks/useOnClickOutside";
 
 import { useDispatch, useSelector } from "react-redux";
 import { closeContext } from "../../../features/toggle";
-import { removeMessage, enterEditMode } from "../../../features/interfaces";
+import { removeMessage, enterEditMode, exitFocusMode, enterFocusMode } from "../../../features/interfaces";
 
 import { sendDeleteStatus } from "../../../scripts/_socketSide";
 
-// import { TrashSVG, EditSVG } from "../../../styles/SVGs/_SVGs";
 import { RootState } from "../../..";
 import { messageI } from "../../../types/types";
 
@@ -25,6 +24,7 @@ interface DeleteDivI {
 const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
   const closeContextMenu = (): void => {
     dispatch(closeContext());
+    dispatch(exitFocusMode({ _id: id as string }));
   };
 
   const editMSG = (id: string | null) => {
@@ -38,11 +38,12 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
       }
     });
     if (isFile) {
-      alert("can't edit a file message...");
+      alert("can't edit a file...");
     } else if (reduxData.currentUser !== messageUser) {
       alert("You do not have privileges to edit that message...");
     } else {
-      dispatch(enterEditMode({ _id: id }));
+      dispatch(enterEditMode({ _id: id as string }));
+      dispatch(enterFocusMode({ _id: id as string }));
     }
     closeContextMenu();
   };
@@ -56,7 +57,7 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
     if (reduxData.currentUser !== messageUser) {
       alert("You do not have privileges to delete that message...");
     } else {
-      dispatch(removeMessage({ _id: id }));
+      dispatch(removeMessage({ _id: id as string }));
       sendDeleteStatus(id);
     }
     closeContextMenu();
