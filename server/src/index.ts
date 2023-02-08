@@ -193,20 +193,29 @@ const main = (connectedUsers: connectedUsersI[]) => {
     });
 
     socket.on("attachEmoji", async (data: attachEmojiI) => {
-      console.log("server received emoji:", data.emoji, data._id, data._userId);
+      console.log("server received emoji:", data.emoji, data._id, data._user);
       let message: any = await MessageModel.findOne({ _id: data._id });
 
-      let found = false;
+      let found = false, suspend = false;
       let num = 1;
       message.emojis.forEach((emoji: any) => {
         if (emoji.emoji === data.emoji){
-          emoji.num += 1;
-          found = true;
-          num = emoji.num;
+          if (emoji.users.includes(data._user) === false){
+            emoji.num += 1;
+            emoji.userIds.push(data._user);
+            found = true;
+            num = emoji.num;
+          }
+          else {
+            suspend = true;
+          }
         }
       });
-      if (found === false){
-        message.emojis.push({emoji: data.emoji, num: 1});
+      if(suspend){
+        return;
+      }
+      else if (found === false){
+        message.emojis.push({emoji: data.emoji, num: 1, users: [data._user]});
       }
 
       let jData = {

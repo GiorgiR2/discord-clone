@@ -42,7 +42,7 @@ type emojiT = "👍" | "😀" | "😘" | "😍" | "😆" | "😜" | "😅" | "�
 interface attachEmojiI {
     emoji: emojiT;
     _id: string; // messageId
-    _userId: string;
+    _user: string;
     room: string;
 }
 

@@ -1,6 +1,12 @@
 import mongoose, { Types } from "mongoose";
 import { emojiT } from "../types/sockets";
 
+interface emojiI {
+  emoji: emojiT,
+  num: number,
+  users: string[],
+}
+
 // mongoose.Document, mongodb.collection
 interface messageSchemaI extends mongoose.Document {
   _id: Types.ObjectId;
@@ -15,7 +21,7 @@ interface messageSchemaI extends mongoose.Document {
   downloadCount?: number;
   size?: number;
   edited: boolean;
-  emojis: any;//Record<emojiT, number>;
+  emojis: emojiI[];//Record<emojiT, number>;
 }
 
 const messageSchema = new mongoose.Schema<messageSchemaI>(
@@ -86,6 +92,7 @@ const messageSchema = new mongoose.Schema<messageSchemaI>(
     emojis: [{
       emoji: String,
       num: Number,
+      users: [String],
     }],
   },
   {

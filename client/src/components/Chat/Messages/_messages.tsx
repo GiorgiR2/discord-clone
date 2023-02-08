@@ -52,7 +52,7 @@ const MessagesDivs = (): JSX.Element => {
   };
   const attachEmoji = (messageId: string, emoji: emojiT) => {
     // console.log(`Id: ${messageId}; emoji: ${emoji}`);
-    socks.attackEmoji(messageId, emoji, reduxData.currentRoom);
+    socks.attackEmoji(messageId, emoji, reduxData.currentRoom, reduxData.currentUser);
   };
 
   const dispatch = useDispatch();

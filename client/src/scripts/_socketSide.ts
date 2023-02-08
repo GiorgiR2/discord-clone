@@ -154,8 +154,8 @@ const sendMessage = ({event, reduxData, roomId, device, inputRef}: sendMessageI)
   }
 };
 
-const attackEmoji = (messageId: string, emoji: emojiT, room: string) => {
-  socket.emit("attachEmoji", { _id: messageId, emoji: emoji, room: room });
+const attackEmoji = (messageId: string, emoji: emojiT, room: string, user: string) => {
+  socket.emit("attachEmoji", { _id: messageId, emoji: emoji, room: room, _user: user });
 }
 
 const disconnect = () => socket.disconnect();
