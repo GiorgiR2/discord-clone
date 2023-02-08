@@ -15,6 +15,7 @@ interface messageI {
     editMode: boolean;
     focusMode: boolean;
     edited: boolean;
+    emojis: Omit<attachEmojiI, "room" | "_id">[];
 }
 
 interface statusI {
@@ -59,6 +60,8 @@ interface interfaceInitialStateValueI {
     offline: string[];
     messages: messageI[];
     voiceMode: boolean;
+    frequentlyUsedEmojis: emojiT[];
+    otherEmojis: emojiT[];
 }
 
 interface sendFileDataI {
@@ -102,7 +105,22 @@ interface editMessageI {
     };
 }
 
+interface attachEmojiI {
+    _id: string;
+    room: string;
+    emoji: emojiT;
+    num: number;
+}
+
+interface attachEmojiRX {
+    payload: Omit<attachEmojiI, "room">;
+}
+
+type emojiT = "👍" | "😀" | "😘" | "😍" | "😆" | "😜" | "😅" | "😂" | "😱" | "😁" | "🤣" | "🙂" |
+             "🙃" | "😉" | "🥲" | "🤑" | "🥵" | "🥶" | "😎" | "🤓" | "😨" | "💩" | "👎" | "✊";
+
 type peerConnectionsT = [string, RTCPeerConnection];
 
 export type { roomI, messageI, optionsI, statusI, voiceInitialStateValueI, toggleInitialStateValueI, interfaceInitialStateValueI,
-    sendFileDataI, sendMessageI, frameI, peerConnectionsT, userDataI, modeI, editMessageI };
+              sendFileDataI, sendMessageI, frameI, peerConnectionsT, userDataI, modeI, editMessageI, emojiT, attachEmojiI,
+              attachEmojiRX };

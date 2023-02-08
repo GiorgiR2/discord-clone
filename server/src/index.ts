@@ -14,17 +14,16 @@ const messagesRouter = require("./routes/messages.cjs");
 const roomsRouter = require("./routes/rooms.cjs");
 
 import { usersStatus } from "./ts/userOperations.cjs";
-import { loadMessages, addToMongoose } from "./ts/msgOperations.cjs";
-// import catOps from "./ts/catOperations.cjs";
+import * as msgOps from "./ts/msgOperations.cjs";
 
-import MessageModel from "./models/message.model.cjs";
+import MessageModel, { messageSchemaI } from "./models/message.model.cjs";
 
 import "./mongooseAPI.cjs";
 
-// types
 import { connectedUsersI, usersInVoiceI } from "./types/types.cjs";
 
 import dotenv from "dotenv";
+import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } from "./types/sockets.js";
 dotenv.config(); // .env variables
 
 const PORT = process.env.PORT || 5000;
@@ -48,7 +47,7 @@ const main = (connectedUsers: connectedUsersI[]) => {
     let username: string;
     console.log("new connection", socket.id);
 
-    socket.on("join", (data: any) => {
+    socket.on("join", (data: joinI) => {
       console.log("join", data);
       username = data.username;
 
@@ -80,12 +79,18 @@ const main = (connectedUsers: connectedUsersI[]) => {
 
       socket.emit("status", connectedUsers);
 
-      loadMessages(socket, data.room);
+      MessageModel.find({
+        room: data.room,
+      })
+      .exec()
+      .then((doc: messageSchemaI[]) => {
+        socket.emit("messagesData", doc);
+      });
 
       socket.join(data.room);
     });
 
-    socket.on("disconnect", (data: any) => {
+    socket.on("disconnect", () => {
       for (var i in connectedUsers) {
         let userData: connectedUsersI = connectedUsers[i];
         if (userData.username === username) {
@@ -115,7 +120,7 @@ const main = (connectedUsers: connectedUsersI[]) => {
         });
       });
 
-      // Todo: implement new code to pip out disconnected users
+      // Todo: implement new code to pop out disconnected users
       socketIds = socketIds.filter((id, n) => {
         if (id !== socket.id) {
           return id;
@@ -128,16 +133,14 @@ const main = (connectedUsers: connectedUsersI[]) => {
       });
     });
 
-    socket.on("message", async (data: any) => {
-      let authentication: string = data.authentication;
+    socket.on("message", async (data: messageIS) => {
+      let authentication = data.authentication;
+      let user = data.username;
+      let message = data.message;
+      let datetime = data.datetime;
+      let room = data.room;
 
-      let user: string = data.username;
-      let message: string = data.message;
-
-      let datetime: string = data.datetime;
-      let room: string = data.room;
-
-      let _id = addToMongoose({ ...data, isFile: false }); // authentication, username, message, datetime, room
+      let _id = msgOps.addToMongoose({ ...data, isFile: false });
 
       let sdata = {
         user: user,
@@ -152,12 +155,12 @@ const main = (connectedUsers: connectedUsersI[]) => {
       // console.log("sent (1)", room, message, "from", username);
     });
 
-    socket.on("deleteMessage", async (data: any): Promise<void> => {
+    socket.on("deleteMessage", async (data: deleteMessageI): Promise<void> => {
       MessageModel.find({ _id: data._id }).remove().exec();
       socket.in(data.room).emit("messageDeleted", { _id: data._id });
     });
 
-    socket.on("editMessage", async (data: any) => {
+    socket.on("editMessage", async (data: editMessageI) => {
       let filter = { _id: data._id };
       let msg = data.messageHTML
         .replace("</div><div>", "<br>")
@@ -171,27 +174,49 @@ const main = (connectedUsers: connectedUsersI[]) => {
       MessageModel.findOneAndUpdate(filter, update).exec();
     });
 
-    socket.on("file", async (data: any) => {
-      let authentication = data.authentication;
+    socket.on("file", async (data: fileI) => {
+      // let authentication = data.authentication;
+      // let user = data.user;
+      // let datetime = data.datetime;
+      // let roomId = data.roomId;
 
-      let user: string = data.user;
-      let datetime: string = data.datetime;
-      let room: string = data.room;
-      let roomId: string = data.roomId;
-      let size: string = data.size;
-      let filename: string = data.filename;
+      let room = data.room;
+      let size = data.size;
+      let filename = data.filename;
 
-      MessageModel.findOne({ size: size, originalName: filename }).then((doc: any) => {
-        // let sdata = {
-        //   user: user,
-        //   _id: file._id,
-        //   date: datetime,
-        //   isFile: true,
-        // };
+      MessageModel.findOne({ size: size, originalName: filename })
+      .then((doc: any) => {
         socket.emit("M_S_O", doc);
         socket.in(room).emit("M_S_O", doc);
         console.log("file sent:", doc._id, filename);
       });
+    });
+
+    socket.on("attachEmoji", async (data: attachEmojiI) => {
+      console.log("server received emoji:", data.emoji, data._id, data._userId);
+      let message: any = await MessageModel.findOne({ _id: data._id });
+
+      let found = false;
+      let num = 1;
+      message.emojis.forEach((emoji: any) => {
+        if (emoji.emoji === data.emoji){
+          emoji.num += 1;
+          found = true;
+          num = emoji.num;
+        }
+      });
+      if (found === false){
+        message.emojis.push({emoji: data.emoji, num: 1});
+      }
+
+      let jData = {
+        emoji: data.emoji,
+        num: num,
+        _id: data._id
+      };
+      socket.emit("newEmoji", jData);
+      socket.in(data.room).emit("newEmoji", jData);
+      await message.save();
     });
 
     // #################################

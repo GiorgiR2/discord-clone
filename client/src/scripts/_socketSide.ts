@@ -8,8 +8,9 @@ import {
   setOffline,
   addMessage,
   removeMessage,
+  attachEmoji
 } from "../features/interfaces";
-import { messageI, statusI, sendMessageI, sendFileDataI } from "../types/types";
+import { messageI, statusI, sendMessageI, sendFileDataI, emojiT, attachEmojiI } from "../types/types";
 
 const main = (reduxData: any, dispatch: any) => {
   if (socket.disconnected){
@@ -36,6 +37,7 @@ const main = (reduxData: any, dispatch: any) => {
         focusMode: false,
         editMode: false,
         edited: data.edited,
+        emojis: data.emojis === undefined ? [] : data.emojis,
       },
     ];
 
@@ -55,6 +57,7 @@ const main = (reduxData: any, dispatch: any) => {
         focusMode: false,
         editMode: false,
         edited: el.edited,
+        emojis: el.emojis === undefined ? [] : el.emojis,
       };
     });
     dispatch(addMessage({ messageList: msgList })); // message/messages
@@ -80,6 +83,11 @@ const main = (reduxData: any, dispatch: any) => {
       else dispatch(setOffline({ name: el.username }));
     });
   });
+
+  socket.on("newEmoji", (data: attachEmojiI) => {
+    console.log("received:", data.emoji, data.num, data._id);
+    dispatch(attachEmoji({ _id: data._id, emoji: data.emoji, num: data.num }));
+  });
 };
 
 // const urlify = (text) => {
@@ -98,11 +106,18 @@ const sendDeleteStatus = (id: string | null) => {
 };
 
 const sendFileData = ({ reduxData, roomId, datetime, size, filename }: sendFileDataI) => {
+  // const data = {
+  //   user: reduxData.currentUser,
+  //   room: reduxData.currentRoom,
+  //   roomId: roomId,
+  //   datetime: datetime,
+  //   size: size,
+  //   authentication: reduxData.authentication,
+  //   filename: filename,
+  // };
+  
   const data = {
-    user: reduxData.currentUser,
     room: reduxData.currentRoom,
-    roomId: roomId,
-    datetime: datetime,
     size: size,
     authentication: reduxData.authentication,
     filename: filename,
@@ -139,6 +154,10 @@ const sendMessage = ({event, reduxData, roomId, device, inputRef}: sendMessageI)
   }
 };
 
+const attackEmoji = (messageId: string, emoji: emojiT, room: string) => {
+  socket.emit("attachEmoji", { _id: messageId, emoji: emoji, room: room });
+}
+
 const disconnect = () => socket.disconnect();
 
 const domain = packageJson.proxy;
@@ -153,4 +172,5 @@ export {
   sendDeleteStatus,
   editMessage,
   disconnect,
+  attackEmoji,
 };

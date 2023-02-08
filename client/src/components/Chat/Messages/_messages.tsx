@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import axios from "axios";
 import FormData from "form-data";
 
-import { interfaceInitialStateValueI, messageI } from "../../../types/types";
+import { emojiT, interfaceInitialStateValueI, messageI } from "../../../types/types";
 import { RootState } from "../../..";
 
 import { editMessage, enterFocusMode, exitEditMode, exitFocusMode } from "../../../features/interfaces";
@@ -27,7 +27,7 @@ const emojiSVG: string = require("../../../assets/chat/emoji.svg").default;
 
 const apiLink = packageJson.proxy;
 
-const MessagesDivs = ({ reduxData }: { reduxData: interfaceInitialStateValueI }): JSX.Element => {
+const MessagesDivs = (): JSX.Element => {
   const handleContextMenu = (e: any, id: string) => {
     e.preventDefault();
 
@@ -50,18 +50,20 @@ const MessagesDivs = ({ reduxData }: { reduxData: interfaceInitialStateValueI })
     dispatch(exitFocusMode({ _id: id }));
     socks.editMessage(event.target.innerHTML, id);
   };
-  const openEmoji = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-    console.log("emoji");
+  const attachEmoji = (messageId: string, emoji: emojiT) => {
+    // console.log(`Id: ${messageId}; emoji: ${emoji}`);
+    socks.attackEmoji(messageId, emoji, reduxData.currentRoom);
   };
 
   const dispatch = useDispatch();
+  const reduxData = useSelector((state: RootState) => state.interfaces.value);
 
   return (
     <div className="messageDivs">
       {reduxData.messages.map((el: messageI) => {
         // msg may be a text / a multiline text or a fileID
         let link = `${apiLink}/file/${el.message}`; // msg === Id
-        // console.log(el.message);
+
         return (
             <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`}>
                 <div
@@ -108,9 +110,30 @@ const MessagesDivs = ({ reduxData }: { reduxData: interfaceInitialStateValueI })
                     </div>
 
                     <div className={`settings ${el.focusMode ? "visible" : null}`}>
-                        <img onClick={(event) => openEmoji(event)} src={emojiSVG} alt="emoji" id="emoji" />
+                        <div className="emojiDiv">
+                            <img src={emojiSVG} alt="emoji" id="emoji" />
+                            <div className="emojiContent">
+                                <div className="frequentlyUsed">
+                                    <h5>Frequently Used</h5>
+                                    {reduxData.frequentlyUsedEmojis.map(emoji => <span onClick={() => attachEmoji(el._id, emoji)}>{emoji}</span>)}
+                                </div>
+                                <div className="other">
+                                    <h5>Smileys & People</h5>
+                                    {reduxData.otherEmojis.map(emoji => <span onClick={() => attachEmoji(el._id, emoji)}>{emoji}</span>)}
+                                </div>
+                            </div>
+                        </div>
                         <h5 onClick={(event) => handleContextMenu(event, el._id)} id="dots">···</h5>
                     </div>
+                </div>
+
+                <div className={`emojis ${el.emojis.length === 0 ? "hidden" : null}`}>
+                    {el.emojis.map(emojiData => (
+                        <div className="emoji">
+                            <span className="smile">{emojiData.emoji}</span>
+                            <span className="num">{emojiData.num}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
         );
@@ -174,7 +197,7 @@ const Messages = () => {
     return (
         <>
         <div id="chat-screen">
-            <MessagesDivs reduxData={reduxData} />
+            <MessagesDivs />
             <div id="last-element"></div>
         </div>
         <div id="input">

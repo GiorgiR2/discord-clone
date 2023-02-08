@@ -1,7 +1,8 @@
 import mongoose, { Types } from "mongoose";
+import { emojiT } from "../types/sockets";
 
 // mongoose.Document, mongodb.collection
-export interface messageSchemaI extends mongoose.Document {
+interface messageSchemaI extends mongoose.Document {
   _id: Types.ObjectId;
   date: string;
   message?: string;
@@ -14,6 +15,7 @@ export interface messageSchemaI extends mongoose.Document {
   downloadCount?: number;
   size?: number;
   edited: boolean;
+  emojis: any;//Record<emojiT, number>;
 }
 
 const messageSchema = new mongoose.Schema<messageSchemaI>(
@@ -81,6 +83,10 @@ const messageSchema = new mongoose.Schema<messageSchemaI>(
       required: true,
       default: false,
     },
+    emojis: [{
+      emoji: String,
+      num: Number,
+    }],
   },
   {
     timestamps: false,
@@ -91,16 +97,4 @@ const Message = mongoose.model<messageSchemaI>("Message", messageSchema);
 
 // module.exports = Message;
 export default Message;
-
-// export function findOneAndUpdate(filter: { _id: any; }, update: { message: any; }) {
-//   throw new Error("Function not implemented.");
-// }
-
-// export function find(arg0: { _id: any; }) {
-//   throw new Error("Function not implemented.");
-// }
-
-// export function findOne(arg0: { size: string; originalName: string; }) {
-//   throw new Error("Function not implemented.");
-// }
-// export { messageSchemaI };
+export { messageSchemaI };

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { editMessageI, interfaceInitialStateValueI, messageI, modeI } from "../types/types";
+import { attachEmojiRX, editMessageI, interfaceInitialStateValueI, messageI, modeI } from "../types/types";
 
 const initialStateValue: interfaceInitialStateValueI = {
   authentication: "",
@@ -13,6 +13,8 @@ const initialStateValue: interfaceInitialStateValueI = {
   offline: [],
   messages: [],
   voiceMode: false,
+  frequentlyUsedEmojis: ["👍", "😀", "😘", "😍", "😆", "😜", "😅", "😂", "😱"],
+  otherEmojis: ["😁", "🤣", "🙂", "🙃", "😉", "🥲", "🤑", "🥵", "🥶", "😎", "🤓", "😨", "💩", "👎", "✊"],
 };
 
 export const userSlice = createSlice({
@@ -137,6 +139,36 @@ export const userSlice = createSlice({
       });
     },
 
+    attachEmoji: (state, action: attachEmojiRX) => {
+      state.value.messages = state.value.messages.map((message) => {
+        if(message._id === action.payload._id){
+          let found = false;
+          let newEmojis = message.emojis.map(emojiData => {
+            if (emojiData.emoji === action.payload.emoji){
+              emojiData.num += 1;
+              found = true;
+              return emojiData;
+            }
+            return emojiData;
+          });
+          if (found === false){
+            message.emojis.push({emoji: action.payload.emoji, num: 1});
+          }
+          else{
+            message.emojis = newEmojis;
+          }
+
+          return message;
+        }
+        else{
+          return message;
+        }
+      });
+    },
+    removeEmoji: (state, action) => {
+      //pass
+    },
+
     clearAll: (state) => {
       state.value = initialStateValue;
     },
@@ -188,6 +220,8 @@ export const {
 
   addMessage,
   removeMessage,
+
+  attachEmoji,
 
   enterFocusMode,
   exitFocusMode,

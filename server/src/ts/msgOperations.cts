@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 import saveModel from "./saveModel.cjs";
 
-import { addToMongooseDataI, messageI } from "../types/types.cjs";
+import { addToMongooseDataI } from "../types/types.cjs";
 
 const addToMongoose = (data: addToMongooseDataI ): string => {
   // authentication, username, message, datetime, room
@@ -12,7 +12,7 @@ const addToMongoose = (data: addToMongooseDataI ): string => {
   let newMessageModel: any;
   // console.log("data to save: ", data);
 
-  if (data.isFile)
+  if (data.isFile){
     newMessageModel = new MessageModel({
       _id: new mongoose.Types.ObjectId(),
       user: data.username,
@@ -24,8 +24,10 @@ const addToMongoose = (data: addToMongooseDataI ): string => {
       roomId: data.roomId, // <----
       downloadCount: 0,
       size: data.size,
+      emojis: [],//[{emoji: 2, num: 1}, {emoji: 1, num: 4}],
     });
-  else
+  }
+  else{
     newMessageModel = new MessageModel({
       _id: new mongoose.Types.ObjectId(),
       isFile: false,
@@ -34,30 +36,13 @@ const addToMongoose = (data: addToMongooseDataI ): string => {
       date: data.datetime,
       room: data.room,
       roomId: data.roomId,
+      emojis: [],//[{emoji: 2, num: 1}, {emoji: 1, num: 4}],
     });
+  }
 
   saveModel(newMessageModel);
 
   return newMessageModel._id;
 };
 
-const removeMessage = (hash: string) => {
-  // pass
-};
-
-const loadMessages = (socket: any, room: string) => {
-  MessageModel.find({
-    room: room,
-    // isFile: false,
-  })
-    .exec()
-    .then((doc: any) => {
-      socket.emit("messagesData", doc);
-      // console.log(doc);
-    });
-  //   console.log("msg", messages);
-  //   return messages;
-};
-
-// module.exports = { addToMongoose, removeMessage, loadMessages };
-export { addToMongoose, removeMessage, loadMessages };
+export { addToMongoose };
