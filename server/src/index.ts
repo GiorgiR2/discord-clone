@@ -202,7 +202,7 @@ const main = (connectedUsers: connectedUsersI[]) => {
         if (emoji.emoji === data.emoji){
           if (emoji.users.includes(data._user) === false){
             emoji.num += 1;
-            emoji.userIds.push(data._user);
+            emoji.users.push(data._user);
             found = true;
             num = emoji.num;
           }
