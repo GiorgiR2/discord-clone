@@ -116,6 +116,12 @@ interface attachEmojiRX {
     payload: Omit<attachEmojiI, "room">;
 }
 
+interface emojiDivI {
+    _id?: string;
+    side: "top" | "bottom";
+    input?: any;
+}
+
 type emojiT = "👍" | "😀" | "😘" | "😍" | "😆" | "😜" | "😅" | "😂" | "😱" | "😁" | "🤣" | "🙂" |
              "🙃" | "😉" | "🥲" | "🤑" | "🥵" | "🥶" | "😎" | "🤓" | "😨" | "💩" | "👎" | "✊";
 
@@ -123,4 +129,4 @@ type peerConnectionsT = [string, RTCPeerConnection];
 
 export type { roomI, messageI, optionsI, statusI, voiceInitialStateValueI, toggleInitialStateValueI, interfaceInitialStateValueI,
               sendFileDataI, sendMessageI, frameI, peerConnectionsT, userDataI, modeI, editMessageI, emojiT, attachEmojiI,
-              attachEmojiRX };
+              attachEmojiRX, emojiDivI };
