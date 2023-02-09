@@ -11,6 +11,8 @@ import "./_editRoom.sass";
 import { optionsI, roomI } from "../../../types/types";
 import { RootState } from "../../..";
 
+const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
+
 const apiLink = packageJson.proxy;
 
 const PopupEditRoom: React.FC = () => {
@@ -155,7 +157,7 @@ const PopupAddRoom: React.FC = () => {
           <h5>channel type</h5>
           <span>
             <div className="title">
-              <h5 className="icon">#</h5>
+              <h5 className="icon sharp">#</h5>
               <h5 className="title">chat room</h5>
             </div>
             <input
@@ -169,7 +171,12 @@ const PopupAddRoom: React.FC = () => {
           </span>
           <span>
             <div className="title">
-              <h5 className="icon">{"<)"}</h5>
+              {/* <h5 className="icon">{"<)"}</h5> */}
+              <img
+                className="icon speaker"
+                src={Speaker}
+                alt="speaker"
+              />
               <h5 className="title">voice room</h5>
             </div>
             <input

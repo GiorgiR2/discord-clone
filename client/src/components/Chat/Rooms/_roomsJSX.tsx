@@ -15,6 +15,10 @@ import { EditSVG, TrashSVG } from "../../../styles/SVGs/_SVGs";
 import { roomI } from "../../../types/types";
 import { RootState } from "../../..";
 
+import "./_roomsJSX"
+
+const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
+
 const apiLink = packageJson.proxy;
 
 const RoomsJSX = (): JSX.Element => {
@@ -66,15 +70,16 @@ const RoomsJSX = (): JSX.Element => {
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
-      <a
+      <div
         className="hyperlink"
         onClick={() => {
           history.push(`/chat/${room._id}/${hashId}`);
           window.location.reload();
         }}
       >
-        # {room.name}
-      </a>
+        {room.voice ? 
+        <img className="speaker" src={Speaker} alt="speaker" /> : <span className="sharp">#</span>} <span className="name">{room.name}</span>
+      </div>
       <div className="svgs">
         <EditSVG id={room._id} />{" "}
         {/* set redux editingCatId as id */}
