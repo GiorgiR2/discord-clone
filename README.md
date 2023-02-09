@@ -31,17 +31,16 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 or do the same with ``yarn``
 
 
-## Functions
+## Features
 
-| Function                                  | Description                                       | Status                 |
-|-------------------------------------------|---------------------------------------------------|------------------------|
-| send messages/files                       | -                                                 | done                   |
-| video/audio group chat                    | webRTC p2p connection                             | done                   |
-| screen share                              | -                                                 | done                   |
-| add/edit/delete rooms                     | -                                                 | done                   |
-| edit/delete messages                      | -                                                 | done                   |
-| hash based authentication                 | -                                                 | done                   |
-| auto login (remember logged in users)     | use localstorage to store authentication hash     | done                   |
+* sending messages/files
+* editing/deleteing messages
+* multi user audio/video group chat
+* screen sharing
+* show active users
+* add/edit/delete rooms
+* hash based authentication
+* auto login (remember logged in users)
 
 ## Screens
 ...
