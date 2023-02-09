@@ -1,0 +1,59 @@
+@import '../../../styles/_variables'
+
+.emojiDiv
+    &:hover > .emojiContent, &:active > .emojiContent,
+    .emoji:hover, .emoji:active
+        display: block
+        visibility: visible
+
+    .emoji
+        cursor: pointer
+        margin: 0
+        padding: 0
+
+    #bottom
+        height: 17px !important
+        margin: 5px 0 0 0 !important
+        border-right: 1px solid #ecf0f1 !important
+    
+    #top
+        height: 30px !important
+        transform: translate(-10px, 8px) !important
+        cursor: pointer !important
+    
+    .top
+        transform: translate(0px, -200px)
+    
+    .bottom
+        transform: translate(-50px, 0px)
+
+    .emojiContent
+        display: none
+        visibility: hidden
+        position: absolute
+        border: 1px splid #ecf0f1
+        z-index: 10
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
+        padding: 5px
+        background-color: #fff
+        border-radius: 4px
+        width: 120px
+
+        h5
+            color: #000
+            margin-bottom: 5px
+            font-size: 14px
+        
+        span
+            cursor: pointer
+            font-size: 14px
+        
+        .frequentlyUsed
+            //pass
+
+        .other
+            margin-top: 10px
+
+@media screen and (max-width: 850px)
+    .emojiDiv .top
+        transform: translate(-40px, -220px) !important

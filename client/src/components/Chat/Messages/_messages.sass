@@ -97,51 +97,11 @@
                     border: 1px solid #ecf0f1
                     border-radius: 5px
                     
-                    #emoji, #dots
+                    .dots
                         cursor: pointer
                         margin: 0
                         padding: 0
 
-                    .emojiDiv
-
-                        &:hover > .emojiContent, &:active > .emojiContent,
-                        #emoji:hover, #emoji:active
-                            display: block
-                            visibility: visible
-
-                        #emoji
-                            height: 17px
-                            margin-top: 5px
-                            margin-right: 3px
-                            border-right: 1px solid #ecf0f1
-                        
-                        .emojiContent
-                            display: none
-                            visibility: hidden
-                            position: absolute
-                            border: 1px splid #ecf0f1
-                            z-index: 10
-                            transform: translate(-50px, 0px)
-                            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
-                            padding: 5px
-                            background-color: #fff
-                            border-radius: 4px
-                            width: 120px
-
-                            h5
-                                color: #000
-                                margin-bottom: 5px
-                            
-                            span
-                                cursor: pointer
-                            
-                            .frequentlyUsed
-                                //pass
-
-                            .other
-                                margin-top: 10px
-                    
-                    #dots
                         font-size: 1.2rem
                         font-weight: bold
                         margin: 0 8px 0 4px
@@ -205,11 +165,11 @@
             overflow: hidden !important
             height: fit-content
             max-height: 50px // 10vh
-            width: calc(60.6vw - 50px) // 99%
+            width: calc(60.6vw - 95px) // 99%
             background-color: #46637f
             z-index: 1
             color: #cfd9e4
-            margin: auto 0 auto 0
+            margin: auto 20px auto 0
             padding-top: 16px
             padding-bottom: 4px
             border: 0
@@ -217,10 +177,5 @@
             &::placeholder
               color: #cfd9e4
         
-        .send
-            display: none
-            position: relative
-            height: 1.4em
-            top: 12px
-            left: -15px
-            z-index: 3
+    .send
+        display: none

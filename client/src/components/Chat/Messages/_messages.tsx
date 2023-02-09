@@ -4,11 +4,13 @@ import { useParams } from "react-router";
 import axios from "axios";
 import FormData from "form-data";
 
-import { emojiT, interfaceInitialStateValueI, messageI } from "../../../types/types";
+import { emojiDivI, emojiT, interfaceInitialStateValueI, messageI } from "../../../types/types";
 import { RootState } from "../../..";
 
 import { editMessage, enterFocusMode, exitEditMode, exitFocusMode } from "../../../features/interfaces";
 import { setContextMenu } from "../../../features/toggle";
+
+import EmojiDiv from "./_emojiDiv";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -23,7 +25,6 @@ const sendSVG: string = require("../../../assets/send-24px.svg").default;
 const fileSVG: string = require("../../../assets/fileIcon.svg").default;
 const userSVG: string = require("../../../assets/chat/user-flat.svg").default;
 const plusSVG: string = require("../../../assets/chat/plus.svg").default;
-const emojiSVG: string = require("../../../assets/chat/emoji.svg").default;
 
 const apiLink = packageJson.proxy;
 
@@ -49,10 +50,6 @@ const MessagesDivs = (): JSX.Element => {
     dispatch(exitEditMode({ _id: id }));
     dispatch(exitFocusMode({ _id: id }));
     socks.editMessage(event.target.innerHTML, id);
-  };
-  const attachEmoji = (messageId: string, emoji: emojiT) => {
-    // console.log(`Id: ${messageId}; emoji: ${emoji}`);
-    socks.attackEmoji(messageId, emoji, reduxData.currentRoom, reduxData.currentUser);
   };
 
   const dispatch = useDispatch();
@@ -110,20 +107,8 @@ const MessagesDivs = (): JSX.Element => {
                     </div>
 
                     <div className={`settings ${el.focusMode ? "visible" : null}`}>
-                        <div className="emojiDiv">
-                            <img src={emojiSVG} alt="emoji" id="emoji" />
-                            <div className="emojiContent">
-                                <div className="frequentlyUsed">
-                                    <h5>Frequently Used</h5>
-                                    {reduxData.frequentlyUsedEmojis.map(emoji => <span onClick={() => attachEmoji(el._id, emoji)}>{emoji}</span>)}
-                                </div>
-                                <div className="other">
-                                    <h5>Smileys & People</h5>
-                                    {reduxData.otherEmojis.map(emoji => <span onClick={() => attachEmoji(el._id, emoji)}>{emoji}</span>)}
-                                </div>
-                            </div>
-                        </div>
-                        <h5 onClick={(event) => handleContextMenu(event, el._id)} id="dots">···</h5>
+                        <EmojiDiv _id={el._id} side="bottom" />
+                        <h5 onClick={(event) => handleContextMenu(event, el._id)} className="dots">···</h5>
                     </div>
                 </div>
 
@@ -192,7 +177,7 @@ const Messages = () => {
 
     let { roomId, hashId } = useParams<{ roomId: string; hashId: string }>();
 
-    const inputRef = useRef<HTMLTextAreaElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
     return (
         <>
@@ -202,37 +187,39 @@ const Messages = () => {
         </div>
         <div id="input">
             <div className="textInput">
-            <div className="fileUpload">
-                {/* @ts-ignore */}
-                <label for="file">
-                <img src={plusSVG} className="fileSVG" alt="fileSVG"/>
-                </label>
-                <input
-                type="file"
-                id="file"
-                onChange={(e) => {
-                    // @ts-ignore
-                    handleSubmit(e.target.files[0]);
-                }}
-                />
+                <div className="fileUpload">
+                    {/* @ts-ignore */}
+                    <label for="file">
+                    <img src={plusSVG} className="fileSVG" alt="fileSVG"/>
+                    </label>
+                    <input
+                    type="file"
+                    id="file"
+                    onChange={(e) => {
+                        // @ts-ignore
+                        handleSubmit(e.target.files[0]);
+                    }}
+                    />
+                </div>
+
+                <textarea
+                    id="text-area"
+                    placeholder={`Message #${reduxData.currentRoom}`}
+                    ref={inputRef}
+                    onKeyPress={(event) =>
+                    socks.sendMessage({
+                        event,
+                        reduxData,
+                        roomId,
+                        device: "desktop",
+                        inputRef,
+                    })
+                    }
+                    autoFocus={window.innerWidth <= 850 ? false : true}
+                ></textarea>
+
+                <EmojiDiv side="top" input={inputRef} />
             </div>
-
-            <textarea
-                id="text-area"
-                placeholder={`Message #${reduxData.currentRoom}`}
-                ref={inputRef}
-                onKeyPress={(event) =>
-                socks.sendMessage({
-                    event,
-                    reduxData,
-                    roomId,
-                    device: "desktop",
-                    inputRef,
-                })
-                }
-                autoFocus={window.innerWidth <= 850 ? false : true}
-            ></textarea>
-
             <img
                 className="send"
                 src={sendSVG}
@@ -247,7 +234,6 @@ const Messages = () => {
                 })
                 }
             />
-            </div>
         </div>
         </>
     );
