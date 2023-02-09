@@ -5,7 +5,6 @@
 * Redux - state managment
 * Node - back-end
 * socket.io - sending messages (and some other kind of data)
-* RestAPI
 * WebRTC - p2p audio/video transfer + screen sharing
 
 ## Overview
@@ -35,6 +34,7 @@ or do the same with ``yarn``
 
 * sending messages/files
 * editing/deleteing messages
+* emojis
 * multi user audio/video group chat
 * screen sharing
 * show active users
