@@ -1,5 +1,7 @@
 // File: _chat.scss
+@import '../../styles/_variables'
 
+// File: _chat.scss
 @import '../../styles/_variables'
 
 svg
@@ -24,7 +26,6 @@ svg
         font-size: 22px
         color: white
         // padding-bottom: 10px
-
     h2
         padding-top: 4px
         padding-left: 10px
@@ -80,7 +81,6 @@ svg
                 margin-left: 5px
                 font-size: 1.2em
                 // margin: 6px
-
             .plus
               margin-top: 7px
               margin-left: 6px
@@ -92,7 +92,6 @@ svg
               height: 38px
               letter-spacing: 1.4px
               // text-align: center
-
               display: flex
               justify-content: space-between
 
@@ -117,13 +116,36 @@ svg
 
                 li
                     font: 20px Lato, Arial, Sans-Serif
-                    margin-top: .15em
+                    margin-top: .2em
+                    height: 30px
                     padding-left: .4em
                     padding-top: 3px
-                    padding-bottom: 3px
+                    padding-bottom: 5px
 
                     display: flex
                     justify-content: space-between
+
+                    div
+                      display: flex
+                      // flex-direction: column
+
+                      .speaker
+                        height: 22px
+                        // margin: 5px 0 3px 0
+                        // background-color: green
+                        // margin-top: 15px
+                      
+                      .sharp
+                        font-size: 1.2rem
+                        // height: 2px
+                        margin-left: 4px
+                      
+                      .name
+                        // background-color: red
+                        position: relative
+                        // transform: translate(-100px, -100px)
+                        margin-left: 8px
+                        // padding-bottom: 5px
 
                     .svgs
                       display: flex
@@ -166,7 +188,6 @@ svg
 
         #category
           // pass
-
         #log_out
           &:hover,
           &:active
@@ -290,12 +311,28 @@ svg
               width: 100% !important
 
             #input
-              // background-color: #4C6C8A !important
-              .textInput
-                width: 98vw !important
+                display: flex
+                margin: 8px 0 0 4px
 
-                textarea
-                  width: calc(98vw - 50px) !important
+                .textInput
+                    width: calc(97.8vw - 50px) !important
+                    border-radius: 12px
+                    
+                    textarea
+                        width: calc(98vw - 50px) !important
+                    
+                    .emoji
+                        height: 38px !important
+                        transform: translate(-5px, 5px) !important
+                        // margin-bottom: 10px !important
 
                 .send
-                  display: block !important
+                    display: block !important
+                    // position: relative
+                    margin: 10px 0 0 8px
+                    height: 1.6em
+                    // top: 12px
+                    // left: -15px
+                    // z-index: 3
+    svg
+        cursor: pointer

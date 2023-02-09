@@ -26,7 +26,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predeploy": "npm run build",
+    "predeploy": "yarn run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -56,6 +56,6 @@
     "gh-pages": "^5.0.0",
     "node-sass": "^7.0.3"
   },
-  "proxy": "http://127.0.0.1:5000",
-  "proxy0": "https://discord-clone-production-38ae.up.railway.app"
+  "proxy0": "http://127.0.0.1:5000",
+  "proxy": "https://discord-clone-production-38ae.up.railway.app"
 }
