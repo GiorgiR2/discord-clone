@@ -31,7 +31,8 @@ interface optionsI {
 interface voiceInitialStateValueI {
     currentStatus: string;
     localStream: any;
-    mediaData: { audio: boolean; video: boolean; };
+    mediaData: { audio: boolean; video: boolean; screen: boolean; };
+    screenBeenShared: boolean;
     remoteUsers: {
       user: string;
       from: string; name: string; status: string; 

@@ -9,6 +9,10 @@ import {
   addLocalStream,
   disconnectRemoteUser,
   changeRemoteStatus,
+  setScreenSharing,
+  turnOffVideo,
+  setScreenBeenShared,
+  setCurrentStatus,
 } from "../../../features/voice";
 import { peerConnectionsT, userDataI, voiceInitialStateValueI } from "../../../types/types";
 
@@ -29,8 +33,8 @@ const servers = {
 
 const init = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch) => {
   localStream = await navigator.mediaDevices.getUserMedia({
-    audio: true,
-    video: true,
+    audio: voiceRedux.mediaData.audio,
+    video: voiceRedux.mediaData.video
   });
   dispatch(addLocalStream({ stream: localStream }));
 
@@ -38,29 +42,58 @@ const init = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch) 
 };
 
 const shareScreen = async (voiceRedux: voiceInitialStateValueI, dispatch: AppDispatch) => {
-  // @ts-expect-error
-  localStream = await navigator.mediaDevices.getDisplayMedia({ cursor: true });
-  dispatch(addLocalStream({ stream: localStream }));
+  // toggle
+  if (voiceRedux.mediaData.screen) {
+    var tracks = localStream.getTracks();
+    for (var i = 0; i < tracks.length; i++) tracks[i].stop();
+    toggleVideoScreen(false);
+    dispatch(setCurrentStatus({ status: "No Video" }));
+  }
+  else {
+    dispatch(setScreenBeenShared({ status: true }));
+    dispatch(setCurrentStatus({ status: "" }));
+    dispatch(turnOffVideo());
+    // @ts-expect-error
+    localStream = await navigator.mediaDevices.getDisplayMedia({ cursor: true });
+    dispatch(addLocalStream({ stream: localStream }));
 
-  // replaceTracks
-  const screenTracks = localStream.getTracks()[0];
-  localStream
-    .getTracks()
-    .find((track: any) => track.kind === "video")
-    .replaceTrack(localStream.getTracks()[1]);
-  // screenTracks.onended = () => {
-  //   localStream
-  //     .getTracks()
-  //     .find((track) => track.kind === "video")
-  //     .replaceTrack(localStream.getTracks()[1]);
-  // };
-};
+    peerConnections.forEach(pr => {
+      localStream.getTracks().forEach((track: any) => {
+        // @ts-expect-error
+        const sender = pr[1].getSenders().find(s => s.track.kind === "video");
+        sender?.replaceTrack(track);
+      });
+    });
+  }
+  dispatch(setScreenSharing({ status: !voiceRedux.mediaData.screen }));
+}
 
-const toggleVideo = (bool: boolean) => {
-  const videoTrack = localStream
-    .getTracks()
-    .find((track: any) => track.kind === "video");
-  videoTrack.enabled = bool;
+const toggleVideoScreen = (value: boolean) => {
+    const videoTrack = localStream
+      .getTracks()
+      .find((track: any) => track.kind === "video");
+    videoTrack.enabled = value;
+}
+
+const toggleVideo = async (voiceRedux: any, dispatch: any, bool: boolean) => {
+  // this part of the code is quite confusing, so please do not touch it
+  if (voiceRedux.screenBeenShared && voiceRedux.mediaData.video === false) {
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: voiceRedux.mediaData.audio,
+      video: !voiceRedux.mediaData.video
+    });
+    peerConnections.forEach(pr => {
+      localStream.getTracks().forEach((track: any) => {
+        // @ts-expect-error
+        const sender = pr[1].getSenders().find(s => s.track.kind === "video");
+        sender?.replaceTrack(track);
+      });
+    });
+    dispatch(setScreenBeenShared({ status: false }));
+    dispatch(addLocalStream({ stream: localStream }));
+    bool = true;
+  }
+  toggleVideoScreen(bool);
 };
 
 const toggleAudio = (bool: boolean) => {

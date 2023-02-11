@@ -4,7 +4,8 @@ import { voiceInitialStateValueI } from "../types/types";
 const initalStateValue: voiceInitialStateValueI = {
   currentStatus: "", // No Video
   localStream: null,
-  mediaData: { audio: true, video: true },
+  mediaData: { audio: true, video: true, screen: false },
+  screenBeenShared: false,
   remoteUsers: [], // {from: "", user: "", status: ""}
   remoteStreams: [], // [..., [id, stream]] // "id": stream
 };
@@ -35,6 +36,15 @@ export const userSlice = createSlice({
     setCurrentStatus: (state, action) => {
       state.value.currentStatus = action.payload.status;
     },
+    turnOffVideo: (state) => {
+      state.value.mediaData.video = false;
+    },
+    setScreenSharing: (state, action: {payload: { status: boolean }}) => {
+      state.value.mediaData.screen = action.payload.status;
+    },
+    setScreenBeenShared: (state, action) => {
+      state.value.screenBeenShared = action.payload.status;
+    },
     changeRemoteStatus: (state, action) => {
       state.value.remoteUsers = state.value.remoteUsers.map((user) => {
         // console.log("id:", user.from);
@@ -63,6 +73,9 @@ export const {
   addStream,
   addLocalStream,
   setCurrentStatus,
+  turnOffVideo,
+  setScreenSharing,
+  setScreenBeenShared,
   changeRemoteStatus,
   disconnectRemoteUser,
 } = userSlice.actions;

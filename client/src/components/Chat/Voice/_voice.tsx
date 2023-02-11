@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentStatus, setMediaData } from "../../../features/voice";
+import { setCurrentStatus, setMediaData, setScreenSharing } from "../../../features/voice";
 
 import {
   socket,
@@ -31,7 +31,7 @@ const FullScreen: string = require("../../../assets/fullscreen_black_24dp.svg").
 //   window.location.reload();
 // };
 
-const launchIntoFullscreen = (element: any) => {
+const launchIntoFullscreen = (element: any): void => {
   if (element.requestFullscreen) {
     element.requestFullscreen();
   } else if (element.mozRequestFullScreen) {
@@ -86,7 +86,7 @@ const VoiceFrame = () => {
 
     if (button === "video") {
       data.video = !voiceRedux.mediaData.video;
-      toggleVideo(data.video);
+      toggleVideo(voiceRedux, dispatch, data.video);
 
       socket.emit("toggleVideo", {
         status: data.video ? "" : "No Video",
