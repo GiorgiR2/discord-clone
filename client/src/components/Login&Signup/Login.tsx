@@ -6,7 +6,7 @@ import { getBasicData } from "../../scripts/_getBasicData";
 
 import "./_style.sass";
 import packageJson from "../../../package.json";
-import InputComponent from "../widgets/inputComponent/inputComponent";
+import InputComponent from "./inputComponent/inputComponent";
 
 const userSVG: string = require("../../assets/login/user.svg").default;
 

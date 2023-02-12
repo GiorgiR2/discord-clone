@@ -10,7 +10,7 @@ import {
   removeMessage,
   attachEmoji
 } from "../features/interfaces";
-import { messageI, statusI, sendMessageI, sendFileDataI, emojiT, attachEmojiI } from "../types/types";
+import { messageI, statusI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateValueI } from "../types/types";
 
 const main = (reduxData: any, dispatch: any) => {
   if (socket.disconnected){
@@ -127,16 +127,8 @@ const sendFileData = ({ reduxData, roomId, datetime, size, filename }: sendFileD
   console.log("sent...........", data);
 };
 
-const sendMessage = ({event, reduxData, roomId, device, inputRef}: sendMessageI) => {
-  let input = inputRef.current.value;
-  if (
-    ((event.key === "Enter" && event.shiftKey !== true) || device === "mobile") &&
-    input !== null &&
-    input !== 0
-  ) {
-    let message = input;
+const sendMessage = (reduxData: interfaceInitialStateValueI, roomId: string, message: string) => {
     let datetime = getTime();
-
     let sdata = {
       authentication: reduxData.authentication,
       username: reduxData.currentUser,
@@ -147,11 +139,6 @@ const sendMessage = ({event, reduxData, roomId, device, inputRef}: sendMessageI)
     };
 
     socket.emit("message", sdata);
-    // e.target.value = "";
-    inputRef.current.value = "";
-    // e.persist();
-    event.preventDefault();
-  }
 };
 
 const attackEmoji = (messageId: string, emoji: emojiT, room: string, user: string) => {

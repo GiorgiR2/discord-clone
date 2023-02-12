@@ -73,14 +73,6 @@ interface sendFileDataI {
     filename: string;
 }
 
-interface sendMessageI {
-    event: any;//React.KeyboardEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLImageElement, MouseEvent>;
-    reduxData: interfaceInitialStateValueI;
-    roomId: string;
-    device: "mobile" | "desktop";
-    inputRef: any;
-}
-
 interface frameI {
     user: string;
     status: string;
@@ -129,5 +121,5 @@ type emojiT = "👍" | "😀" | "😘" | "😍" | "😆" | "😜" | "😅" | "�
 type peerConnectionsT = [string, RTCPeerConnection];
 
 export type { roomI, messageI, optionsI, statusI, voiceInitialStateValueI, toggleInitialStateValueI, interfaceInitialStateValueI,
-              sendFileDataI, sendMessageI, frameI, peerConnectionsT, userDataI, modeI, editMessageI, emojiT, attachEmojiI,
+              sendFileDataI, frameI, peerConnectionsT, userDataI, modeI, editMessageI, emojiT, attachEmojiI,
               attachEmojiRX, emojiDivI };
