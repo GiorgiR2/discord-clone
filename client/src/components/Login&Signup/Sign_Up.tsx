@@ -2,10 +2,14 @@ import React, { useRef, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 
+import InputComponent from "../widgets/inputComponent/inputComponent";
+
 import { getBasicData } from "../../scripts/_getBasicData";
 import packageJson from "../../../package.json";
 
-import "./_sign-up.sass";
+import "./_style.sass";
+
+const userSVG: string = require("../../assets/login/user.svg").default;
 
 const apiLink = packageJson.proxy;
 
@@ -18,6 +22,7 @@ interface dataI {
 const SignUp = () => {
   const sendData = (e: React.SyntheticEvent) => {
     e.preventDefault();
+
     const data: dataI = {
       username: username.current.value,
       password0: password0.current.value,
@@ -39,9 +44,9 @@ const SignUp = () => {
       })
       .catch((err) => console.log(err));
   };
-  const username = useRef<any>("");
-  const password0 = useRef<any>("");
-  const password1 = useRef<any>("");
+  const username = useRef<any>(null);
+  const password0 = useRef<any>(null);
+  const password1 = useRef<any>(null);
 
   const history = useHistory();
   // let { signup } = useParams();
@@ -54,41 +59,22 @@ const SignUp = () => {
 
   return (
     <div className="sign-up">
-      <h2 className="signUpTitle">sign up</h2>
-      <h2 className="usernameLabel label">UserName:</h2>
-      <h2 className="passwordLabel0 label">Password:</h2>
-      <h2 className="passwordLabel1 label">Repeat Password:</h2>
+      <div className="top">
+        <img src={userSVG} alt="user" className="user" />
+        <h2 className="title">Member sign up</h2>
+      </div>
 
-      <input
-        type="text"
-        className="e-name 234535353" // @ts-expect-error
-        rows="1"
-        cols="15"
-        ref={username}
-      />
-      <input
-        type="password"
-        className="pass0"
-        autoComplete="on" // @ts-expect-error
-        rows="1"
-        cols="15"
-        ref={password0}
-      />
-      <input
-        type="password"
-        className="pass1"
-        autoComplete="on" // @ts-expect-error
-        rows="1"
-        cols="15"
-        ref={password1}
-      />
-      <button className="go-button" onClick={(event) => sendData(event)}>
-        GO
+      <InputComponent input={username} className="" defaultText="Username" type="text" />
+      <InputComponent input={password0} className="" defaultText="Password" type="password" />
+      <InputComponent input={password1} className="" defaultText="Repeat password" type="password" />
+
+      <button className="button margin-top" onClick={(event) => sendData(event)}>
+        SIGN UP
       </button>
-      {/*<a href="/" className="go-back-button">
+      {/* <a href="#" className="back">
         go back
-</a>*/}
-      <Link
+      </a> */}
+      {/* <Link
         to="/"
         onClick={() => {
           history.push("/");
@@ -97,7 +83,7 @@ const SignUp = () => {
         className="go-back-button"
       >
         go back
-      </Link>
+      </Link> */}
     </div>
   );
 };

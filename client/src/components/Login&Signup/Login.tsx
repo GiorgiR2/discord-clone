@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
 import axios from "axios";
 
 import { getBasicData } from "../../scripts/_getBasicData";
 
-import "./_login.sass";
+import "./_style.sass";
 import packageJson from "../../../package.json";
+import InputComponent from "../widgets/inputComponent/inputComponent";
+
+const userSVG: string = require("../../assets/login/user.svg").default;
 
 const apiLink = packageJson.proxy;
 
@@ -50,55 +53,26 @@ const Login = () => {
 
   document.title = "login section";
 
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const username = useRef<any>(null);
+  const password = useRef<any>(null);
   const history = useHistory();
 
   const [remember, setRemember] = useState(false);
 
-  // const queryParams = new URLSearchParams(window.location.search);
-  // console.log(queryParams.get('status')===null);
   useEffect(() => {
-    // if (queryParams.get("status") === "done") {
-    // successfully registered
-    // alert("registration is done...");
-    // }
-
     getBasicData({ history });
   }, []);
 
   return (
     <div className="login">
-      <h2 className="LogInTitle">Login</h2>
-      <h2 className="usernameLabel label">UserName:</h2>
-      <h2 className="passwordLabel label">Password:</h2>
+      <div className="top">
+        <img src={userSVG} alt="user" className="user" />
+        <h2 className="title">Member login</h2>
+      </div>
 
-      <input
-        type="text"
-        className="e-name" // @ts-expect-error
-        rows="1"
-        cols="20"
-        onChange={(event) => setUserName(event.target.value)}
-      />
-      <input
-        type="password"
-        className="e-pass" // @ts-expect-error
-        rows="1"
-        cols="20"
-        onChange={(event) => setPassword(event.target.value)}
-      />
+      <InputComponent input={username} defaultText="username" type="text" />
+      <InputComponent input={password} defaultText="password" type="password" />
 
-      <button
-        type="submit"
-        className="go-button"
-        onClick={(event) => sendLoginData(event, userName, password)}
-      >
-        GO
-      </button>
-
-      {/* <a href="/signup" className="sign-up-button">
-        Sign up
-</a>*/}
       <div className="rememberMe">
         <input
           type="checkbox"
@@ -109,16 +83,27 @@ const Login = () => {
         <label>remember me</label>
       </div>
 
-      <Link
-        to="/signup"
-        onClick={() => {
-          history.push("signup");
-          window.location.reload();
-        }}
-        className="sign-up-button"
+      <button
+        type="submit"
+        className="button"
+        onClick={(event) => sendLoginData(event, username.current.value, password.current.value)}
       >
-        SIGN UP
-      </Link>
+        login
+      </button>
+
+      <div className="account">
+        <h5>Don't have an account?</h5>
+        <Link
+          to="/signup"
+          onClick={() => {
+            history.push("signup");
+            window.location.reload();
+          }}
+          className="signUp"
+        >
+          sign up
+        </Link>
+      </div>
     </div>
   );
 };
