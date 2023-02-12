@@ -71,9 +71,9 @@ const SignUp = () => {
       <button className="button margin-top" onClick={(event) => sendData(event)}>
         SIGN UP
       </button>
-      {/* <a href="#" className="back">
-        go back
-      </a> */}
+      <a href="#" className="back">
+        ← go back
+      </a>
       {/* <Link
         to="/"
         onClick={() => {
