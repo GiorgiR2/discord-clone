@@ -28,7 +28,17 @@ const InputComponent = ({ input, setState, className, defaultText, type }: Input
       ref={input}
       onChange={(event) => setState(event.target.value)}
     />
-    {type === "password" ? <img src={eyeSVG} alt="icon" className="eye" onClick={() => setDisplayPassword(false)} onMouseDown={() => setDisplayPassword(true)} /> : null}
+    {type === "password" ?
+    <img src={eyeSVG} alt="icon" className="eye"
+        onClick={(event) => {
+          // event.preventDefault();
+          setDisplayPassword(false);
+          }}
+        onMouseDown={(event) => {
+          // event.preventDefault();
+          setDisplayPassword(true);
+        }
+        } /> : null}
   </div>);
 }
 
