@@ -26,13 +26,10 @@ const PopupEditRoom: React.FC = () => {
         })
         .then((res) => {
           if (res.data.status === "done") {
-            // update category name
-
-            // setDisplay(false);
             dispatch(togglePopupEdit());
             let newJson = reduxData.rooms.map((cat: roomI) => {
               if (cat._id === elementId) {
-                return { //__v: cat.__v,
+                return {
                   name: newName,
                   position: cat.position,
                   voice: cat.voice,
@@ -56,11 +53,13 @@ const PopupEditRoom: React.FC = () => {
   const dispatch = useDispatch();
 
   const [defValue, setDefValue] = useState<string>();
+  const [voice, setVoice] = useState<boolean>(false);
 
   useEffect(() => {
     reduxData.rooms.forEach((el: roomI) => {
       if (el._id === toggleData.editingCatId) {
         setDefValue(el.name);
+        setVoice(el.voice);
         return;
       }
     });
@@ -71,7 +70,13 @@ const PopupEditRoom: React.FC = () => {
       <div className="center">
         <h4 className="mainTitle">rename</h4>
         <div className="inputDiv">
-          <h5>#</h5>
+          {!voice ? <h5>#</h5> :
+            <img
+              className=""
+              src={Speaker}
+              alt="speaker"
+            />
+          }
           <input // @ts-expect-error
             rows="1"
             columns="20"
@@ -143,8 +148,6 @@ const PopupAddRoom: React.FC = () => {
     }
   };
   const newNameRef = useRef(null);
-
-  // const reduxData = useSelector((state) => state.interfaces.value);
   const dispatch = useDispatch();
 
   const [options, setOptions] = useState<optionsI>({ chat: true, voice: false });
@@ -189,7 +192,13 @@ const PopupAddRoom: React.FC = () => {
           </span>
         </form>
         <div className="inputDiv">
-          <h5>#</h5>
+          {options.chat ? <h5>#</h5> :
+            <img
+              className=""
+              src={Speaker}
+              alt="speaker"
+            />
+          }
           <input // @ts-expect-error
             rows="1"
             columns="20"

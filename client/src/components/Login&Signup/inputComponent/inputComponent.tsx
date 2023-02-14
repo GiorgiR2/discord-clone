@@ -8,14 +8,14 @@ const eyeSVG: string = require("../../../assets/login/eye.svg").default;
 
 interface InputComponentI {
   input?: any;
-  setState?: any;
+  setInput?: (value: string | ((prevState: string) => string)) => void;
   // icon: any;
   className?: string;
   defaultText: string;
   type: "text" | "password";
 }
 
-const InputComponent = ({ input, setState, className, defaultText, type }: InputComponentI) => {
+const InputComponent = ({ input, setInput, className, defaultText, type }: InputComponentI) => {
   const [displayPassword, setDisplayPassword] = useState(false);
 
   return (
@@ -26,7 +26,7 @@ const InputComponent = ({ input, setState, className, defaultText, type }: Input
       className=""
       placeholder={defaultText}
       ref={input}
-      onChange={(event) => setState(event.target.value)}
+      onChange={(event) => setInput ? setInput(event.target.value) : null}
     />
     {type === "password" ?
     <img src={eyeSVG} alt="icon" className="eye"

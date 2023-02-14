@@ -111,11 +111,11 @@ const SignUp = () => {
 
       <InputComponent input={username} className="" defaultText="Username" type="text" />
       <div className="signup-password">
-        <InputComponent setState={setPassword0} className="" defaultText="Password" type="password" />
+        <InputComponent setInput={setPassword0} className="" defaultText="Password" type="password" />
         <h5 className={`${passwordStatus !== "" ? "display" : ""} ${passwordStatus === "strong" ? "green" : ""}`}>{passwordStatus}</h5>
       </div>
       <div className="signup-password">
-        <InputComponent setState={setPassword1} className="" defaultText="Repeat password" type="password" />
+        <InputComponent setInput={setPassword1} className="" defaultText="Repeat password" type="password" />
         <h5 className={`${match !== "" ? "display" : ""} ${match === "match" ? "green" : ""}`}>{match}</h5>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useOnClickOutside } from "../customHooks/useOnClickOutside";
 
 import { useParams, useHistory } from "react-router-dom";
