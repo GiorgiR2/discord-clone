@@ -82,6 +82,7 @@ const main = (connectedUsers: connectedUsersI[]) => {
       MessageModel.find({
         room: data.room,
       })
+      .sort("number")
       .exec()
       .then((doc: messageSchemaI[]) => {
         socket.emit("messagesData", doc);

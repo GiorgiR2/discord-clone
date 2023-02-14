@@ -1,4 +1,4 @@
-import MessageModel from "../models/message.model.cjs";
+import MessageModel, { messageSchemaI } from "../models/message.model.cjs";
 
 import mongoose from "mongoose";
 
@@ -6,13 +6,24 @@ import saveModel from "./saveModel.cjs";
 
 import { addToMongooseDataI } from "../types/types.cjs";
 
-const addToMongoose = (data: addToMongooseDataI ): string => {
-  // authentication, username, message, datetime, room
-  // console.log("data", data);
-  let newMessageModel: any;
-  // console.log("data to save: ", data);
+let num: number = 0;
 
-  if (data.isFile){
+// find the maximum value
+MessageModel.find({})
+.sort({ number: -1 })
+.limit(1)
+.exec()
+.then((res: messageSchemaI[]) => {
+  // console.log("res:", res);
+  if (res.length !== 0){
+    num = res[0].number+1;
+  }
+});
+
+const addToMongoose = (data: addToMongooseDataI): string => {
+  let newMessageModel: any;
+
+  if (data.isFile) {
     newMessageModel = new MessageModel({
       _id: new mongoose.Types.ObjectId(),
       user: data.username,
@@ -25,9 +36,10 @@ const addToMongoose = (data: addToMongooseDataI ): string => {
       downloadCount: 0,
       size: data.size,
       emojis: [],//[{emoji: 2, num: 1}, {emoji: 1, num: 4}],
+      number: num,
     });
   }
-  else{
+  else {
     newMessageModel = new MessageModel({
       _id: new mongoose.Types.ObjectId(),
       isFile: false,
@@ -37,8 +49,10 @@ const addToMongoose = (data: addToMongooseDataI ): string => {
       room: data.room,
       roomId: data.roomId,
       emojis: [],//[{emoji: 2, num: 1}, {emoji: 1, num: 4}],
+      number: num,
     });
   }
+  num++;
 
   saveModel(newMessageModel);
 

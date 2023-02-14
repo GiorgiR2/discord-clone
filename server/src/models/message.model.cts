@@ -22,6 +22,7 @@ interface messageSchemaI extends mongoose.Document {
   size?: number;
   edited: boolean;
   emojis: emojiI[];//Record<emojiT, number>;
+  number: number;
 }
 
 const messageSchema = new mongoose.Schema<messageSchemaI>(
@@ -94,6 +95,10 @@ const messageSchema = new mongoose.Schema<messageSchemaI>(
       num: Number,
       users: [String],
     }],
+    number: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: false,
