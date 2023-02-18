@@ -1,6 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
+
 import axios from "axios";
+// @ts-ignore
+import bcrypt from 'bcryptjs'
 
 import InputComponent from "./inputComponent/inputComponent";
 
@@ -15,18 +18,26 @@ const apiLink = packageJson.proxy;
 
 interface dataI {
   username: string;
-  password0: string;
-  password1: string;
+  hashedPassword: string;
 }
+
+// const salt = bcrypt.genSaltSync(10)
 
 const SignUp = () => {
   const sendData = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
+    if (password0 !== password1){
+      alert("passwords do not match");
+      return;
+    }
+
+    const hashedPassword = bcrypt.hashSync(password0, '$2a$10$CwTycUXWue0Thq9StjUM0u');
+    // console.log("hashedPassword:", hashedPassword);
+    
     const data: dataI = {
-      username: username.current.value,
-      password0: password0,
-      password1: password1,
+      username: username, //username.current.value,
+      hashedPassword: hashedPassword,
     };
 
     axios
@@ -34,13 +45,14 @@ const SignUp = () => {
       .then((res) => {
         console.log("res", res.data);
         if (res.data.data === "done") {
-          username.current.value = "";
+          // username.current.value = "";
+          setUsername("");
           setPassword0("");
           setPassword1("");
           alert("registration was successful");
           // history.push("/?status=done");
           // window.location.reload();
-        } else alert("try again, something went wrong...");
+        } else alert(res.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -59,7 +71,8 @@ const SignUp = () => {
     return answer;
   }
 
-  const username = useRef<any>(null);
+  // const username = useRef<any>(null);
+  const [username, setUsername] = useState<string>("");
   const [password0, setPassword0] = useState<string>("");
   const [password1, setPassword1] = useState<string>("");
 
@@ -109,13 +122,13 @@ const SignUp = () => {
         <h2 className="title">Member sign up</h2>
       </div>
 
-      <InputComponent input={username} className="" defaultText="Username" type="text" />
+      <InputComponent input={username} setInput={setUsername} defaultText="Username" type="text" />
       <div className="signup-password">
-        <InputComponent setInput={setPassword0} className="" defaultText="Password" type="password" />
+        <InputComponent input={password0} setInput={setPassword0} defaultText="Password" type="password" />
         <h5 className={`${passwordStatus !== "" ? "display" : ""} ${passwordStatus === "strong" ? "green" : ""}`}>{passwordStatus}</h5>
       </div>
       <div className="signup-password">
-        <InputComponent setInput={setPassword1} className="" defaultText="Repeat password" type="password" />
+        <InputComponent input={password1} setInput={setPassword1} defaultText="Repeat password" type="password" />
         <h5 className={`${match !== "" ? "display" : ""} ${match === "match" ? "green" : ""}`}>{match}</h5>
       </div>
 

@@ -25,24 +25,25 @@ const bufferData = (username: string, password: string): string => {
   return hash;
 };
 
-const registerUser = async (username: string, password0: string, password1: string): Promise<string> => {
+const registerUser = async (username: string, hashedPassword: string, ip: string | undefined): Promise<"done" | "username already exists"> => {
   const doc = await UserModel.find({
     username: username,
   });
 
-  if (password0 === password1 && doc.length === 0) {
+  if (doc.length === 0) {
     let user = new UserModel({
       _id: new mongoose.Types.ObjectId(),
       username: username,
-      password: password0,
-      hashId: bufferData(username, password0),
-      ip: "",
+      password: hashedPassword,
+      hashId: bufferData(username, hashedPassword),
+      ip: ip,
     });
 
     saveModel(user);
-
     return "done";
-  } else return "try again";
+  } else{
+    return "username already exists";
+  }
 };
 
 const addIp = async (username: string, ip: string | undefined): Promise<void> => {

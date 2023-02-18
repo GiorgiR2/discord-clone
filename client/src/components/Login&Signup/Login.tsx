@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
+
 import axios from "axios";
+// @ts-ignore
+import bcrypt from 'bcryptjs'
 
 import { getBasicData } from "../../scripts/_getBasicData";
 
@@ -22,15 +25,13 @@ const Login = () => {
     console.log(`remember hashId: ${hashId}`);
     localStorage.setItem("hashId", hashId);
   };
-  const sendLoginData = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    user: string,
-    password: string
-  ) => {
+  const sendLoginData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, user: string, password: string) => {
     e.preventDefault();
+
+    const hashedPassword = bcrypt.hashSync(password, '$2a$10$CwTycUXWue0Thq9StjUM0u');
     let data = {
       username: user,
-      password: password,
+      password: hashedPassword,
     };
 
     axios
@@ -45,7 +46,7 @@ const Login = () => {
           history.push(`/chat/${res.data.roomId}/${res.data.hashId}`); // /?id=${res.data.data}
           window.location.reload();
         } else {
-          alert("Try again...");
+          alert(res.data.status);
         }
       })
       .catch((err) => console.error("error...", err));
@@ -53,8 +54,10 @@ const Login = () => {
 
   document.title = "login section";
 
-  const username = useRef<any>(null);
-  const password = useRef<any>(null);
+  // const username = useRef<any>(null);
+  // const password = useRef<any>(null);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const history = useHistory();
 
   const [remember, setRemember] = useState(false);
@@ -70,8 +73,8 @@ const Login = () => {
         <h2 className="title">Member login</h2>
       </div>
 
-      <InputComponent input={username} defaultText="username" type="text" />
-      <InputComponent input={password} defaultText="password" type="password" />
+      <InputComponent input={username} setInput={setUsername} defaultText="username" type="text" />
+      <InputComponent input={password} setInput={setPassword} defaultText="password" type="password" />
 
       <div className="rememberMe">
         <input
@@ -86,7 +89,7 @@ const Login = () => {
       <button
         type="submit"
         className="button"
-        onClick={(event) => sendLoginData(event, username.current.value, password.current.value)}
+        onClick={(event) => sendLoginData(event, username, password)}
       >
         login
       </button>

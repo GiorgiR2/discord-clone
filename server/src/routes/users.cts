@@ -19,11 +19,13 @@ router.get("/", (req, res) => {
 
 router.post("/api/users/register", async (req: Request, res: Response) => {
   let username: string = req.body.username;
-  let password0: string = req.body.password0;
-  let password1: string = req.body.password1;
+  let hashedPassword: string = req.body.hashedPassword;
+  let ip = (req.headers["x-forwarded-for"] || req.connection.remoteAddress)?.toString();
+  // let password0: string = req.body.password0;
+  // let password1: string = req.body.password1;
 
-  let data = await registerUser(username, password0, password1);
-  res.send({ data: data });
+  let response = await registerUser(username, hashedPassword, ip) //, password0, password1);
+  res.send({ data: response });
 });
 
 router.post("/api/users/login", async (req: Request, res: Response) => {
@@ -33,26 +35,18 @@ router.post("/api/users/login", async (req: Request, res: Response) => {
   let password: string = await req.body.password;
 
   let data = await checkLogin(username, password);
+
   if (data.status === "done") {
     await addIp(username, ip);
     await res.send(data);
   } else {
-    res.send({ status: "tryAgain" });
+    res.send({ status: "try again, wrong username and/or password" });
   }
 });
 
-router.post("/api/users/logout", async (req: Request, res: Response) => {
-  let ip = (req.headers["x-forwarded-for"] || req.connection.remoteAddress)?.toString();
-
-  let status = await removeIp(ip); // status == "done"
-  res.send({ status: status });
-});
-
 router.post("/api/users/status", async (req: Request, res: Response) => {
-  // do nothing, authentication using ip address doesn't really works
   return;
   // const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-
   // const data = await checkIp(ip); //  { status: "0" } or "1"(with other params)
   // res.send(data);
 });
