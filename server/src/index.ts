@@ -3,27 +3,27 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 
+import { usersStatus } from "./ts/userOperations.cjs";
+import * as msgOps from "./ts/msgOperations.cjs";
+
+import MessageModel, { messageSchemaI } from "./models/message.model.cjs";
+
+import { connectedUsersT, usersInVoiceI } from "./types/types.cjs";
+import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } from "./types/sockets.js";
+
+import "./mongooseAPI.cjs";
+import dotenv from "dotenv";
+
+const usersRouter = require("./routes/users.cjs");
+const messagesRouter = require("./routes/messages.cjs");
+const roomsRouter = require("./routes/rooms.cjs");
+
 const corsOptions = {
   origin: "*",
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
 
-const usersRouter = require("./routes/users.cjs");
-const messagesRouter = require("./routes/messages.cjs");
-const roomsRouter = require("./routes/rooms.cjs");
-
-import { usersStatus } from "./ts/userOperations.cjs";
-import * as msgOps from "./ts/msgOperations.cjs";
-
-import MessageModel, { messageSchemaI } from "./models/message.model.cjs";
-
-import "./mongooseAPI.cjs";
-
-import { connectedUsersI, usersInVoiceI } from "./types/types.cjs";
-
-import dotenv from "dotenv";
-import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } from "./types/sockets.js";
 dotenv.config(); // .env variables
 
 const PORT = process.env.PORT || 5000;
@@ -42,7 +42,7 @@ var usersInVoice: usersInVoiceI = {};
 var socketIds: string[] = [];
 var roomIds: string[] = [];
 
-const main = (connectedUsers: connectedUsersI[]) => {
+const main = (connectedUsers: connectedUsersT) => {
   io.on("connection", (socket: any) => {
     let username: string;
     console.log("new connection", socket.id);
@@ -51,58 +51,46 @@ const main = (connectedUsers: connectedUsersI[]) => {
       console.log("join", data);
       username = data.username;
 
-      const newAccount = connectedUsers
-        .map((data) => data.username)
-        .includes(data.username);
-
-      if (!newAccount)
-        connectedUsers.push({
-          username: data.username,
+      if (connectedUsers[username] === undefined) {
+        connectedUsers[username] = {
           status: "online",
           tabsOpen: 1,
-        });
-      else
-        for (var i in connectedUsers) {
-          let userData: connectedUsersI = connectedUsers[i];
-          if (userData.username == data.username) {
-            if (userData.tabsOpen === 0) {
-              userData.status = "online";
+        };
+      }
+      else if (connectedUsers[username].tabsOpen < 1) {
+        connectedUsers[username].status = "online";
 
-              socket.broadcast.emit("online", {
-                username: username,
-              });
-              userData.tabsOpen = 1;
-            } else userData.tabsOpen += 1;
-            break;
-          }
-        }
+        socket.broadcast.emit("online", {
+          username: username,
+        });
+        connectedUsers[username].tabsOpen = 1;
+      }
+      else {
+        connectedUsers[username].tabsOpen += 1;
+      }
 
       socket.emit("status", connectedUsers);
 
       MessageModel.find({
         room: data.room,
       })
-      .sort("number")
-      .exec()
-      .then((doc: messageSchemaI[]) => {
-        socket.emit("messagesData", doc);
-      });
+        .sort("number")
+        .exec()
+        .then((doc: messageSchemaI[]) => {
+          socket.emit("messagesData", doc);
+        });
 
       socket.join(data.room);
     });
 
     socket.on("disconnect", () => {
-      for (var i in connectedUsers) {
-        let userData: connectedUsersI = connectedUsers[i];
-        if (userData.username === username) {
-          userData.tabsOpen -= 1;
-          if (userData.tabsOpen === 0) {
-            socket.broadcast.emit("offline", {
-              username: username,
-            });
-            userData.status = "offline";
-          }
-          break;
+      if (connectedUsers[username] !== undefined) {
+        connectedUsers[username].tabsOpen -= 1;
+        if (connectedUsers[username].tabsOpen <= 0) {
+          socket.broadcast.emit("offline", {
+            username: username,
+          });
+          connectedUsers[username].status = "offline";
         }
       }
 
@@ -186,11 +174,11 @@ const main = (connectedUsers: connectedUsersI[]) => {
       let filename = data.filename;
 
       MessageModel.findOne({ size: size, originalName: filename })
-      .then((doc: any) => {
-        socket.emit("M_S_O", doc);
-        socket.in(room).emit("M_S_O", doc);
-        console.log("file sent:", doc._id, filename);
-      });
+        .then((doc: any) => {
+          socket.emit("M_S_O", doc);
+          socket.in(room).emit("M_S_O", doc);
+          console.log("file sent:", doc._id, filename);
+        });
     });
 
     socket.on("attachEmoji", async (data: attachEmojiI) => {
@@ -200,8 +188,8 @@ const main = (connectedUsers: connectedUsersI[]) => {
       let found = false, suspend = false;
       let num = 1;
       message.emojis.forEach((emoji: any) => {
-        if (emoji.emoji === data.emoji){
-          if (emoji.users.includes(data._user) === false){
+        if (emoji.emoji === data.emoji) {
+          if (emoji.users.includes(data._user) === false) {
             emoji.num += 1;
             emoji.users.push(data._user);
             found = true;
@@ -212,11 +200,11 @@ const main = (connectedUsers: connectedUsersI[]) => {
           }
         }
       });
-      if(suspend){
+      if (suspend) {
         return;
       }
-      else if (found === false){
-        message.emojis.push({emoji: data.emoji, num: 1, users: [data._user]});
+      else if (found === false) {
+        message.emojis.push({ emoji: data.emoji, num: 1, users: [data._user] });
       }
 
       let jData = {
@@ -326,7 +314,7 @@ const main = (connectedUsers: connectedUsersI[]) => {
     });
 
     // socket.on("toggleAudio", (data) => {
-      // console.log(`users in ${data.roomId}: ${usersInVoice[data.roomId]}`);
+    // console.log(`users in ${data.roomId}: ${usersInVoice[data.roomId]}`);
     // });
   });
 
@@ -344,10 +332,12 @@ const escapeRegExp = (arg: string): string => {
 }
 
 const replaceAll = (str: string, match: string, replacement: string): string => {
-   return str.replace(new RegExp(escapeRegExp(match), 'g'), ()=>replacement);
+  return str.replace(new RegExp(escapeRegExp(match), 'g'), () => replacement);
 }
 
 (async () => {
-  const connectedUsers: connectedUsersI[] = await usersStatus();
+  const connectedUsers: connectedUsersT = await usersStatus();
+  console.log(connectedUsers);
+
   main(connectedUsers);
 })();

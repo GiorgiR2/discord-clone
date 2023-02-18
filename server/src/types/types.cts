@@ -2,10 +2,12 @@ import { ObjectId } from "mongodb";
 import { Types } from "mongoose";
 
 interface connectedUsersI {
-  username: string;
+  // username: string;
   status: "online" | "offline";
   tabsOpen: number;
 };
+
+type connectedUsersT = Record<string, connectedUsersI>;
 
 interface voiceII {
   [key: string]: {
@@ -87,4 +89,4 @@ interface SocketData {
   age: number;
 }
 
-export { connectedUsersI, voiceI, usersInVoiceI, addToMongooseDataI, roomI, messageI, loadCatsI, checkIpI, checkDataI, checkLoginI };
+export { connectedUsersT, voiceI, usersInVoiceI, addToMongooseDataI, roomI, messageI, loadCatsI, checkIpI, checkDataI, checkLoginI };

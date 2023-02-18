@@ -3,13 +3,7 @@ import io from "socket.io-client";
 import getTime from "./getTime";
 import packageJson from "../../package.json";
 
-import {
-  setOnline,
-  setOffline,
-  addMessage,
-  removeMessage,
-  attachEmoji
-} from "../features/interfaces";
+import { setOnline, setOffline, addMessage, removeMessage, attachEmoji } from "../features/interfaces";
 import { messageI, statusI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateValueI } from "../types/types";
 
 const main = (reduxData: any, dispatch: any) => {
@@ -41,7 +35,7 @@ const main = (reduxData: any, dispatch: any) => {
       },
     ];
 
-    dispatch(addMessage({ messageList: msgList })); // message/messages
+    dispatch(addMessage({ messageList: msgList }));
   });
 
   socket.on("messagesData", (data: dataIMSG[]) => {
@@ -73,15 +67,21 @@ const main = (reduxData: any, dispatch: any) => {
   });
 
   socket.on("offline", (data: any) => {
+    console.log("offline:", data.username);
     dispatch(setOffline({ name: data.username }));
   });
 
   socket.on("status", (data: any) => {
-    console.log("status:", data);
-    data.forEach((el: statusI) => {
-      if (el.status === "online") dispatch(setOnline({ name: el.username }));
-      else dispatch(setOffline({ name: el.username }));
-    });
+    // data.forEach((el: statusI) => {
+    //   if (el.status === "online") dispatch(setOnline({ name: el.username }));
+    //   else dispatch(setOffline({ name: el.username }));
+    // });
+    
+    for (const [username, value] of Object.entries(data)) {
+      // @ts-ignore
+      if (value.status === "online") dispatch(setOnline({ name: username }));
+      else dispatch(setOffline({ name: username }));
+    }
   });
 
   socket.on("newEmoji", (data: attachEmojiI) => {

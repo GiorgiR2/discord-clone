@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 var sha1 = require("sha1");
 
-import { connectedUsersI, checkIpI, checkDataI, checkLoginI } from "../types/types.cjs";
+import { connectedUsersT, checkIpI, checkDataI, checkLoginI } from "../types/types.cjs";
 
 // const checkUser = (username: string) => {
 //   let user = UserModel.find({
@@ -137,18 +137,17 @@ const checkLogin = async (username: string, password: string): Promise<checkLogi
   }
 };
 
-const usersStatus = async (): Promise<connectedUsersI[]> => {
-  let users: connectedUsersI[] = [];
+const usersStatus = async (): Promise<connectedUsersT> => {
+  let users: connectedUsersT = {};
 
   await UserModel.find()
     .exec()
     .then((doc: any) => {
       doc.forEach((el: any) => {
-        users.push({
-          username: el.username,
+        users[el.username] = {
           status: "offline",
           tabsOpen: 0,
-        });
+        };
       });
     });
 
