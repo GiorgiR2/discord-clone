@@ -4,6 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 // @ts-ignore
 import bcrypt from 'bcryptjs'
+import { checkStatus } from "../js/passwordStrength";
 
 import InputComponent from "./inputComponent/inputComponent";
 
@@ -56,20 +57,6 @@ const SignUp = () => {
       })
       .catch((err) => console.log(err));
   };
-  const strength = (password: string) => {
-    let answer = 0;
-    ",.<>/?'][{]\\|()-_=+!@#$%^&*~`".split("").forEach(el => {
-      if (password.includes(el)){
-        answer++;
-      }
-    });
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(el => {
-      if (password.includes(el.toString())){
-        answer++;
-      }
-    });
-    return answer;
-  }
 
   // const username = useRef<any>(null);
   const [username, setUsername] = useState<string>("");
@@ -88,32 +75,8 @@ const SignUp = () => {
   }, []);
 
   useEffect(() => {
-    let password = password0;
-    if (password === ""){
-      setPasswordStatus("");
-    }
-    else if(password.length < 5){
-      setPasswordStatus("weak");
-    }
-    else if (password.length >= 5 && strength(password) > 3){
-      setPasswordStatus("strong");
-    }
-    else{
-      setPasswordStatus("normal")
-    }
-  }, [password0]);
-
-  useEffect(() => {
-    if(password0 === password1 && password0 !== ""){
-      setMatch("match");
-    }
-    else if (password1.length === 0){
-      setMatch("");
-    }
-    else{
-      setMatch("passwords must match");
-    }
-  }, [password1]);
+    checkStatus(password0, password1, setPasswordStatus, setMatch);
+  }, [password0, password1]);
 
   return (
     <div className="sign-up">

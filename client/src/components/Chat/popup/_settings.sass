@@ -1,0 +1,57 @@
+@import '../../../styles/_variables'
+
+.settings
+    .center
+        .mainTitle
+            letter-spacing: 0.2px !important
+
+        .changePassword
+            // border: 1px solid $fg-color
+            // border-radius: 5px
+            // padding: 5px
+            margin-top: 15px
+
+            div > h5
+                color: #FC8181//#c0392b
+            
+            .input
+                width: 350px !important
+        
+        .modify
+            margin-top: 5px
+            padding: 3px 8px 3px 8px
+            font-weight: 400
+            // border: 1px solid #fff
+            // border-radius: 4px
+            width: fit-content
+            float: right
+            cursor: pointer
+
+            &:hover,
+            &:active
+                text-decoration: underline
+
+        .delete
+            margin-top: 10px
+            cursor: pointer
+            color: #c0392b
+            transition: 0.1s
+
+            &:hover,
+            &:active
+                color: #fff
+        
+        .cancel
+            margin: 25px 0 5px 0
+            width: fit-content
+            cursor: pointer
+
+            position: relative
+            left: 100%
+            // background-color: red
+            transform: translate(-52px, 0)
+            // float: right
+
+            &:hover,
+            &:active
+                text-decoration: underline

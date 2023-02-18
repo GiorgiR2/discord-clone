@@ -6,7 +6,6 @@ const router: Router = express.Router();
 import { registerUser, checkLogin, checkData, addIp, removeIp } from "../ts/userOperations.cjs";
 
 import usersModel from "../models/user.model.cjs";
-import { checkLoginI } from "../types/types.cjs";
 
 router.use(bp.json());
 router.use(bp.urlencoded({ extended: true }));

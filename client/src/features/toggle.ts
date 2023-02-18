@@ -6,8 +6,9 @@ const initalStateValues: toggleInitialStateValueI = {
   toggleRight: false,
   contextMenu: { show: false, x: 0, y: 0, id: null },
   displayEdit: false,
-  editingCatId: null,
   displayAdd: false,
+  displaySettings: false,
+  editingCatId: null,
 };
 
 export const userSlice = createSlice({
@@ -24,6 +25,9 @@ export const userSlice = createSlice({
     },
     togglePopupAdd: (state) => {
       state.value.displayAdd = !state.value.displayAdd;
+    },
+    toggleSettings: (state) => {
+      state.value.displaySettings = !state.value.displaySettings;
     },
     toggleLeft: (state) => {
       state.value.toggleLeft = !state.value.toggleLeft;
@@ -49,6 +53,7 @@ export const userSlice = createSlice({
 export const {
   togglePopupEdit,
   togglePopupAdd,
+  toggleSettings,
   addEditingCatId,
 
   toggleLeft,

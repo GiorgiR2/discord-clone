@@ -45,8 +45,9 @@ interface toggleInitialStateValueI {
     toggleRight: boolean;
     contextMenu: { show: boolean; x: number; y: number; id: string | null};
     displayEdit: boolean;
-    editingCatId: string | null;
     displayAdd: boolean;
+    displaySettings: boolean;
+    editingCatId: string | null;
 }
 
 interface interfaceInitialStateValueI {

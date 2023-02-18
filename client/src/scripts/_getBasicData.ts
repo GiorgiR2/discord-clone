@@ -44,7 +44,8 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
           // }
         } else {
           // console.log("status:", res.data.status);
-          history.push("/");
+          localStorage.removeItem("hashId");
+          history.push("");
         }
       })
       .catch((error) => {

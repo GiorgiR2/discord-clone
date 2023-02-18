@@ -15,7 +15,8 @@ import {
   toggleLeft,
   toggleRight,
   closeLeft,
-  closeRight
+  closeRight,
+  toggleSettings
 } from "../../features/toggle";
 
 import { checkRoomId } from "../js/checkData";
@@ -31,7 +32,8 @@ import * as socks from "../../scripts/_socketSide";
 import { VoiceFrame } from "./Voice/_voice";
 import { voiceMain } from "./Voice/_webRTCfunctions";
 
-import { PopupEditRoom, PopupAddRoom } from "./Rooms/_editRoom";
+import PopupAddRoom from "./popup/_addRoom";
+import PopupEditRoom from "./popup/_editRoom";
 import RoomsJSX from "./Rooms/_roomsJSX";
 import Messages from "./Messages/_messages";
 
@@ -41,28 +43,28 @@ import { userDataI } from "../../types/types";
 import { AppDispatch, RootState } from "../..";
 
 import { History } from "history";
+import PopupSettings from "./popup/_settings";
 
 const egressSVG: string = require("../../assets/egress.svg").default;
+const settingsSVG: string = require("../../assets/chat/settings.svg").default;
 
 const apiLink = packageJson.proxy;
 
-const logOut = (
-  e: React.MouseEvent<HTMLHeadingElement, MouseEvent>,
-  history: History,
-  dispatch: AppDispatch
-) => {
+const logOut = (e: React.MouseEvent<HTMLHeadingElement, MouseEvent>, history: History, dispatch: AppDispatch) => {
   e.preventDefault();
-  axios
-    .post(`${apiLink}/api/users/logout`, { junk: "" })
-    .then((res) => {
-      if (res.data.status === "done") {
-        localStorage.removeItem("hashId");
-        history.push(`/`);
-        window.location.reload();
-      }
-    })
-    .catch((err) => console.error(err));
+  // axios
+  //   .post(`${apiLink}/api/users/logout`, { junk: "" })
+  //   .then((res) => {
+  //     if (res.data.status === "done") {
+  //       localStorage.removeItem("hashId");
+  //       history.push(`/`);
+  //       window.location.reload();
+  //     }
+  //   })
+  //   .catch((err) => console.error(err));
 
+  localStorage.removeItem("hashId");
+  history.push(`/`);
   dispatch(clearAll());
   socks.disconnect();
 };
@@ -92,6 +94,7 @@ const Chat: React.FC = () => {
               alt="exit"
               onClick={() => dispatch(toggleLeft())}
             />
+            <img src={settingsSVG} alt="settings" className="settings" onClick={() => dispatch(toggleSettings())} />
           </div>
 
           <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
@@ -231,6 +234,7 @@ const Chat: React.FC = () => {
     <div className="chat">
       {toggleRedux.displayEdit ? <PopupEditRoom /> : null}
       {toggleRedux.displayAdd ? <PopupAddRoom /> : null}
+      {toggleRedux.displaySettings ? <PopupSettings /> : null}
 
       <Rooms />
       <Center />
