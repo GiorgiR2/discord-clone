@@ -73,5 +73,24 @@ router.post("/api/users/usernameByHashId", async (req: Request, res: Response) =
   await res.send({ username: user[0].username });
 });
 
+router.post("/api/users/changePassword", async (req: Request, res: Response) => {
+  console.log("authentication:", req.body.authentication);
+  console.log("username:", req.body.username);
+  console.log("password:", req.body.password);
+
+  usersModel.findOneAndUpdate({ username: req.body.username }, { password: req.body.password }).exec();
+
+  res.send({ status: "done" });
+});
+
+router.delete("/api/users/deleteAccount", async (req: Request, res: Response) => {
+  console.log("deleting account:", req.headers.Authorization);
+  console.log("username:", req.body.username);
+
+  usersModel.findOneAndDelete({ username: req.body.username }).exec();
+
+  res.send({ status: "done" });
+});
+
 module.exports = router;
 // export default router;
