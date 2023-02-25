@@ -30,7 +30,7 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 ## Features
 
 * sending messages/files
-* editing/deleteing messages
+* editing/deleting messages
 * emojis
 * multi user audio/video group chat
 * screen sharing
