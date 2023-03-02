@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema<userSchemaI>(
     },
     imageDir: {
       type: String,
-      required: true,
+      required: false,
       default: null,
       trim: true,
     },
