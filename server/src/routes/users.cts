@@ -103,6 +103,20 @@ router.post("/api/users/addProfilePicture", upload.single("image"), async (req: 
   await res.send({ status: "done" });
 });
 
+router.get("/api/users/checkImageAvailability/:userName", (req: Request, res: Response) => {
+  usersModel.findOne({ username: req.params.userName })
+  .then(user => {
+    if (user?.imageDir !== null){
+      console.log("exist", user?.imageDir);
+      res.send({ status: "exists" });
+    }
+    else{
+      console.log("exist", user.imageDir);
+      res.send({ status: "do not exist" });
+    }
+  });
+});
+
 const handleDownload = async (req: Request, res: Response) => {
   const user: any = await usersModel.findOne({ username: req.params.userName });
   await res.download(user.imageDir, "profileImage.png");

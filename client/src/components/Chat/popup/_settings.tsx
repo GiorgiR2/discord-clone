@@ -92,14 +92,16 @@ const PopupSettings = () => {
         }
     }
     const loadProfilePicture = () => {
-        // axios.get(`${apiLink}/api/users/profilePicture/${reduxData.currentUser}`)
-        // .then(res => {
-        //     setProfilePicture(res);
-        // })
-        // .catch(err => console.error(err));
-        let imgLink = `${apiLink}/api/users/profilePicture/${reduxData.currentUser}`;
-        console.log("link:", imgLink);
-        setProfilePicture(imgLink);
+        axios.get(`${apiLink}/api/users/checkImageAvailability/${reduxData.currentUser}`)
+        .then(res => {
+            console.log("data receive:", res.data);
+            if(res.data.status === "exists"){
+                let imgLink = `${apiLink}/api/users/profilePicture/${reduxData.currentUser}`;
+                console.log("link:", imgLink);
+                setProfilePicture(imgLink);
+            }
+        })
+        .catch(err => console.error(err));
     }
 
     const history = useHistory();
@@ -119,7 +121,6 @@ const PopupSettings = () => {
     const [profilePicture, setProfilePicture] = useState<any>(null);
 
     useEffect(() => {
-        console.log("shit happen");
         loadProfilePicture();
     }, []);
 
