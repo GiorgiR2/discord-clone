@@ -6,17 +6,14 @@ import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  clearAll,
-  addUserName,
-} from "../../features/interfaces";
+import { clearAll, addUserName } from "../../features/interfaces";
 import {
   togglePopupAdd,
   toggleLeft,
   toggleRight,
   closeLeft,
   closeRight,
-  toggleSettings
+  toggleSettings,
 } from "../../features/toggle";
 
 import { checkRoomId } from "../js/checkData";
@@ -50,8 +47,7 @@ const settingsSVG: string = require("../../assets/chat/settings.svg").default;
 
 const apiLink = packageJson.proxy;
 
-const logOut = (e: React.MouseEvent<HTMLHeadingElement, MouseEvent>, history: History, dispatch: AppDispatch) => {
-  e.preventDefault();
+const logOut = (history: History, dispatch: AppDispatch) => {
   // axios
   //   .post(`${apiLink}/api/users/logout`, { junk: "" })
   //   .then((res) => {
@@ -94,7 +90,12 @@ const Chat: React.FC = () => {
               alt="exit"
               onClick={() => dispatch(toggleLeft())}
             />
-            <img src={settingsSVG} alt="settings" className="settings" onClick={() => dispatch(toggleSettings())} />
+            <img
+              src={settingsSVG}
+              alt="settings"
+              className="settings"
+              onClick={() => dispatch(toggleSettings())}
+            />
           </div>
 
           <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
@@ -118,8 +119,8 @@ const Chat: React.FC = () => {
         <h1 id="category"># {reduxData.currentRoom}</h1>
         <h1
           id="log_out"
-          onClick={(event) => {
-            logOut(event, history, dispatch);
+          onClick={() => {
+            logOut(history, dispatch);
           }}
         >
           Log out
@@ -139,7 +140,7 @@ const Chat: React.FC = () => {
     const contextMenuRightRef = useRef<HTMLDivElement>(null);
     useOnClickOutside(contextMenuRightRef, closeRightPanel);
 
-    return(
+    return (
       <div
         className={`status-bar ${
           toggleRedux.toggleRight === false ? "hidden" : ""
@@ -156,8 +157,8 @@ const Chat: React.FC = () => {
 
           <h1
             className="logOut"
-            onClick={(event) => {
-              logOut(event, history, dispatch);
+            onClick={() => {
+              logOut(history, dispatch);
             }}
           >
             Log out

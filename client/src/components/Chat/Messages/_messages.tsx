@@ -128,7 +128,7 @@ const MessagesDivs = (): JSX.Element => {
 }
 
 const Messages = () => {
-    const handleSubmit = (file: any) => {
+    const handleSubmit = (file: any ) => {
         const sendFileData = () => {
             socks.sendFileData({
                 reduxData,

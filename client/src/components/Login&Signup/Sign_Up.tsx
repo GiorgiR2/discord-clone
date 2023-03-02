@@ -2,8 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 
 import axios from "axios";
-// @ts-ignore
-import bcrypt from 'bcryptjs'
+import encrypt from "../js/encrypt";
 import { checkStatus } from "../js/passwordStrength";
 
 import InputComponent from "./inputComponent/inputComponent";
@@ -33,7 +32,7 @@ const SignUp = () => {
       return;
     }
 
-    const hashedPassword = bcrypt.hashSync(password0, '$2a$10$CwTycUXWue0Thq9StjUM0u');
+    const hashedPassword = encrypt(password0);
     // console.log("hashedPassword:", hashedPassword);
     
     const data: dataI = {

@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
 
 import axios from "axios";
-// @ts-ignore
-import bcrypt from 'bcryptjs'
 
+import encrypt from "../js/encrypt";
 import { getBasicData } from "../../scripts/_getBasicData";
 
 import "./_style.sass";
@@ -28,7 +27,7 @@ const Login = () => {
   const sendLoginData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, user: string, password: string) => {
     e.preventDefault();
 
-    const hashedPassword = bcrypt.hashSync(password, '$2a$10$CwTycUXWue0Thq9StjUM0u');
+    const hashedPassword = encrypt(password);
     let data = {
       username: user,
       password: hashedPassword,
