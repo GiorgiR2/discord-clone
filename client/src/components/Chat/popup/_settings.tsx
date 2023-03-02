@@ -6,8 +6,7 @@ import { RootState } from "../../..";
 import axios from "axios";
 import packageJson from "../../../../package.json";
 
-// @ts-ignore
-import bcrypt from 'bcryptjs'
+import encrypt from "../../js/encrypt";
 
 import { toggleSettings } from "../../../features/toggle";
 import { checkStatus } from "../../js/passwordStrength";
@@ -17,34 +16,35 @@ import "./_popup.sass";
 import "./_settings.sass";
 
 const egressSVG: string = require("../../../assets/egress.svg").default;
+const userSVG: string = require("../../../assets/chat/user-flat.svg").default;
 
 const apiLink = packageJson.proxy;
 
 const PopupSettings = () => {
     const changePassword = (): void => {
-        if (match === "match" && password0.length > 3){
-            const hashedPassword = bcrypt.hashSync(password0, '$2a$10$CwTycUXWue0Thq9StjUM0u');
+        if (match === "match" && password0.length > 3) {
+            const hashedPassword = encrypt(password0);
 
             axios.post(`${apiLink}/api/users/changePassword`, {
                 authentication: reduxData.authentication,
                 username: reduxData.currentUser,
                 password: hashedPassword
             })
-            .then(res => {
-                if (res.data.status === "done"){
-                    alert("password succesfully changed...");
-                    setCurrentPassword("");
-                    setPassword0("");
-                    setPassword1("");
-                    dispatch(toggleSettings());
-                }
-            })
-            .catch(err => console.error(err));
+                .then(res => {
+                    if (res.data.status === "done") {
+                        alert("password succesfully changed...");
+                        setCurrentPassword("");
+                        setPassword0("");
+                        setPassword1("");
+                        dispatch(toggleSettings());
+                    }
+                })
+                .catch(err => console.error(err));
         }
-        else if (match !== "match"){
+        else if (match !== "match") {
             alert("passwords do not match");
         }
-        else{
+        else {
             alert("password is too short");
         }
     }
@@ -57,17 +57,53 @@ const PopupSettings = () => {
                 username: reduxData.currentUser
             }
         })
-        .then(res => {
-            if(res.data.status === "done"){
-                alert("user succesfully deleted...");
-                localStorage.removeItem("hashId");
-                history.push("");
-            }
-        });
+            .then(res => {
+                if (res.data.status === "done") {
+                    alert("user succesfully deleted...");
+                    localStorage.removeItem("hashId");
+                    history.push("");
+                }
+            });
+    }
+    const addProfilePicture = (event: any) => {
+        const sendToServer = (image: any) => {
+            const formData = new FormData();
+            formData.append("image", image);
+            formData.append("user", reduxData.currentUser);
+
+            const config = {
+                headers: {
+                    "content-type": "multipart/form-data",
+                },
+            };
+            axios
+                .post(`${apiLink}/api/users/addProfilePicture`, formData, config)
+                .then(res => console.log(res.status))
+                .catch((err) => console.log(""));
+        };
+
+        if (event.target.files && event.target.files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                setProfilePicture(URL.createObjectURL(event.target.files[0]));
+            };
+            reader.readAsDataURL(event.target.files[0]);
+            sendToServer(event.target.files[0]);
+        }
+    }
+    const loadProfilePicture = () => {
+        // axios.get(`${apiLink}/api/users/profilePicture/${reduxData.currentUser}`)
+        // .then(res => {
+        //     setProfilePicture(res);
+        // })
+        // .catch(err => console.error(err));
+        let imgLink = `${apiLink}/api/users/profilePicture/${reduxData.currentUser}`;
+        console.log("link:", imgLink);
+        setProfilePicture(imgLink);
     }
 
     const history = useHistory();
-    
+
     const dispatch = useDispatch();
     const reduxData = useSelector((state: RootState) => state.interfaces.value);
 
@@ -80,6 +116,13 @@ const PopupSettings = () => {
     const [passwordStatus, setPasswordStatus] = useState<"" | "weak" | "normal" | "strong">("");
     const [match, setMatch] = useState<"" | "passwords must match" | "match">("");
 
+    const [profilePicture, setProfilePicture] = useState<any>(null);
+
+    useEffect(() => {
+        console.log("shit happen");
+        loadProfilePicture();
+    }, []);
+
     useEffect(() => {
         checkStatus(password0, password1, setPasswordStatus, setMatch);
     }, [password0, password1]);
@@ -88,14 +131,29 @@ const PopupSettings = () => {
         <div className="popup settings">
             <div className="center">
                 <div className="main">
-                    <h4 className="mainTitle">PROFILE SETTINGS_</h4>
+                    <h4 className="mainTitle">My Account_</h4>
                     <img
-                    className="x"
-                    src={egressSVG}
-                    alt="exit"
-                    onClick={() => dispatch(toggleSettings())}
+                        className="x"
+                        src={egressSVG}
+                        alt="exit"
+                        onClick={() => dispatch(toggleSettings())}
                     />
                 </div>
+
+                <div className="profile">
+                    <div className="left">
+                        <img src={profilePicture !== null ? profilePicture : userSVG} alt="user" className="icon" />
+                        <h5 className="userName">{reduxData.currentUser}</h5>
+                    </div>
+
+                    <div className="right">
+                        {/* @ts-ignore */}
+                        <label for="addImage" className="submitButton"><h5>Edit Profile Image</h5></label>
+                        <input type="file" id="addImage" onChange={(e) => addProfilePicture(e)} />
+                    </div>
+                </div>
+
+                <div className="newLine" />
 
                 <div className="changePassword">
                     <h5>Change Password</h5>
@@ -115,9 +173,14 @@ const PopupSettings = () => {
                     </div>
                 </div>
 
-                {/* @ts-ignore */}
-                <h5 className="modify" onClick={() => changePassword()}>save</h5>
-                <h5 className="delete" onClick={() => deleteAccount()}>Delete Account</h5>
+                <h5 className="submitButton" onClick={() => changePassword()}>done</h5>
+
+                <div className="newLine" />
+
+                <div className="remove">
+                    <h5 className="title">ACCOUNT REMOVAL</h5>
+                    <h5 className="delete" onClick={() => deleteAccount()}>Delete Account</h5>
+                </div>
                 {/* <h5 className="cancel" onClick={() => dispatch(toggleSettings())}>CLOSE</h5> */}
             </div>
         </div>

@@ -25,10 +25,7 @@ yarn-error.log*
 /.vscode
 __pycache__
 
-/temp
-/client/temp
-/server/temp
-
 /server/uploads
+/server/profile_pictures
 
 client/public/oldIcons

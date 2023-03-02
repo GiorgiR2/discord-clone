@@ -1,6 +1,9 @@
 import express, { Request, Response, Router } from "express";
 import bp from "body-parser";
 
+const multer = require("multer"); // for file uploading
+const upload = multer({ dest: "profile_pictures" });
+
 const router: Router = express.Router();
 
 import { registerUser, checkLogin, checkData, addIp, removeIp } from "../ts/userOperations.cjs";
@@ -91,6 +94,20 @@ router.delete("/api/users/deleteAccount", async (req: Request, res: Response) =>
 
   res.send({ status: "done" });
 });
+
+router.post("/api/users/addProfilePicture", upload.single("image"), async (req: Request, res: Response) => {
+  // @ts-ignore
+  console.log("new profile image:", req.body.user, req.file.path);
+  // @ts-ignore
+  await usersModel.findOneAndUpdate({ username: req.body.user }, { imageDir: req.file.path });
+  await res.send({ status: "done" });
+});
+
+const handleDownload = async (req: Request, res: Response) => {
+  const user: any = await usersModel.findOne({ username: req.params.userName });
+  await res.download(user.imageDir, "profileImage.png");
+};
+router.route("/api/users/profilePicture/:userName").get(handleDownload).post(handleDownload);
 
 module.exports = router;
 // export default router;

@@ -5,7 +5,8 @@ interface userSchemaI extends mongoose.Document {
   _id: Types.ObjectId;
   username: string;
   password: string;
-  status: Number;
+  imageDir: null | string;
+  status: "user" | "admin";
   ip: string;
   hashId: string;
 }
@@ -26,9 +27,15 @@ const userSchema = new mongoose.Schema<userSchemaI>(
       unique: false,
       trim: true,
     },
+    imageDir: {
+      type: String,
+      required: true,
+      default: null,
+      trim: true,
+    },
     status: {
-      type: Number, // 1=online, 0=offline
-      required: false,
+      type: String,
+      default: "user",
       unique: false,
       trim: false,
     },
