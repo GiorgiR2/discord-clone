@@ -1,5 +1,7 @@
 ﻿# Discord Clone
 
+Discord-like chat platform with all of the core features.
+
 ## Technologies Used
 * React.js - front-end
 * Redux - state managment
