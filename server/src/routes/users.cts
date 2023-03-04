@@ -81,7 +81,9 @@ router.post("/api/users/changePassword", async (req: Request, res: Response) => 
   console.log("username:", req.body.username);
   console.log("password:", req.body.password);
 
-  usersModel.findOneAndUpdate({ username: req.body.username }, { password: req.body.password }).exec();
+  const filter = { username: req.body.username };
+  const update = { password: req.body.password };
+  usersModel.findOneAndUpdate(filter, update).exec();
 
   res.send({ status: "done" });
 });

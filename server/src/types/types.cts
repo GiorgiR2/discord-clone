@@ -89,4 +89,9 @@ interface SocketData {
   age: number;
 }
 
-export { connectedUsersT, voiceI, usersInVoiceI, addToMongooseDataI, roomI, messageI, loadCatsI, checkIpI, checkDataI, checkLoginI };
+interface popOutI {
+  authentication: string;
+  username: string
+};
+
+export { connectedUsersT, voiceI, usersInVoiceI, addToMongooseDataI, roomI, messageI, loadCatsI, checkIpI, checkDataI, checkLoginI, popOutI };

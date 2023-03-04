@@ -6,13 +6,22 @@ import cors from "cors";
 import { usersStatus } from "./ts/userOperations.cjs";
 import * as msgOps from "./ts/msgOperations.cjs";
 
-import MessageModel, { messageSchemaI } from "./models/message.model.cjs";
+import MessageModel from "./models/message.model.cjs";
 
-import { connectedUsersT, usersInVoiceI } from "./types/types.cjs";
-import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } from "./types/sockets.js";
+import { connectedUsersT, popOutI, usersInVoiceI } from "./types/types.cjs";
+import {
+  attachEmojiI,
+  deleteMessageI,
+  editMessageI,
+  fileI,
+  joinI,
+  messageIS,
+} from "./types/sockets.js";
 
 import "./mongooseAPI.cjs";
 import dotenv from "dotenv";
+import { disconnectUser, emitDisconnect, popOut } from "./scripts/disconnectUser.cjs";
+import { join } from "./scripts/joinUser.cjs";
 
 const usersRouter = require("./routes/users.cjs");
 const messagesRouter = require("./routes/messages.cjs");
@@ -45,82 +54,29 @@ var roomIds: string[] = [];
 const main = (connectedUsers: connectedUsersT) => {
   io.on("connection", (socket: any) => {
     let username: string;
+    let room: string;
     console.log("new connection", socket.id);
 
     socket.on("join", (data: joinI) => {
       console.log("join", data);
       username = data.username;
+      room = data.room;
 
-      if (connectedUsers[username] === undefined) {
-        connectedUsers[username] = {
-          status: "online",
-          tabsOpen: 1,
-        };
-      }
-      else if (connectedUsers[username].tabsOpen < 1) {
-        connectedUsers[username].status = "online";
-
-        socket.broadcast.emit("online", {
-          username: username,
-        });
-        connectedUsers[username].tabsOpen = 1;
-      }
-      else {
-        connectedUsers[username].tabsOpen += 1;
-      }
-
-      socket.emit("status", connectedUsers);
-
-      MessageModel.find({
-        room: data.room,
-      })
-        .sort("number")
-        .exec()
-        .then((doc: messageSchemaI[]) => {
-          socket.emit("messagesData", doc);
-        });
-
-      socket.join(data.room);
+      join(socket, connectedUsers, username, room);
     });
 
     socket.on("disconnect", () => {
-      if (connectedUsers[username] !== undefined) {
-        connectedUsers[username].tabsOpen -= 1;
-        if (connectedUsers[username].tabsOpen <= 0) {
-          socket.broadcast.emit("offline", {
-            username: username,
-          });
-          connectedUsers[username].status = "offline";
-        }
-      }
-
-      console.log("disconnect", username, socket.id);
-      // emit disconnect message for voice chat users
-      roomIds.forEach((roomid) => {
-        usersInVoice[roomid].forEach((user) => {
-          if (user.id === socket.id) {
-            usersInVoice[roomid].forEach((user0) => {
-              if (user0.id !== socket.id) {
-                console.log("'peerDisconnected' emitted...");
-                io.to(user0.id).emit("peerDisconnected", { id: socket.id });
-              }
-            });
-          }
-        });
-      });
-
-      // Todo: implement new code to pop out disconnected users
-      socketIds = socketIds.filter((id, n) => {
-        if (id !== socket.id) {
-          return id;
-        } else {
-          usersInVoice[roomIds[n]] = usersInVoice[roomIds[n]].filter(
-            (el) => el.id !== socket.id
-          );
-          roomIds = roomIds.filter((r, n0) => n0 !== n);
-        }
-      });
+      disconnectUser(socket, connectedUsers, username);
+      emitDisconnect(socket, io, roomIds, usersInVoice);
+      popOut(socketIds, usersInVoice, roomIds, socket.id);
     });
+
+    socket.on("popAccount", (data: popOutI) => {
+        console.log("deleting user", data.username);
+        delete connectedUsers[data.username];
+        console.log("user:", data.username);
+      }
+    );
 
     socket.on("message", async (data: messageIS) => {
       let authentication = data.authentication;
@@ -137,7 +93,7 @@ const main = (connectedUsers: connectedUsersT) => {
         date: datetime,
         isFile: false,
         _id: _id,
-        edited: false
+        edited: false,
       };
       socket.emit("M_S_O", sdata);
       socket.in(room).emit("M_S_O", sdata);
@@ -155,7 +111,7 @@ const main = (connectedUsers: connectedUsersT) => {
         .replace("</div><div>", "<br>")
         .replace("<div>", "")
         .replace("</div>", "<br>");
-      console.log(`%cmsg: ${msg}`, 'color: red');
+      console.log(`%cmsg: ${msg}`, "color: red");
       // msg = msg.substring(0, msg.length - 4);
       msg = replaceAll(msg, "<br>", "\n");
 
@@ -173,19 +129,21 @@ const main = (connectedUsers: connectedUsersT) => {
       let size = data.size;
       let filename = data.filename;
 
-      MessageModel.findOne({ size: size, originalName: filename })
-        .then((doc: any) => {
+      MessageModel.findOne({ size: size, originalName: filename }).then(
+        (doc: any) => {
           socket.emit("M_S_O", doc);
           socket.in(room).emit("M_S_O", doc);
           console.log("file sent:", doc._id, filename);
-        });
+        }
+      );
     });
 
     socket.on("attachEmoji", async (data: attachEmojiI) => {
       console.log("server received emoji:", data.emoji, data._id, data._user);
       let message: any = await MessageModel.findOne({ _id: data._id });
 
-      let found = false, suspend = false;
+      let found = false;
+      let suspend = false;
       let num = 1;
       message.emojis.forEach((emoji: any) => {
         if (emoji.emoji === data.emoji) {
@@ -194,23 +152,21 @@ const main = (connectedUsers: connectedUsersT) => {
             emoji.users.push(data._user);
             found = true;
             num = emoji.num;
-          }
-          else {
+          } else {
             suspend = true;
           }
         }
       });
       if (suspend) {
         return;
-      }
-      else if (found === false) {
+      } else if (found === false) {
         message.emojis.push({ emoji: data.emoji, num: 1, users: [data._user] });
       }
 
       let jData = {
         emoji: data.emoji,
         num: num,
-        _id: data._id
+        _id: data._id,
       };
       socket.emit("newEmoji", jData);
       socket.in(data.room).emit("newEmoji", jData);
@@ -234,13 +190,11 @@ const main = (connectedUsers: connectedUsersT) => {
         username: username,
       };
       if (usersInVoice[roomId] === undefined) {
-        // console.log("undefined");
         usersInVoice[roomId] = [];
       }
       // console.log("socketIds:", socketIds);
       // console.log("includes", socketIds.includes(socket.id));
       if (!socketIds.includes(socket.id)) {
-        console.log("not includes");
         usersInVoice[roomId].push(payload);
         console.log(`
       ##########################################################
@@ -328,12 +282,12 @@ const main = (connectedUsers: connectedUsersT) => {
 
 // next two functions are taken out of stackoverflow
 const escapeRegExp = (arg: string): string => {
-  return arg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-}
+  return arg.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+};
 
 const replaceAll = (str: string, match: string, replacement: string): string => {
-  return str.replace(new RegExp(escapeRegExp(match), 'g'), () => replacement);
-}
+  return str.replace(new RegExp(escapeRegExp(match), "g"), () => replacement);
+};
 
 (async () => {
   const connectedUsers: connectedUsersT = await usersStatus();

@@ -14,6 +14,7 @@ import InputComponent from "../../Login&Signup/inputComponent/inputComponent";
 
 import "./_popup.sass";
 import "./_settings.sass";
+import { socket } from "../../../scripts/_socketSide";
 
 const egressSVG: string = require("../../../assets/egress.svg").default;
 const userSVG: string = require("../../../assets/chat/user-flat.svg").default;
@@ -59,6 +60,9 @@ const PopupSettings = () => {
         })
             .then(res => {
                 if (res.data.status === "done") {
+                    // popout
+                    socket.emit("popAccount", { authentication: reduxData.authentication, username: reduxData.currentUser });
+
                     alert("user succesfully deleted...");
                     localStorage.removeItem("hashId");
                     history.push("");
