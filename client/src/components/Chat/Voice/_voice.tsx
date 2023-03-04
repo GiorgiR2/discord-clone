@@ -25,6 +25,7 @@ const ScreenShare: string = require("../../../assets/voice/screenShare.svg").def
 
 const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
 const FullScreen: string = require("../../../assets/fullscreen_black_24dp.svg").default;
+const EndCall: string = require("../../../assets/voice/phone-call.svg").default;
 
 // const egress = (history: History, roomId: string, hashId: string) => {
 //   history.push(`/chat/61ed960432479c682956838e/${hashId}`);
@@ -175,15 +176,15 @@ const VoiceFrame = () => {
             alt="screen"
           />
         </div>
-        <a
+        <img
           className="egress"
+          title="end call"
           onClick={() => {
             history.push(`/chat/61ed960432479c682956838e/${hashId}`);
             window.location.reload();
           }}
-        >
-          egress
-        </a>
+          src={EndCall} alt="egressIcons"
+          />
         <h4 className="p2p">p2p connection</h4>
       </div>
     </div>
