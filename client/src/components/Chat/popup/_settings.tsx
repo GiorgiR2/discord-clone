@@ -24,12 +24,14 @@ const apiLink = packageJson.proxy;
 const PopupSettings = () => {
     const changePassword = (): void => {
         if (match === "match" && password0.length > 3) {
-            const hashedPassword = encrypt(password0);
+            const hashedOldPassword = encrypt(currentPassword);
+            const hashedNewPassword = encrypt(password0);
 
             axios.post(`${apiLink}/api/users/changePassword`, {
                 authentication: reduxData.authentication,
                 username: reduxData.currentUser,
-                password: hashedPassword
+                oldPassword: hashedOldPassword,
+                newPassword: hashedNewPassword
             })
                 .then(res => {
                     if (res.data.status === "done") {
@@ -38,6 +40,9 @@ const PopupSettings = () => {
                         setPassword0("");
                         setPassword1("");
                         dispatch(toggleSettings());
+                    }
+                    else if (res.data.status === "wrong password"){
+                        alert("wrong password");
                     }
                 })
                 .catch(err => console.error(err));

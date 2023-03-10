@@ -9,6 +9,7 @@ const router: Router = express.Router();
 import { registerUser, checkLogin, checkData, addIp, removeIp } from "../ts/userOperations.cjs";
 
 import usersModel from "../models/user.model.cjs";
+import saveModel from "../ts/saveModel.cjs";
 
 router.use(bp.json());
 router.use(bp.urlencoded({ extended: true }));
@@ -77,15 +78,23 @@ router.post("/api/users/usernameByHashId", async (req: Request, res: Response) =
 });
 
 router.post("/api/users/changePassword", async (req: Request, res: Response) => {
-  console.log("authentication:", req.body.authentication);
-  console.log("username:", req.body.username);
-  console.log("password:", req.body.password);
+  let username = req.body.username;
+  let oldPassword = req.body.oldPassword;
+  let newPassword = req.body.newPassword;
 
-  const filter = { username: req.body.username };
-  const update = { password: req.body.password };
-  usersModel.findOneAndUpdate(filter, update).exec();
-
-  res.send({ status: "done" });
+  const filter = { username: username };
+  const update = { password: newPassword };
+  let user = await usersModel.findOne(filter);
+  if (user?.password === oldPassword && user !== null) {
+    // usersModel.findOneAndUpdate(filter, update);
+    user.password = newPassword;
+    res.send({ status: "done" });
+  }
+  else {
+    res.send({ status: "wrong password" });
+  }
+  await user!.save();
+  // res.send({ status: "done" });
 });
 
 router.delete("/api/users/deleteAccount", async (req: Request, res: Response) => {
@@ -107,16 +116,16 @@ router.post("/api/users/addProfilePicture", upload.single("image"), async (req: 
 
 router.get("/api/users/checkImageAvailability/:userName", (req: Request, res: Response) => {
   usersModel.findOne({ username: req.params.userName })
-  .then(user => {
-    if (user?.imageDir !== null){
-      console.log("exist", user?.imageDir);
-      res.send({ status: "exists" });
-    }
-    else{
-      console.log("exist", user.imageDir);
-      res.send({ status: "do not exist" });
-    }
-  });
+    .then(user => {
+      if (user?.imageDir !== null) {
+        console.log("exist", user?.imageDir);
+        res.send({ status: "exists" });
+      }
+      else {
+        console.log("exist", user.imageDir);
+        res.send({ status: "do not exist" });
+      }
+    });
 });
 
 const handleDownload = async (req: Request, res: Response) => {

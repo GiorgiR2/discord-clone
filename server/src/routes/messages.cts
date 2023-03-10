@@ -51,9 +51,7 @@ router.patch("/:messageId", (req: Request, res: Response) => {
       },
     }
   )
-    .exec()
-    .then()
-    .catch();
+    .exec();
 });
 
 router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
