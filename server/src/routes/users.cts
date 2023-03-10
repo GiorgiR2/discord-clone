@@ -83,10 +83,8 @@ router.post("/api/users/changePassword", async (req: Request, res: Response) => 
   let newPassword = req.body.newPassword;
 
   const filter = { username: username };
-  const update = { password: newPassword };
   let user = await usersModel.findOne(filter);
   if (user?.password === oldPassword && user !== null) {
-    // usersModel.findOneAndUpdate(filter, update);
     user.password = newPassword;
     res.send({ status: "done" });
   }
@@ -94,7 +92,6 @@ router.post("/api/users/changePassword", async (req: Request, res: Response) => 
     res.send({ status: "wrong password" });
   }
   await user!.save();
-  // res.send({ status: "done" });
 });
 
 router.delete("/api/users/deleteAccount", async (req: Request, res: Response) => {

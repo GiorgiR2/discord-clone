@@ -150,13 +150,5 @@ router.post("/api/deleteCategory", async (req: Request, res: Response) => {
   });
 });
 
-router.post("/move", (req: Request, res: Response) => {
-  // pass
-});
-
-router.delete("/remove", (req: Request, res: Response) => {
-  // pass
-});
-
 module.exports = router;
 // export default router;
