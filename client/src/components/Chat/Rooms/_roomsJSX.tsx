@@ -6,10 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import packageJson from "../../../../package.json";
 
-import {
-  rememberDraggingRoom,
-  modifyPosition,
-} from "../../../features/interfaces";
+import { rememberDraggingRoom, modifyPosition } from "../../../features/interfaces";
 
 import { EditSVG, TrashSVG } from "../../../styles/SVGs/_SVGs";
 import { roomI } from "../../../types/types";
@@ -53,7 +50,7 @@ const RoomsJSX = (): JSX.Element => {
 
   const [index, setIndex] = useState<number>(-1);
 
-  let { _, hashId } = useParams<{_: string; hashId: string;}>();
+  let { _, hashId } = useParams<{ _: string; hashId: string; }>();
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -61,32 +58,33 @@ const RoomsJSX = (): JSX.Element => {
 
   return <>{
     reduxData.rooms.map((room: roomI, n: number) => (
-    <li
-      className={`category ${index === n ? "activePlace" : ""}`}
-      id={room._id}
-      draggable
-      onDragStart={(e) => onDragStart(e, room._id, n)}
-      onDragEnter={(e) => onDragEnter(e, n)}
-      onDragEnd={onDragEnd}
-      onDragOver={(e) => e.preventDefault()}
-    >
-      <div
-        className="hyperlink"
-        onClick={() => {
-          history.push(`/chat/${room._id}/${hashId}`);
-          window.location.reload();
-        }}
+      <li
+        className={`category ${index === n ? "activePlace" : ""}`}
+        key={n}
+        id={room._id}
+        draggable
+        onDragStart={(e) => onDragStart(e, room._id, n)}
+        onDragEnter={(e) => onDragEnter(e, n)}
+        onDragEnd={onDragEnd}
+        onDragOver={(e) => e.preventDefault()}
       >
-        {room.voice ? 
-        <img className="speaker" src={Speaker} alt="speaker" /> : <span className="sharp">#</span>} <span className="name">{room.name}</span>
-      </div>
-      <div className="svgs">
-        <EditSVG id={room._id} />{" "}
-        {/* set redux editingCatId as id */}
-        <TrashSVG id={room._id} />
-      </div>
-    </li>
-  ))
+        <div
+          className="hyperlink"
+          onClick={() => {
+            history.push(`/chat/${room._id}/${hashId}`);
+            window.location.reload();
+          }}
+        >
+          {room.voice ?
+            <img className="speaker" src={Speaker} alt="speaker" /> : <span className="sharp">#</span>} <span className="name">{room.name}</span>
+        </div>
+        <div className="svgs">
+          <EditSVG id={room._id} />{" "}
+          {/* set redux editingCatId as id */}
+          <TrashSVG id={room._id} />
+        </div>
+      </li>
+    ))
   }</>;
 };
 

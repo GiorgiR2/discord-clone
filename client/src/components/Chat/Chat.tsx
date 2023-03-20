@@ -165,15 +165,15 @@ const Chat: React.FC = () => {
           </h1>
         </div>
         <h3 className="titleON">ACTIVE - {reduxData.online.length}</h3>
-        {reduxData.online.map((el: string) => (
-          <h3 className="online">
+        {reduxData.online.map((el: string, n: number) => (
+          <h3 className="online" key={n}>
             <div />
             {el}
           </h3>
         ))}
         <h3 className="titleOFF">OFFLINE - {reduxData.offline.length}</h3>
-        {reduxData.offline.map((el: string) => (
-          <h3 className="offline">
+        {reduxData.offline.map((el: string, n: number) => (
+          <h3 className="offline" key={n}>
             <div />
             {el}
           </h3>

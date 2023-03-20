@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import axios from "axios";
 import FormData from "form-data";
 
-import { emojiDivI, emojiT, interfaceInitialStateValueI, messageI } from "../../../types/types";
+import { messageI } from "../../../types/types";
 import { RootState } from "../../..";
 
 import { editMessage, enterFocusMode, exitEditMode, exitFocusMode } from "../../../features/interfaces";
@@ -57,12 +57,12 @@ const MessagesDivs = (): JSX.Element => {
 
     return (
         <div className="messageDivs">
-            {reduxData.messages.map((el: messageI) => {
+            {reduxData.messages.map((el: messageI, messageN: number) => {
                 // msg may be a text / a multiline text or a fileID
                 let link = `${apiLink}/file/${el.message}`; // msg === Id
 
                 return (
-                    <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`}>
+                    <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={messageN}>
                         <div
                             className={`message element`}
                             onContextMenu={(event) => handleContextMenu(event, el._id)}
@@ -95,7 +95,7 @@ const MessagesDivs = (): JSX.Element => {
                                             onBlur={(event) => handleOnBlur(event, el._id)}
                                             contentEditable={el.editMode}
                                         >
-                                            {el.message.split("\n").map((line: string) => (
+                                            {el.message.split("\n").map((line: string, lineN: number) => (
                                                 <>
                                                     {line}
                                                     <br />
