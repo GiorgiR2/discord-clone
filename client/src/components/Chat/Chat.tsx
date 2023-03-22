@@ -76,38 +76,25 @@ const Chat: React.FC = () => {
 
     return (
       <div
-        className={`categories ${
-          toggleRedux.toggleLeft === false ? "hidden" : ""
-        }`}
+        className={`categories ${toggleRedux.toggleLeft === false ? "hidden" : ""
+          }`}
         ref={contextMenuLeftRef}
       >
-        <div className="top">
-          <div className="topl">
-            <h1 className="user">{reduxData.currentUser}</h1>
-            <img
-              className="x"
-              src={egressSVG}
-              alt="exit"
-              onClick={() => dispatch(toggleLeft())}
-            />
-            <img
-              src={settingsSVG}
-              alt="settings"
-              className="settings"
-              onClick={() => dispatch(toggleSettings())}
-            />
-          </div>
-
-          <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
-            add new room <b>+</b>
-          </h1>
-
-          <nav>
-            <ul id="ul-id">
-              <RoomsJSX />
-            </ul>
-          </nav>
+        <div className="topl">
+          <h1 className="user">{reduxData.currentUser}</h1>
+          <img className="x" src={egressSVG} alt="exit" onClick={() => dispatch(toggleLeft())} />
+          <img src={settingsSVG} alt="settings" className="settings" onClick={() => dispatch(toggleSettings())} />
         </div>
+
+        <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
+          add new room <b>+</b>
+        </h1>
+
+        <nav>
+          <ul id="ul-id">
+            <RoomsJSX />
+          </ul>
+        </nav>
       </div>
     );
   };
@@ -142,9 +129,8 @@ const Chat: React.FC = () => {
 
     return (
       <div
-        className={`status-bar ${
-          toggleRedux.toggleRight === false ? "hidden" : ""
-        }`}
+        className={`status-bar ${toggleRedux.toggleRight === false ? "hidden" : ""
+          }`}
         ref={contextMenuRightRef}
       >
         <div className="top">

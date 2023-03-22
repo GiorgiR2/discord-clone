@@ -1,21 +1,18 @@
-// File: _chat.scss
 @import '../../styles/_variables'
 
 svg
     cursor: pointer
 
+a
+  color: #cfd9e4
+  text-decoration: none
+
 .chat
     background-color: $bg-color//#161f27
     // background-color: #11171D
-    // margin: 5px 0px 5px 0px
-    // max-height: 800px
     height: -webkit-fill-available
     display: flex
     justify-content: space-between
-
-    a
-        color: #cfd9e4
-        text-decoration: none
 
     h1
         // height: 5%
@@ -45,130 +42,131 @@ svg
 
     .categories
         width: 18vw
+        margin-right: 0px !important
         // min-width: 250px
         // min-width: fit-content
-        display: flex
-        flex-direction: column
-        justify-content: space-between
+        // display: flex
+        // flex-direction: column
+        // overflow: hidden
+        // overflow-y: scroll
+        // background-color: green
+        // padding: 0 !important
+        
+        .topl
+          // background-color: red
+          display: flex
+          justify-content: space-between
+          height: 48px
+          // width: 300px
+          z-index: 5
+          padding-top: 10px
+          border-bottom: 2px solid #bdc3c7
 
-        .top
-            overflow: hidden
-            overflow-y: scroll
-            width: 100%
-            
-            .topl
-              display: flex
-              justify-content: space-between
-              margin: 15px 0px 0px 10px
-              border-bottom: 2px solid darken($fg-color, 50)
-              
-              .x
-                position: relative
-                top: -6px
-                height: 25px
-                color: #fff
-                margin-top: 8px
-                // margin-top: 15px
-                cursor: pointer
-                display: none
-              
-              .settings
-                height: 24px
-                filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(82deg) brightness(110%) contrast(101%)
-                margin-top: 3px
-                margin-right: 8px
-                cursor: pointer
+          .x
+            position: relative
+            top: -6px
+            height: 25px
+            color: #fff
+            margin-top: 8px
+            cursor: pointer
+            display: none
+          
+          .settings
+            // display: none
+            height: 24px
+            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(82deg) brightness(110%) contrast(101%)
+            margin-top: 3px
+            margin-right: 8px
+            cursor: pointer
 
-              .user
-                width: 100%
-                height: 43px
-                margin-left: 5px
-                font-size: 1.2em
-                // margin: 6px
-            .plus
-              margin-top: 7px
-              margin-left: 6px
-              padding: 8px 8px 8px 16px
-              background-color: #ecf0f1//#C4C4C4
-              color: #2c3e50//lighten(#000000, 40%)
-              border-radius: 5px
-              font-size: 1.0em
-              height: 38px
-              letter-spacing: 1.4px
-              display: flex
-              justify-content: space-between
+          .user
+            margin-left: 15px
+            font-size: 1.2em
 
-              b
-                position: relative
-                top: -4px
-                right: 2px
-                font-size: 1.5em
+        .plus
+          margin-top: 7px
+          margin-left: 6px
+          padding: 8px 8px 8px 16px
+          background-color: #ecf0f1//#C4C4C4
+          color: #2c3e50//lighten(#000000, 40%)
+          border-radius: 5px
+          font-size: 1.0em
+          height: 38px
+          letter-spacing: 1.4px
+          display: flex
+          justify-content: space-between
 
-              &:hover,
-              &:active
-                cursor: pointer
-                color: #000000
-                transition-duration: .2s
+          b
+            position: relative
+            top: -4px
+            right: 2px
+            font-size: 1.5em
 
-            nav ul
-                list-style: none
-                padding-left: 6px
+          &:hover,
+          &:active
+            cursor: pointer
+            color: #000000
+            transition-duration: .2s
 
-                .activePlace
-                  border-bottom: 3px solid #ecf0f1
+        nav ul
+            list-style: none
+            padding-left: 6px
 
-                li
-                    font: 20px Lato, Arial, Sans-Serif
-                    margin-top: .2em
-                    height: 30px
-                    padding-left: .4em
-                    padding-top: 3px
-                    padding-bottom: 5px
+            .activePlace
+              border-bottom: 3px solid #ecf0f1
 
-                    display: flex
-                    justify-content: space-between
+            li
+                font: 20px Lato, Arial, Sans-Serif
+                margin-top: .2em
+                height: 30px
+                padding-left: .4em
+                padding-top: 3px
+                padding-bottom: 5px
 
-                    div
-                      display: flex
-                      // flex-direction: column
+                display: flex
+                justify-content: space-between
 
-                      .speaker
-                        height: 22px
-                        // margin: 5px 0 3px 0
-                        // background-color: green
-                        // margin-top: 15px
-                      
-                      .sharp
-                        font-size: 1.2rem
-                        // height: 2px
-                        margin-left: 4px
-                      
-                      .name
-                        // background-color: red
-                        position: relative
-                        // transform: translate(-100px, -100px)
-                        margin-left: 8px
-                        // padding-bottom: 5px
+                div
+                  display: flex
+                  // flex-direction: column
 
-                    .svgs
-                      display: flex
+                  .speaker
+                    height: 22px
+                    // margin: 5px 0 3px 0
+                    // background-color: green
+                    // margin-top: 15px
+                  
+                  .sharp
+                    font-size: 1.2rem
+                    // height: 2px
+                    margin-left: 4px
+                  
+                  .name
+                    // background-color: red
+                    position: relative
+                    // transform: translate(-100px, -100px)
+                    margin-left: 8px
+                    // padding-bottom: 5px
 
-                      img
-                        opacity: 0
-                        width: 25px
-                        height: 25px
-                        cursor: pointer
+                .svgs
+                  display: flex
 
-                li:hover,
-                li:active
-                    background-color: #8f9397
-                    border-radius: 5px
+                  img
+                    opacity: 0
+                    width: 25px
+                    height: 25px
+                    cursor: pointer
 
-                    a
-                      color: $fg-color
+            li:hover,
+            li:active
+                background-color: #8f9397
+                border-radius: 5px
 
-                    svg, img
-                      opacity: 1
+                a
+                  color: $fg-color
+
+                svg, img
+                  opacity: 1
 
     .messages
       display: flex
@@ -196,7 +194,6 @@ svg
           &:active
             cursor: pointer
             color: darken(white, 15%)
-
 
     .status-bar
       width: 19vw
@@ -283,7 +280,7 @@ svg
         position: absolute
         z-index: 10
         
-        .top .topl .x
+        .topl .x
           display: block !important
 
         .settings
