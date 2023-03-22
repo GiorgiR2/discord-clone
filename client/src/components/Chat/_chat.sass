@@ -3,61 +3,46 @@
 svg
     cursor: pointer
 
-a
-  color: #cfd9e4
-  text-decoration: none
-
 .chat
-    background-color: $bg-color//#161f27
-    // background-color: #11171D
+    background-color: #2e4153
     height: -webkit-fill-available
     display: flex
     justify-content: space-between
 
+    a
+      color: #cfd9e4
+      text-decoration: none
+
     h1
-        // height: 5%
-        // padding-left: 10px
         font-size: 22px
         color: white
-        // padding-bottom: 10px
+
     h2
         padding-top: 4px
         padding-left: 10px
         font-size: 15px
         border-bottom: 1px solid #ccc
 
-    .categories,
-    .status-bar
-      min-width: 200px
-
-    .categories,
-    .messages,
-    .status-bar
-      // height: 100vh
+    .messages
       height: -webkit-fill-available
+      width: 62vw
 
     .categories,
     .status-bar
       background-color: $bg-color
+      width: 19vw
+      min-width: 200px
+      height: 100vh
 
     .categories
-        width: 18vw
         margin-right: 0px !important
-        // min-width: 250px
-        // min-width: fit-content
-        // display: flex
-        // flex-direction: column
         // overflow: hidden
         // overflow-y: scroll
-        // background-color: green
-        // padding: 0 !important
         
         .topl
-          // background-color: red
           display: flex
           justify-content: space-between
           height: 48px
-          // width: 300px
           z-index: 5
           padding-top: 10px
           border-bottom: 2px solid #bdc3c7
@@ -68,15 +53,15 @@ a
             height: 25px
             color: #fff
             margin-top: 8px
+            margin-right: 7px
             cursor: pointer
             display: none
           
           .settings
-            // display: none
             height: 24px
             filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(82deg) brightness(110%) contrast(101%)
             margin-top: 3px
-            margin-right: 8px
+            margin-right: 15px
             cursor: pointer
 
           .user
@@ -84,9 +69,8 @@ a
             font-size: 1.2em
 
         .plus
-          margin-top: 7px
-          margin-left: 6px
-          padding: 8px 8px 8px 16px
+          margin: 7px 7px 0 7px
+          padding: 8px 8px 8px 14px
           background-color: #ecf0f1//#C4C4C4
           color: #2c3e50//lighten(#000000, 40%)
           border-radius: 5px
@@ -128,25 +112,17 @@ a
 
                 div
                   display: flex
-                  // flex-direction: column
 
                   .speaker
                     height: 22px
-                    // margin: 5px 0 3px 0
-                    // background-color: green
-                    // margin-top: 15px
                   
                   .sharp
                     font-size: 1.2rem
-                    // height: 2px
                     margin-left: 4px
                   
                   .name
-                    // background-color: red
                     position: relative
-                    // transform: translate(-100px, -100px)
                     margin-left: 8px
-                    // padding-bottom: 5px
 
                 .svgs
                   display: flex
@@ -171,9 +147,6 @@ a
     .messages
       display: flex
       flex-direction: column
-      width: 62vw
-        
-      background-color: #2e4153
 
       #top
         flex: 0 1 auto
@@ -189,6 +162,7 @@ a
 
         #category
           // pass
+
         #log_out
           &:hover,
           &:active
@@ -196,9 +170,9 @@ a
             color: darken(white, 15%)
 
     .status-bar
-      width: 19vw
       overflow: hidden
       overflow-y: scroll
+      padding: 5px 8px
 
       .top
         display: flex
@@ -328,13 +302,8 @@ a
                   .emoji
                       height: 38px !important
                       transform: translate(-5px, 5px) !important
-                      // margin-bottom: 10px !important
 
               .send
                   display: block !important
-                  // position: relative
                   margin: 10px 0 0 8px
                   height: 1.6em
-                  // top: 12px
-                  // left: -15px
-                  // z-index: 3
