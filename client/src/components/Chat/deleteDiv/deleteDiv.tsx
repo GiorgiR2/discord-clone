@@ -84,7 +84,7 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
           </li>
           <li id="delete" onClick={() => deleteMSG(id)}>
             <h3 className="delete">Delete Message</h3>
-            <img src={Trash} alt="trash" />
+            <img className="trash" src={Trash} alt="trash" />
           </li>
         </ul>
       </nav>

@@ -30,12 +30,18 @@
       border-radius: 2px
 
     #delete
-      color: lighten(#c0392b, 10%)//darken(red, 10%)
+      color: #F23F42//lighten(#c0392b, 10%)//darken(red, 10%)
 
       &:hover,
       &:active 
-        background-color: #c0392b
+        background-color: #F23F42//#c0392b
         color: #fff
+
+        .trash
+          filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(293deg) brightness(95%) contrast(105%)
+
+      .trash
+        filter: invert(39%) sepia(95%) saturate(4416%) hue-rotate(337deg) brightness(96%) contrast(97%)
 
     #edit
       color: #ecf0f1//#fff
