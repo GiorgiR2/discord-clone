@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import bp from "body-parser";
+import sharp from "sharp";
 
 const multer = require("multer"); // for file uploading
 const upload = multer({ dest: "profile_pictures" });
@@ -105,9 +106,19 @@ router.delete("/api/users/deleteAccount", async (req: Request, res: Response) =>
 
 router.post("/api/users/addProfilePicture", upload.single("image"), async (req: Request, res: Response) => {
   // @ts-ignore
-  console.log("new profile image:", req.body.user, req.file.path);
-  // @ts-ignore
-  await usersModel.findOneAndUpdate({ username: req.body.user }, { imageDir: req.file.path });
+  const _imageDir = req.file.path;
+  const newImageDir = _imageDir+0;
+
+  sharp(_imageDir)
+  .resize(82, 82)
+  .toFile(newImageDir, (err, info) => {  
+    console.log(info);
+    console.error(err);
+  });
+
+  console.log("new profile image:", req.body.user, newImageDir);
+
+  await usersModel.findOneAndUpdate({ username: req.body.user }, { imageDir: newImageDir });
   await res.send({ status: "done" });
 });
 
