@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router";
 
 import axios from "axios";
@@ -59,7 +59,7 @@ const MessagesDivs = (): JSX.Element => {
         <div className="messageDivs">
             {reduxData.messages.map((el: messageI, messageN: number) => {
                 // msg may be a text / a multiline text or a fileID
-                let link = `${apiLink}/file/${el.message}`; // msg === Id
+                let imageBool: boolean = el.fileName.substr(-3) === "png" || el.fileName.substr(-3) === "jpg";
 
                 return (
                     <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={messageN}>
@@ -79,14 +79,18 @@ const MessagesDivs = (): JSX.Element => {
                                 <div className="message">
                                     {el.isFile ? (
                                         <div className="fileDiv">
-                                            <img src={fileSVG} className="fileSVG" alt="file" />
+                                            {imageBool ?
+                                                <img src={`${apiLink}/file/${el.message}`} className="imagePreview" alt="file" />
+                                                :
+                                                <img src={fileSVG} className="fileSVG" alt="file" />
+                                            }
                                             <a
-                                                href={link}
+                                                href={`${apiLink}/file/${el.message}`}
                                                 rel="noreferrer"
                                                 target="_blank"
                                                 className="name"
                                             >
-                                                {el.fileName}
+                                                {imageBool ? "save as" : el.fileName}
                                             </a>
                                         </div>
                                     ) : (
@@ -128,7 +132,7 @@ const MessagesDivs = (): JSX.Element => {
 }
 
 const Messages = () => {
-    const handleSubmit = (file: any ) => {
+    const handleSubmit = (file: any) => {
         const sendFileData = () => {
             socks.sendFileData({
                 reduxData,
