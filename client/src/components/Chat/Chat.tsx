@@ -167,6 +167,15 @@ const Chat: React.FC = () => {
       </div>
     );
   };
+  const scrollToBottom = () => {
+    // scroll to the newest message
+    try {
+      let el: any = document.getElementById("last-element");
+      el.scrollIntoView();
+    } catch {
+      //pass
+    }
+  }
 
   const dispatch: AppDispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -181,6 +190,7 @@ const Chat: React.FC = () => {
     checkRoomId(dispatch, apiLink, roomId, hashId, history);
 
     getBasicData({ history, roomId, hashId, dispatch });
+    scrollToBottom();
   }, []);
 
   useEffect(() => {
@@ -188,13 +198,7 @@ const Chat: React.FC = () => {
   }, [reduxData.currentUser]);
 
   useEffect(() => {
-    // scroll to the newest message
-    try {
-      let el: any = document.getElementById("last-element");
-      el.scrollIntoView();
-    } catch {
-      //pass
-    }
+    scrollToBottom();
   }, [reduxData.messages]);
 
   useEffect(() => {
