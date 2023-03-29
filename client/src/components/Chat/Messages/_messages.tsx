@@ -20,6 +20,7 @@ import * as socks from "../../../scripts/_socketSide";
 import packageJson from "../../../../package.json";
 
 import "./_messages.sass";
+import scrollToBottom from "../../js/scrollToBottom";
 
 const sendSVG: string = require("../../../assets/send-24px.svg").default;
 const fileSVG: string = require("../../../assets/fileIcon.svg").default;
@@ -29,7 +30,7 @@ const plusSVG: string = require("../../../assets/chat/plus.svg").default;
 const apiLink = packageJson.proxy;
 
 const MessagesDivs = (): JSX.Element => {
-    const handleContextMenu = (e: any, id: string) => {
+    const handleContextMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
         e.preventDefault();
 
         const { pageX, pageY } = e;
@@ -59,7 +60,7 @@ const MessagesDivs = (): JSX.Element => {
         <div className="messageDivs">
             {reduxData.messages.map((el: messageI, messageN: number) => {
                 // msg may be a text / a multiline text or a fileID
-                let imageBool: boolean = el.fileName.substr(-3) === "png" || el.fileName.substr(-3) === "jpg";
+                let imageBool: boolean = el.fileName.substr(-4) === ".png" || el.fileName.substr(-4) === ".jpg";
 
                 return (
                     <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={messageN}>
@@ -80,7 +81,7 @@ const MessagesDivs = (): JSX.Element => {
                                     {el.isFile ? (
                                         <div className="fileDiv">
                                             {imageBool ?
-                                                <img src={`${apiLink}/file/${el.message}`} className="imagePreview" alt="file" />
+                                                <img src={`${apiLink}/file/${el.message}`} className="imagePreview" alt="file" onLoad={() => scrollToBottom()} />
                                                 :
                                                 <img src={fileSVG} className="fileSVG" alt="file" />
                                             }

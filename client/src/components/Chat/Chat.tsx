@@ -41,6 +41,7 @@ import { AppDispatch, RootState } from "../..";
 
 import { History } from "history";
 import PopupSettings from "./popup/_settings";
+import scrollToBottom from "../js/scrollToBottom";
 
 const egressSVG: string = require("../../assets/egress.svg").default;
 const settingsSVG: string = require("../../assets/chat/settings.svg").default;
@@ -129,8 +130,7 @@ const Chat: React.FC = () => {
 
     return (
       <div
-        className={`status-bar ${toggleRedux.toggleRight === false ? "hidden" : ""
-          }`}
+        className={`status-bar ${toggleRedux.toggleRight === false ? "hidden" : ""}`}
         ref={contextMenuRightRef}
       >
         <div className="top">
@@ -167,15 +167,6 @@ const Chat: React.FC = () => {
       </div>
     );
   };
-  const scrollToBottom = () => {
-    // scroll to the newest message
-    try {
-      let el: any = document.getElementById("last-element");
-      el.scrollIntoView();
-    } catch {
-      //pass
-    }
-  }
 
   const dispatch: AppDispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -199,7 +190,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [reduxData.messages]);
+  }, [reduxData.messages, toggleRedux.toggleLeft, toggleRedux.toggleRight, toggleRedux.displayAdd, toggleRedux.displayEdit, toggleRedux.displaySettings]);
 
   useEffect(() => {
     if (reduxData.voiceMode && reduxData.currentUser === "") {
@@ -230,6 +221,7 @@ const Chat: React.FC = () => {
       <Rooms />
       <Center />
       <StatusBar />
+
       {toggleRedux.contextMenu.show ? (
         <DeleteDiv
           x={toggleRedux.contextMenu.x}
