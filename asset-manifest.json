@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/discord-clone/static/css/main.d9c0318d.css",
+    "main.js": "/discord-clone/static/js/main.8700622e.js",
+    "static/media/settings.svg": "/discord-clone/static/media/settings.bd860e361531f92499d9d065620d0565.svg",
+    "static/media/eye.svg": "/discord-clone/static/media/eye.250b58d5a8d53ce275f2515b5b202346.svg",
+    "static/media/lock.svg": "/discord-clone/static/media/lock.c1606cdefe49a10498417d5b27380824.svg",
+    "static/media/phone-call.svg": "/discord-clone/static/media/phone-call.c21797771360b1a98482f1019a3aaea2.svg",
+    "static/media/fileIcon.svg": "/discord-clone/static/media/fileIcon.8cb6fa26896148aa800dbf5170c91334.svg",
+    "static/media/camOff.svg": "/discord-clone/static/media/camOff.fabf79b1c3655fdab2d251bab95f6ee3.svg",
+    "static/media/user.svg": "/discord-clone/static/media/user.2d6897c1765ae323aebe4b45b0033e7f.svg",
+    "static/media/micOff.svg": "/discord-clone/static/media/micOff.8e0b929b4d64ad1916c0e4485c4034f2.svg",
+    "static/media/micOn.svg": "/discord-clone/static/media/micOn.6552e10bd99cd5a9ae5f2ddbe9e378cd.svg",
+    "static/media/user-flat.svg": "/discord-clone/static/media/user-flat.d387b70e79fb87e0325782e3bc950bc6.svg",
+    "static/media/emoji.svg": "/discord-clone/static/media/emoji.c9bf1d29fa4c9e76b8c0f2594f94b2f0.svg",
+    "index.html": "/discord-clone/index.html",
+    "static/media/plus.svg": "/discord-clone/static/media/plus.2a0b9cae7ed48bd992f4e4f1a51b7341.svg",
+    "static/media/camOn.svg": "/discord-clone/static/media/camOn.0fd433aa142aaaa53ca42caca1a37905.svg",
+    "static/media/volume_up_black_24dp.svg": "/discord-clone/static/media/volume_up_black_24dp.007d0a7849c0e076cc305c4e06535fdb.svg",
+    "static/media/screenShare.svg": "/discord-clone/static/media/screenShare.2a6cf907334e8a7b152f3633d460a2ee.svg",
+    "static/media/send-24px.svg": "/discord-clone/static/media/send-24px.2245eccfb16d2c7db89d694899f37a7c.svg",
+    "static/media/edit.svg": "/discord-clone/static/media/edit.ebfb3fdfcb1a11374ddca14c11bc5044.svg",
+    "static/media/trash.svg": "/discord-clone/static/media/trash.2be1532e58f0b409e7872f65db3748cc.svg",
+    "static/media/fullscreen_black_24dp.svg": "/discord-clone/static/media/fullscreen_black_24dp.e21f85bf178e4ced41adbc72870f0165.svg",
+    "static/media/egress.svg": "/discord-clone/static/media/egress.27b5dbfeb3d0aa9d25649e01cb87f60e.svg",
+    "main.d9c0318d.css.map": "/discord-clone/static/css/main.d9c0318d.css.map",
+    "main.8700622e.js.map": "/discord-clone/static/js/main.8700622e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d9c0318d.css",
+    "static/js/main.8700622e.js"
+  ]
+}
