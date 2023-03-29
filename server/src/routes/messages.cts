@@ -74,12 +74,11 @@ router.post("/upload", upload.single("file"), async (req: Request, res: Response
 });
 
 const handleD = async (req: Request, res: Response) => {
-  // res.send(req.params.id);
   const file: any = await Message.findById(req.params.id);
-  file.downloadCount++;
-  // console.log("count:", file.downloadCount);
-  await file.save();
   await res.download(file.path, file.originalName);
+
+  // file.downloadCount++;
+  // await file.save();
 };
 router.route("/file/:id").get(handleD).post(handleD);
 

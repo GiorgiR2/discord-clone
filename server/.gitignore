@@ -1,0 +1,10 @@
+/node_modules
+
+.env
+
+.vscode
+/.vscode
+__pycache__
+
+/uploads
+/profile_pictures
