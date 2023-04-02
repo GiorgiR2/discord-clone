@@ -105,18 +105,9 @@ const sendDeleteStatus = (id: string | null) => {
   socket.emit("deleteMessage", { _id: id });
 };
 
-const sendFileData = ({ reduxData, roomId, datetime, size, filename }: sendFileDataI) => {
-  // const data = {
-  //   user: reduxData.currentUser,
-  //   room: reduxData.currentRoom,
-  //   roomId: roomId,
-  //   datetime: datetime,
-  //   size: size,
-  //   authentication: reduxData.authentication,
-  //   filename: filename,
-  // };
-  
+const sendFileData = ({ reduxData, id, size, filename }: sendFileDataI) => {
   const data = {
+    _id: id,
     room: reduxData.currentRoom,
     size: size,
     authentication: reduxData.authentication,

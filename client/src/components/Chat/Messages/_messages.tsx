@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useParams } from "react-router";
 
 import axios from "axios";
@@ -29,7 +29,7 @@ const plusSVG: string = require("../../../assets/chat/plus.svg").default;
 
 const apiLink = packageJson.proxy;
 
-const MessagesDivs = (): JSX.Element => {
+const Messages = () => {
     const handleContextMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
         e.preventDefault();
 
@@ -41,9 +41,6 @@ const MessagesDivs = (): JSX.Element => {
             })
         );
     };
-    const handleOnInput = (event: any, id: string) => {
-        // console.log("OnInput:", event.target.innerHTML, id);
-    };
     const handleOnBlur = (event: any, id: string) => {
         //Todo: get p content, update that specific line and then send post request
         // console.log("OnBlur");
@@ -52,17 +49,68 @@ const MessagesDivs = (): JSX.Element => {
         dispatch(exitFocusMode({ _id: id }));
         socks.editMessage(event.target.innerHTML, id);
     };
+    const handleSubmit = (file: any) => {
+        const sendFileData = (_id: string) => {
+            socks.sendFileData({
+                reduxData,
+                id: _id,
+                size: file.size,
+                filename: file.name,
+            });
+        };
+        if (file === undefined) return;
+
+        const formData = new FormData();
+        const datetime = getTime();
+
+        formData.append("file", file);
+        formData.append("fileName", file.name);
+        formData.append("room", reduxData.currentRoom);
+        formData.append("user", reduxData.currentUser);
+        formData.append("roomId", roomId);
+        formData.append("datetime", datetime);
+        formData.append("size", file.size);
+
+        const config = {
+            headers: {
+                "content-type": "multipart/form-data",
+            },
+        };
+
+        axios
+            .post(`${apiLink}/upload`, formData, config)
+            .then((res) => {
+                // console.log("send file; res:", res.data);
+                if (res.data.status === "done") {
+                    sendFileData(res.data._id);
+                }
+            })
+            .catch((err) => console.error(err));//sendFileData());
+        // console.log("!!!!!!!!!!", file.name, file.size, typeof file.size);
+    };
+    const send = (mobile: boolean, event?: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        let message = inputRef.current.value;
+        if ((event && (event.key === "Enter" && event.shiftKey !== true && message.length > 0)) || (mobile === true && message.length > 0)) {
+            socks.sendMessage(reduxData, roomId, message);
+            inputRef.current.value = "";
+        }
+    }
+    const imageBool = (name: string): boolean => {
+        //name = el.fileName
+        return name.substr(-4) === ".png" || name.substr(-4) === ".jpg";
+    }
 
     const dispatch = useDispatch();
     const reduxData = useSelector((state: RootState) => state.interfaces.value);
 
-    return (
-        <div className="messageDivs">
-            {reduxData.messages.map((el: messageI, messageN: number) => {
-                // msg may be a text / a multiline text or a fileID
-                let imageBool: boolean = el.fileName.substr(-4) === ".png" || el.fileName.substr(-4) === ".jpg";
+    let { roomId, } = useParams<{ roomId: string; hashId: string }>();
 
-                return (
+    const inputRef = useRef<any>("");
+
+    return (
+        <>
+            <div id="chat-screen">
+                {reduxData.messages.map((el: messageI, messageN: number) => (
                     <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={messageN}>
                         <div
                             className={`message element`}
@@ -75,13 +123,15 @@ const MessagesDivs = (): JSX.Element => {
                                         {el.user} <span>{el.date}</span>
                                         {el.edited ? <span>(edited)</span> : null}
                                     </div>
-                                    {/*<h4 className="encryption">No Encryption</h4>*/}
                                 </div>
                                 <div className="message">
                                     {el.isFile ? (
                                         <div className="fileDiv">
-                                            {imageBool ?
-                                                <img src={`${apiLink}/file/${el.message}`} className="imagePreview" alt="file" onLoad={() => scrollToBottom()} />
+                                            {imageBool(el.fileName) ?
+                                                <img src={`${apiLink}/file/${el.message}`} className="imagePreview" alt="file" onLoad={() => {
+                                                    scrollToBottom();
+                                                }}
+                                                />
                                                 :
                                                 <img src={fileSVG} className="fileSVG" alt="file" />
                                             }
@@ -91,16 +141,15 @@ const MessagesDivs = (): JSX.Element => {
                                                 target="_blank"
                                                 className="name"
                                             >
-                                                {imageBool ? "save as" : el.fileName}
+                                                {imageBool(el.fileName) ? "save as" : el.fileName}
                                             </a>
                                         </div>
                                     ) : (
                                         <p
-                                            onInput={(event) => handleOnInput(event, el._id)}
                                             onBlur={(event) => handleOnBlur(event, el._id)}
                                             contentEditable={el.editMode}
                                         >
-                                            {el.message.split("\n").map((line: string, lineN: number) => (
+                                            {el.message.split("\n").map((line: string) => (
                                                 <>
                                                     {line}
                                                     <br />
@@ -126,74 +175,7 @@ const MessagesDivs = (): JSX.Element => {
                             ))}
                         </div>
                     </div>
-                );
-            })}
-        </div>
-    );
-}
-
-const Messages = () => {
-    const handleSubmit = (file: any) => {
-        const sendFileData = () => {
-            socks.sendFileData({
-                reduxData,
-                roomId,
-                datetime,
-                size: file.size,
-                filename: file.name,
-            });
-        };
-        // if (window.innerWidth <= 800) {
-        //   socks.sendMessage(e, reduxData, roomId, "mobile", inputRef);
-        //   return;
-        // }
-        if (file === undefined) return;
-
-        const url = `${apiLink}/upload`;
-        const formData = new FormData();
-        const datetime = getTime();
-
-        formData.append("file", file);
-        formData.append("fileName", file.name);
-        formData.append("room", reduxData.currentRoom);
-        formData.append("user", reduxData.currentUser);
-        formData.append("roomId", roomId);
-        formData.append("datetime", datetime);
-        formData.append("size", file.size);
-
-        const config = {
-            headers: {
-                "content-type": "multipart/form-data",
-            },
-        };
-
-        axios
-            .post(url, formData, config)
-            .then((res) => {
-                // console.log("send file; res:", res.data);
-                if (res.data === "done") sendFileData();
-            })
-            .catch((err) => sendFileData());
-        // console.log("!!!!!!!!!!", file.name, file.size, typeof file.size);
-    };
-    const send = (mobile: boolean, event?: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        let message = inputRef.current.value;
-        if (event && (event.key === "Enter" && event.shiftKey !== true && message.length > 0) || (mobile === true && message.length > 0)) {
-            socks.sendMessage(reduxData, roomId, message);
-            inputRef.current.value = "";
-        }
-    }
-
-    const reduxData = useSelector((state: RootState) => state.interfaces.value);
-
-    let { roomId, hashId } = useParams<{ roomId: string; hashId: string }>();
-
-    const inputRef = useRef<any>("");
-
-    return (
-        <>
-            <div id="chat-screen">
-                <MessagesDivs />
+                ))}
                 <div id="last-element"></div>
             </div>
             <div id="input">

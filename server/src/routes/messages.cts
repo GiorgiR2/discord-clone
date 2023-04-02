@@ -1,4 +1,3 @@
-// @ts-nocheck
 import express, { Request, Response, NextFunction, Router } from "express";
 import Message from "../models/message.model.cjs";
 
@@ -20,7 +19,7 @@ router.get("/", (req: Request, res: Response) => {
     .catch((err: string) => res.status(400).json(`Error: ${err}`));
 });
 
-router.post("/add/:category/:id", () => {});
+router.post("/add/:category/:id", () => { });
 
 router.delete("/:messageId", (req: Request, res: Response) => {
   const id = req.params.messageId;
@@ -55,28 +54,26 @@ router.patch("/:messageId", (req: Request, res: Response) => {
 });
 
 router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
+  const room = req.body.room;
   const realFileData = {
     isFile: true,
     username: req.body.user,
-    originalName: req.body.fileName,
-    path: req.file.path, // @ts-ignore
-    room: req.body.room,
+    originalName: req.body.fileName, // @ts-ignore
+    path: req.file.path,
+    room: room,
     roomId: req.body.roomId,
     datetime: req.body.datetime,
     size: req.body.size,
   };
 
-  // console.log("data:", req.body);
-  // console.log("path:", req.file.path);
-  await addToMongoose(realFileData);
-  await res.send("done");
+  const _id = await addToMongoose(realFileData);
+  await res.send({ status: "done", _id: _id });
   console.log("uploaded");
 });
 
 const handleD = async (req: Request, res: Response) => {
   const file: any = await Message.findById(req.params.id);
   await res.download(file.path, file.originalName);
-
   // file.downloadCount++;
   // await file.save();
 };

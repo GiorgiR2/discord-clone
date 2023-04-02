@@ -125,15 +125,16 @@ const main = (connectedUsers: connectedUsersT) => {
       // let datetime = data.datetime;
       // let roomId = data.roomId;
 
+      let _id = data._id;
       let room = data.room;
-      let size = data.size;
-      let filename = data.filename;
+      // let size = data.size;
+      // let filename = data.filename;
 
-      MessageModel.findOne({ size: size, originalName: filename }).then(
+      await MessageModel.findById(_id).then(
         (doc: any) => {
           socket.emit("M_S_O", doc);
           socket.in(room).emit("M_S_O", doc);
-          console.log("file sent:", doc._id, filename);
+          console.log("file sent:", doc._id, doc.originalName);
         }
       );
     });

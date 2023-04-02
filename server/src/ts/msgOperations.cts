@@ -8,7 +8,7 @@ import { addToMongooseDataI } from "../types/types.cjs";
 
 let num: number = 0;
 
-// find the maximum value
+// find the maximum number value (the newest message)
 MessageModel.find({})
 .sort({ number: -1 })
 .limit(1)

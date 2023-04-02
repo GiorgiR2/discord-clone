@@ -27,6 +27,7 @@ interface editMessageI {
 }
 
 interface fileI {
+    _id: string;
     authentication: string;
     user: string;
     datetime: string;

@@ -68,8 +68,9 @@ interface interfaceInitialStateValueI {
 
 interface sendFileDataI {
     reduxData: interfaceInitialStateValueI;
-    roomId: string;
-    datetime: string;
+    id: string,
+    // roomId: string;
+    // datetime: string;
     size: string;
     filename: string;
 }
