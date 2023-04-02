@@ -11,109 +11,108 @@
     overflow: hidden
     overflow-y: scroll
 
-    .messageDivs
-        .focus
-            background-color: lighten($bg-color, 20%)
+    .focus
+        background-color: lighten($bg-color, 20%)
 
-        .messageDiv
-            .message
-                display: flex
-                font-size: 14px
-                justify-content: space-between
-                height: fit-content
-                padding: 2px 0 1px 0
+    .messageDiv
+        .message
+            display: flex
+            font-size: 14px
+            justify-content: space-between
+            height: fit-content
+            padding: 2px 0 1px 0
 
-                &:hover,
-                &:active
-                    background-color: lighten($bg-color, 20%)
+            &:hover,
+            &:active
+                background-color: lighten($bg-color, 20%)
 
-                    .settings
-                        visibility: visible
-
-                img
-                    margin: 10px 10px 14px 8px
-                    width: 32px
-                    height: 32px
-
-                .main
-                    display: flex
-                    flex-direction: column
-                    width: calc(100% - 35px)
-                    height: fit-content
-
-                    .top
-                        display: flex
-                        justify-content: space-between
-                        height: 17px
-                        width: 100%//calc(100% - 45px)
-                        margin-bottom: 8px
-                        
-                        .author
-                            color: darken(#fff, 15%)
-                            width: fit-content
-
-                            span
-                                margin-left: 10px
-                                width: fit-content
-                                color: darken(#fff, 30%)
-                        
-                        .encryption
-                            padding-right: 6px
-                
-                    .message
-                        width: calc(100% - 45px)
-                        height: fit-content
-                        
-                        .fileDiv
-                            display: flex
-
-                            .imagePreview
-                                width: fit-content
-                                height: fit-content
-                                max-width: 90%
-
-
-                            .fileSVG
-                                height: 42px
-                                margin: 2px 0 0 0
-
-                            .name
-                                margin-left: 2px
-                                margin-top: 20px
-
-                    // div, p
-                    //   width: 100%
-                    //   word-break: break-word
-
-                    a
-                        cursor: pointer
-                        width: 100%
-                        word-break: break-word
-                    
                 .settings
-                    // background-color: green
-                    display: flex
-                    visibility: hidden
-                    width: fit-content
-                    height: 25px
-                    margin: 0 4px 0 0
-                    padding: 0 0 26px 0
-
-                    position: relative
-                    border: 1px solid #ecf0f1
-                    border-radius: 5px
-                    
-                    .dots
-                        cursor: pointer
-                        margin: 0
-                        padding: 0
-
-                        font-size: 1.2rem
-                        font-weight: bold
-                        margin: 0 8px 0 4px
-                
-                .visible
                     visibility: visible
+
+            img
+                margin: 10px 10px 14px 8px
+                width: 32px
+                height: 32px
+
+            .main
+                display: flex
+                flex-direction: column
+                width: calc(100% - 35px)
+                height: fit-content
+
+                .top
+                    display: flex
+                    justify-content: space-between
+                    height: 17px
+                    width: 100%//calc(100% - 45px)
+                    margin-bottom: 8px
+                    
+                    .author
+                        color: darken(#fff, 15%)
+                        width: fit-content
+
+                        span
+                            margin-left: 10px
+                            width: fit-content
+                            color: darken(#fff, 30%)
+                    
+                    .encryption
+                        padding-right: 6px
+            
+                .message
+                    width: calc(100% - 45px)
+                    height: fit-content
+                    
+                    .fileDiv
+                        display: flex
+
+                        .imagePreview
+                            width: fit-content
+                            height: fit-content
+                            max-width: 90%
+
+
+                        .fileSVG
+                            height: 42px
+                            margin: 2px 0 0 0
+
+                        .name
+                            margin-left: 2px
+                            margin-top: 20px
+
+                // div, p
+                //   width: 100%
+                //   word-break: break-word
+
+                a
+                    cursor: pointer
+                    width: 100%
+                    word-break: break-word
+                
+            .settings
+                // background-color: green
+                display: flex
+                visibility: hidden
+                width: fit-content
+                height: 25px
+                margin: 0 4px 0 0
+                padding: 0 0 26px 0
+
+                position: relative
+                border: 1px solid #ecf0f1
+                border-radius: 5px
+                
+                .dots
+                    cursor: pointer
+                    margin: 0
+                    padding: 0
+
+                    font-size: 1.2rem
+                    font-weight: bold
+                    margin: 0 8px 0 4px
+            
+            .visible
+                visibility: visible
 
         .emojis
             display: flex

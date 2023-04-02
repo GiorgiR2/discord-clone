@@ -38,6 +38,7 @@ MONGO_ADDRESS = mongodb+srv://username:password!@cluster0.bb4he.mongodb.net/myFi
 * screen sharing
 * show active users
 * add/edit/delete rooms
+* dragNdrop/change rooms' positions
 * hash based authentication
 * auto login (remember logged in users)
 

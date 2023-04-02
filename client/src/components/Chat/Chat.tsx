@@ -105,12 +105,7 @@ const Chat: React.FC = () => {
       <div id="top">
         <Panel side="left" />
         <h1 id="category"># {reduxData.currentRoom}</h1>
-        <h1
-          id="log_out"
-          onClick={() => {
-            logOut(history, dispatch);
-          }}
-        >
+        <h1 id="log_out" onClick={() => logOut(history, dispatch)}>
           Log out
         </h1>
         <Panel side="right" />
@@ -176,12 +171,11 @@ const Chat: React.FC = () => {
   let { roomId, hashId } = useParams<{ roomId: string; hashId: string }>();
   const history = useHistory();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // checkHashId(hashId, history);
     checkRoomId(dispatch, apiLink, roomId, hashId, history);
 
     getBasicData({ history, roomId, hashId, dispatch });
-    scrollToBottom();
   }, []);
 
   useEffect(() => {
