@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useOnClickOutside } from "../customHooks/useOnClickOutside";
 
 import { useParams, useHistory } from "react-router-dom";
@@ -100,21 +100,6 @@ const Chat: React.FC = () => {
     );
   };
 
-  const Center = () => (
-    <div className="messages">
-      <div id="top">
-        <Panel side="left" />
-        <h1 id="category"># {reduxData.currentRoom}</h1>
-        <h1 id="log_out" onClick={() => logOut(history, dispatch)}>
-          Log out
-        </h1>
-        <Panel side="right" />
-      </div>
-
-      {reduxData.voiceMode ? <VoiceFrame /> : <Messages />}
-    </div>
-  );
-
   const StatusBar = () => {
     const closeRightPanel = (): void => {
       dispatch(closeRight());
@@ -183,10 +168,6 @@ const Chat: React.FC = () => {
   }, [reduxData.currentUser]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [reduxData.messages, toggleRedux.toggleLeft, toggleRedux.toggleRight, toggleRedux.displayAdd, toggleRedux.displayEdit, toggleRedux.displaySettings]);
-
-  useEffect(() => {
     if (reduxData.voiceMode && reduxData.currentUser === "") {
       axios
         .post(`${apiLink}/api/users/usernameByHashId`, { hashId: hashId })
@@ -213,7 +194,21 @@ const Chat: React.FC = () => {
       {toggleRedux.displaySettings ? <PopupSettings /> : null}
 
       <Rooms />
-      <Center />
+
+      {/* center */}
+      <div className="messages">
+        <div id="top">
+          <Panel side="left" />
+          <h1 id="category"># {reduxData.currentRoom}</h1>
+          <h1 id="log_out" onClick={() => logOut(history, dispatch)}>
+            Log out
+          </h1>
+          <Panel side="right" />
+        </div>
+
+        {reduxData.voiceMode ? <VoiceFrame /> : <Messages />}
+      </div>
+
       <StatusBar />
 
       {toggleRedux.contextMenu.show ? (

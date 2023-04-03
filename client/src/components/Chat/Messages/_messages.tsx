@@ -92,12 +92,14 @@ const Messages = () => {
         let message = inputRef.current.value;
         if ((event && (event.key === "Enter" && event.shiftKey !== true && message.length > 0)) || (mobile === true && message.length > 0)) {
             socks.sendMessage(reduxData, roomId, message);
-            inputRef.current.value = "";
+            setTimeout(() => {
+                inputRef.current.value = "";
+            }, 10);
         }
     }
     const imageBool = (name: string): boolean => {
         //name = el.fileName
-        return name.substr(-4) === ".png" || name.substr(-4) === ".jpg";
+        return name.substr(-4) === ".png" || name.substr(-4) === ".jpg" || name.substr(-5) === ".jpeg";
     }
 
     const dispatch = useDispatch();

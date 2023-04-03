@@ -5,6 +5,7 @@ import packageJson from "../../package.json";
 
 import { setOnline, setOffline, addMessage, removeMessage, attachEmoji } from "../features/interfaces";
 import { messageI, statusI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateValueI } from "../types/types";
+import scrollToBottom from "../components/js/scrollToBottom";
 
 const main = (reduxData: any, dispatch: any) => {
   if (socket.disconnected){

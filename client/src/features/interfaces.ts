@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import scrollToBottom from "../components/js/scrollToBottom";
 import { attachEmojiRX, editMessageI, interfaceInitialStateValueI, messageI, modeI } from "../types/types";
 
 const initialStateValue: interfaceInitialStateValueI = {
@@ -80,10 +81,7 @@ export const userSlice = createSlice({
       action.payload.messageList.forEach((message: messageI) => {
         state.value.messages.push(message);
       });
-      // state.value.messages = [
-      //   ...state.value.messages,
-      //   ...action.payload.messageList,
-      // ];
+      scrollToBottom();
     },
     removeMessage: (state, action: modeI) => {
       // state.value.messages = state.value.messages.filter(
