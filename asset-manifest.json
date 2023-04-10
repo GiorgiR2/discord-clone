@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/discord-clone/static/css/main.888d25d0.css",
-    "main.js": "/discord-clone/static/js/main.be893716.js",
+    "main.css": "/discord-clone/static/css/main.77e0bfdd.css",
+    "main.js": "/discord-clone/static/js/main.4187debd.js",
     "static/media/settings.svg": "/discord-clone/static/media/settings.bd860e361531f92499d9d065620d0565.svg",
     "static/media/eye.svg": "/discord-clone/static/media/eye.250b58d5a8d53ce275f2515b5b202346.svg",
     "static/media/lock.svg": "/discord-clone/static/media/lock.c1606cdefe49a10498417d5b27380824.svg",
     "static/media/phone-call.svg": "/discord-clone/static/media/phone-call.c21797771360b1a98482f1019a3aaea2.svg",
     "static/media/fileIcon.svg": "/discord-clone/static/media/fileIcon.8cb6fa26896148aa800dbf5170c91334.svg",
     "static/media/camOff.svg": "/discord-clone/static/media/camOff.fabf79b1c3655fdab2d251bab95f6ee3.svg",
+    "static/media/logout.svg": "/discord-clone/static/media/logout.c310bc1ee963f9434be62df1a52fce7d.svg",
     "static/media/user.svg": "/discord-clone/static/media/user.2d6897c1765ae323aebe4b45b0033e7f.svg",
     "static/media/micOff.svg": "/discord-clone/static/media/micOff.8e0b929b4d64ad1916c0e4485c4034f2.svg",
     "static/media/micOn.svg": "/discord-clone/static/media/micOn.6552e10bd99cd5a9ae5f2ddbe9e378cd.svg",
@@ -24,11 +25,11 @@
     "static/media/fullscreen_black_24dp.svg": "/discord-clone/static/media/fullscreen_black_24dp.e21f85bf178e4ced41adbc72870f0165.svg",
     "static/media/bottom_arrow.svg": "/discord-clone/static/media/bottom_arrow.639c4c5bf302ca7f6b737ae8a617f17a.svg",
     "static/media/egress.svg": "/discord-clone/static/media/egress.27b5dbfeb3d0aa9d25649e01cb87f60e.svg",
-    "main.888d25d0.css.map": "/discord-clone/static/css/main.888d25d0.css.map",
-    "main.be893716.js.map": "/discord-clone/static/js/main.be893716.js.map"
+    "main.77e0bfdd.css.map": "/discord-clone/static/css/main.77e0bfdd.css.map",
+    "main.4187debd.js.map": "/discord-clone/static/js/main.4187debd.js.map"
   },
   "entrypoints": [
-    "static/css/main.888d25d0.css",
-    "static/js/main.be893716.js"
+    "static/css/main.77e0bfdd.css",
+    "static/js/main.4187debd.js"
   ]
 }
