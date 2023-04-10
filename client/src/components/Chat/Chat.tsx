@@ -46,6 +46,7 @@ import PopupSettings from "./popup/_settings";
 const egressSVG: string = require("../../assets/egress.svg").default;
 const settingsSVG: string = require("../../assets/chat/settings.svg").default;
 const bottomArrow: string = require("../../assets/chat/rooms/bottom_arrow.svg").default;
+const logout: string = require("../../assets/chat/logout.svg").default;
 
 const apiLink = packageJson.proxy;
 
@@ -124,14 +125,7 @@ const Chat: React.FC = () => {
             onClick={() => dispatch(toggleRight())}
           />
 
-          <h1
-            className="logOut"
-            onClick={() => {
-              logOut(history, dispatch);
-            }}
-          >
-            Log out
-          </h1>
+          <LogOut />
         </div>
         <h3 className="titleON">ACTIVE - {reduxData.online.length}</h3>
         {reduxData.online.map((el: string, n: number) => (
@@ -150,6 +144,17 @@ const Chat: React.FC = () => {
       </div>
     );
   };
+  const LogOut = () => {
+    return (
+      <img
+        className="log_out"
+        src={logout}
+        alt="exit"
+        onClick={() => logOut(history, dispatch)}
+        title="log out"
+      />
+    );
+  }
 
   const dispatch: AppDispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -203,9 +208,7 @@ const Chat: React.FC = () => {
         <div id="top">
           <Panel side="left" />
           <h1 id="category"># {reduxData.currentRoom}</h1>
-          <h1 id="log_out" onClick={() => logOut(history, dispatch)}>
-            Log out
-          </h1>
+          <LogOut />
           <Panel side="right" />
         </div>
 
