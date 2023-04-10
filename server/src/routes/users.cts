@@ -7,9 +7,11 @@ const upload = multer({ dest: "profile_pictures" });
 
 const router: Router = express.Router();
 
-import { registerUser, checkLogin, checkData, addIp, removeIp } from "../ts/userOperations.cjs";
+import { registerUser, checkLogin, checkData, addIp } from "../ts/userOperations.cjs";
 
 import usersModel from "../models/user.model.cjs";
+import deletedUserModel from "../models/deletedUser.model.cjs";
+import getIp from "../scripts/getIp.cjs";
 import saveModel from "../ts/saveModel.cjs";
 
 router.use(bp.json());
@@ -24,16 +26,14 @@ router.get("/", (req, res) => {
 router.post("/api/users/register", async (req: Request, res: Response) => {
   let username: string = req.body.username;
   let hashedPassword: string = req.body.hashedPassword;
-  let ip = (req.headers["x-forwarded-for"] || req.connection.remoteAddress)?.toString();
-  // let password0: string = req.body.password0;
-  // let password1: string = req.body.password1;
+  let ip = getIp(req);
 
   let response = await registerUser(username, hashedPassword, ip) //, password0, password1);
   res.send({ data: response });
 });
 
 router.post("/api/users/login", async (req: Request, res: Response) => {
-  let ip = (req.headers["x-forwarded-for"] || req.connection.remoteAddress)?.toString();
+  let ip = getIp(req);
 
   let username: string = await req.body.username;
   let password: string = await req.body.password;
@@ -50,7 +50,7 @@ router.post("/api/users/login", async (req: Request, res: Response) => {
 
 router.post("/api/users/status", async (req: Request, res: Response) => {
   return;
-  // const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  // const ip = getIp(req);
   // const data = await checkIp(ip); //  { status: "0" } or "1"(with other params)
   // res.send(data);
 });
@@ -100,6 +100,12 @@ router.delete("/api/users/deleteAccount", async (req: Request, res: Response) =>
   console.log("username:", req.body.username);
 
   usersModel.findOneAndDelete({ username: req.body.username }).exec();
+
+  let newDeletedUserModel = new deletedUserModel({
+    username: req.body.username,
+    ip: getIp(req),
+  });
+  saveModel(newDeletedUserModel);
 
   res.send({ status: "done" });
 });
