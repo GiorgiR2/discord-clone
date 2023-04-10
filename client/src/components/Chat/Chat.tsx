@@ -7,15 +7,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 
 import { clearAll, addUserName } from "../../features/interfaces";
-import {
-  togglePopupAdd,
-  toggleLeft,
-  toggleRight,
-  closeLeft,
-  closeRight,
-  toggleSettings,
-  toggleRooms,
-} from "../../features/toggle";
+import { togglePopupAdd, toggleLeft, toggleRight, closeLeft, closeRight, toggleSettings, toggleRooms } from "../../features/toggle";
 
 import { checkRoomId } from "../js/checkData";
 
@@ -85,7 +77,7 @@ const Chat: React.FC = () => {
         <div className="topl">
           <h1 className="user">{reduxData.currentUser}</h1>
           <img className="x" src={egressSVG} alt="exit" onClick={() => dispatch(toggleLeft())} />
-          <img src={settingsSVG} title="settings" alt="settings" className="settings" onClick={() => dispatch(toggleSettings())} />
+          <img src={settingsSVG} title="settings" alt="settings" id="settings" onClick={() => dispatch(toggleSettings())} />
         </div>
 
         {/* <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
@@ -144,17 +136,15 @@ const Chat: React.FC = () => {
       </div>
     );
   };
-  const LogOut = () => {
-    return (
-      <img
-        className="log_out"
-        src={logout}
-        alt="exit"
-        onClick={() => logOut(history, dispatch)}
-        title="log out"
-      />
-    );
-  }
+  const LogOut = () => (
+    <img
+      className="log_out"
+      src={logout}
+      alt="exit"
+      onClick={() => logOut(history, dispatch)}
+      title="log out"
+    />
+  )
 
   const dispatch: AppDispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -165,14 +155,21 @@ const Chat: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    // checkHashId(hashId, history);
     checkRoomId(dispatch, apiLink, roomId, hashId, history);
-
     getBasicData({ history, roomId, hashId, dispatch });
   }, []);
 
   useEffect(() => {
-    if (reduxData.currentUser !== "") socks.main(reduxData, dispatch);
+    if (reduxData.currentUser !== "") {
+      socks.main(reduxData, dispatch);
+    }
+    else {
+      setTimeout(() => {
+        if (reduxData.currentUser !== "") {
+          socks.main(reduxData, dispatch);
+        }
+      }, 1000);
+    }
   }, [reduxData.currentUser]);
 
   useEffect(() => {

@@ -1,19 +1,11 @@
 import axios from "axios";
 import { History } from "history";
 
+import { addUserName, setAuthentication, addRooms } from "../features/interfaces";
+
 import packageJson from "../../package.json";
 
-import {
-  addUserName,
-  setAuthentication,
-  addRooms,
-} from "../features/interfaces";
-
 const apiLink = packageJson.proxy;
-// const config = {
-//   "Access-Control-Allow-Origin": "*",
-//   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-// };
 
 interface getBasicDataI {
   history: History;
@@ -34,23 +26,18 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
       .post(`${apiLink}/api/users/hashId`, { hashId: hashId })
       .then((res) => {
         if (res.data.status === "success") {
-          // console.log("success");
           // if (frame !== "chat") history.push(`/chat/${roomId}/${hashId}`);
-          // else {
           let username = res.data.username;
           dispatch(setAuthentication(res.data.authentication));
           dispatch(addUserName({ username: username }));
           dispatch(addRooms({ rooms: res.data.categories }));
-          // }
         } else {
           // console.log("status:", res.data.status);
           localStorage.removeItem("hashId");
           history.push("");
         }
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => console.error(error));
   }
 };
 

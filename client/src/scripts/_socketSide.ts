@@ -41,6 +41,10 @@ const main = (reduxData: any, dispatch: any) => {
 
   socket.on("messagesData", (data: dataIMSG[]) => {
     // type msgT = Omit<messageI, "focusMode">;
+    if(reduxData.messages.length >= 1){
+      return;
+    }
+
     let msgList: messageI[] = data.map((el: dataIMSG) => {
       return {
         user: el.user,
