@@ -38,7 +38,6 @@ export const userSlice = createSlice({
     },
     toggleRooms: (state) => {
       state.value.toggleRooms = !state.value.toggleRooms;
-      console.log("togglin", state.value.toggleRooms);
     },
 
     setContextMenu: (state, action) => {

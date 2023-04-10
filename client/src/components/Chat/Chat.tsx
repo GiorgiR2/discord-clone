@@ -85,7 +85,7 @@ const Chat: React.FC = () => {
         <div className="topl">
           <h1 className="user">{reduxData.currentUser}</h1>
           <img className="x" src={egressSVG} alt="exit" onClick={() => dispatch(toggleLeft())} />
-          <img src={settingsSVG} alt="settings" className="settings" onClick={() => dispatch(toggleSettings())} />
+          <img src={settingsSVG} title="settings" alt="settings" className="settings" onClick={() => dispatch(toggleSettings())} />
         </div>
 
         {/* <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
@@ -96,7 +96,7 @@ const Chat: React.FC = () => {
             <img className={`arrow ${toggleRedux.toggleRooms ? "rotate" : ""}`} src={bottomArrow} alt="exit" onClick={() => dispatch(toggleLeft())} />
             <h4>CHANNELS</h4>
           </div>
-          <b onClick={() => dispatch(togglePopupAdd())}>+</b>
+          <b id="plus" title="add new room" onClick={() => dispatch(togglePopupAdd())}>+</b>
         </div>
 
         <RoomsJSX />

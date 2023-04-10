@@ -3,18 +3,18 @@
 svg
     cursor: pointer
 
+.log_out, .settings, #plus
+  &:hover,
+  &:active
+    cursor: pointer
+    filter: invert(71%) sepia(8%) saturate(371%) hue-rotate(135deg) brightness(90%) contrast(90%) !important
+    // filter: invert(76%) sepia(2%) saturate(509%) hue-rotate(161deg) brightness(102%) contrast(95%) !important
+
 .log_out
   height: 28px
   margin-top: 5px
   margin-right: 2px
-  filter: invert(100%) sepia(7%) saturate(7440%) hue-rotate(243deg) brightness(128%) contrast(99%)
-          
-  &:hover,
-  &:active
-    cursor: pointer
-    // color: darken(white, 15%)
-    filter: invert(71%) sepia(8%) saturate(371%) hue-rotate(135deg) brightness(90%) contrast(90%)
-    // filter: invert(99%) sepia(1%) saturate(5489%) hue-rotate(28deg) brightness(124%) contrast(88%)
+  filter: invert(100%) sepia(7%) saturate(7440%) hue-rotate(243deg) brightness(128%) contrast(99%)      
 
 .chat
     background-color: #2e4153
@@ -75,7 +75,6 @@ svg
             filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(82deg) brightness(110%) contrast(101%)
             margin-top: 3px
             margin-right: 8px
-            cursor: pointer
 
           .user
             margin-left: 15px
@@ -88,7 +87,7 @@ svg
           justify-content: space-between
           margin-top: -2px
 
-          .arrow, h4, b
+          h4, b
             cursor: pointer
           
           .rotate
@@ -103,9 +102,10 @@ svg
                 color: #bdc3c7
               
               .arrow
-                filter: invert(76%) sepia(2%) saturate(509%) hue-rotate(161deg) brightness(102%) contrast(95%)
+                filter: invert(71%) sepia(8%) saturate(371%) hue-rotate(135deg) brightness(90%) contrast(90%)
 
             .arrow
+              cursor: pointer
               margin-top: 10px
               height: 20px
 
