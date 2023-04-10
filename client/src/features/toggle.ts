@@ -9,6 +9,7 @@ const initalStateValues: toggleInitialStateValueI = {
   displayAdd: false,
   displaySettings: false,
   editingCatId: null,
+  toggleRooms: false,
 };
 
 export const userSlice = createSlice({
@@ -35,6 +36,11 @@ export const userSlice = createSlice({
     toggleRight: (state) => {
       state.value.toggleRight = !state.value.toggleRight;
     },
+    toggleRooms: (state) => {
+      state.value.toggleRooms = !state.value.toggleRooms;
+      console.log("togglin", state.value.toggleRooms);
+    },
+
     setContextMenu: (state, action) => {
       state.value.contextMenu = action.payload.contextMenu;
     },
@@ -54,6 +60,7 @@ export const {
   togglePopupEdit,
   togglePopupAdd,
   toggleSettings,
+  toggleRooms,
   addEditingCatId,
 
   toggleLeft,

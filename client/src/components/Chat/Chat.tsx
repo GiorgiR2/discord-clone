@@ -14,6 +14,7 @@ import {
   closeLeft,
   closeRight,
   toggleSettings,
+  toggleRooms,
 } from "../../features/toggle";
 
 import { checkRoomId } from "../js/checkData";
@@ -41,10 +42,10 @@ import { AppDispatch, RootState } from "../..";
 
 import { History } from "history";
 import PopupSettings from "./popup/_settings";
-import scrollToBottom from "../js/scrollToBottom";
 
 const egressSVG: string = require("../../assets/egress.svg").default;
 const settingsSVG: string = require("../../assets/chat/settings.svg").default;
+const bottomArrow: string = require("../../assets/chat/rooms/bottom_arrow.svg").default;
 
 const apiLink = packageJson.proxy;
 
@@ -77,8 +78,7 @@ const Chat: React.FC = () => {
 
     return (
       <div
-        className={`categories ${toggleRedux.toggleLeft === false ? "hidden" : ""
-          }`}
+        className={`categories ${toggleRedux.toggleLeft === false ? "hidden" : ""}`}
         ref={contextMenuLeftRef}
       >
         <div className="topl">
@@ -87,15 +87,18 @@ const Chat: React.FC = () => {
           <img src={settingsSVG} alt="settings" className="settings" onClick={() => dispatch(toggleSettings())} />
         </div>
 
-        <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
+        {/* <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
           add new room <b>+</b>
-        </h1>
+        </h1> */}
+        <div className="addRoom">
+          <div className="left" onClick={() => dispatch(toggleRooms())}>
+            <img className={`arrow ${toggleRedux.toggleRooms ? "rotate" : ""}`} src={bottomArrow} alt="exit" onClick={() => dispatch(toggleLeft())} />
+            <h4>CHANNELS</h4>
+          </div>
+          <b onClick={() => dispatch(togglePopupAdd())}>+</b>
+        </div>
 
-        <nav>
-          <ul id="ul-id">
-            <RoomsJSX />
-          </ul>
-        </nav>
+        <RoomsJSX />
       </div>
     );
   };

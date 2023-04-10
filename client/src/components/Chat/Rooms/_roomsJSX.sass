@@ -1,2 +1,59 @@
-
 @import '../../../styles/_variables'
+
+.hideRoom
+    display: none
+    // background-color: red !important
+    // color: green !important
+
+nav ul
+    list-style: none
+    padding-left: 6px
+
+    .activePlace
+        border-bottom: 3px solid #ecf0f1
+
+    li
+        font: 20px Lato, Arial, Sans-Serif
+        margin-top: .2em
+        margin-right: .3em
+        height: 30px
+        padding-left: .4em
+        padding-top: 3px
+        padding-bottom: 5px
+
+        display: flex
+        justify-content: space-between
+
+        div
+            display: flex
+
+            .speaker
+                height: 22px
+                  
+            .sharp
+                font-size: 1.2rem
+                margin-left: 4px
+                  
+            .name
+                position: relative
+                margin-left: 8px
+
+        .svgs
+            display: flex
+
+            img
+                opacity: 0
+                width: 25px
+                height: 25px
+                cursor: pointer
+
+    li:hover,
+    li:active
+        background-color: #95a5a6//#bdc3c7//#8f9397
+        border-radius: 5px
+
+        a
+            color: $fg-color
+
+        svg, img
+            opacity: 1

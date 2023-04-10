@@ -12,7 +12,7 @@ import { EditSVG, TrashSVG } from "../../../styles/SVGs/_SVGs";
 import { roomI } from "../../../types/types";
 import { RootState } from "../../..";
 
-import "./_roomsJSX"
+import "./_roomsJSX.sass";
 
 const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
 
@@ -47,6 +47,10 @@ const RoomsJSX = (): JSX.Element => {
       })
       .catch((err) => console.error(err));
   };
+  const redirectToRoom = (room: roomI) => {
+    history.push(`/chat/${room._id}/${hashId}`);
+    window.location.reload();
+  }
 
   const [index, setIndex] = useState<number>(-1);
 
@@ -55,37 +59,37 @@ const RoomsJSX = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
+  const toggleRedux = useSelector((state: RootState) => state.toggle.value);
 
-  return <>{
-    reduxData.rooms.map((room: roomI, n: number) => (
-      <li
-        className={`category ${index === n ? "activePlace" : ""}`}
-        key={n}
-        id={room._id}
-        draggable
-        onDragStart={(e) => onDragStart(e, room._id, n)}
-        onDragEnter={(e) => onDragEnter(e, n)}
-        onDragEnd={onDragEnd}
-        onDragOver={(e) => e.preventDefault()}
-      >
-        <div
-          className="hyperlink"
-          onClick={() => {
-            history.push(`/chat/${room._id}/${hashId}`);
-            window.location.reload();
-          }}
-        >
-          {room.voice ?
-            <img className="speaker" src={Speaker} alt="speaker" /> : <span className="sharp">#</span>} <span className="name">{room.name}</span>
-        </div>
-        <div className="svgs">
-          <EditSVG id={room._id} />{" "}
-          {/* set redux editingCatId as id */}
-          <TrashSVG id={room._id} />
-        </div>
-      </li>
-    ))
-  }</>;
+  return (
+    <nav>
+      <ul>
+        {
+          reduxData.rooms.map((room: roomI, n: number) => (
+            <li
+              className={`category ${index === n ? "activePlace" : ""} ${toggleRedux.toggleRooms && room.name !== reduxData.currentRoom ? "hideRoom" : ""}`}
+              key={n}
+              id={room._id}
+              draggable
+              onDragStart={(e) => onDragStart(e, room._id, n)}
+              onDragEnter={(e) => onDragEnter(e, n)}
+              onDragEnd={onDragEnd}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              <div className="hyperlink" onClick={() => redirectToRoom(room)}>
+                {room.voice ?
+                  <img className="speaker" src={Speaker} alt="speaker" /> : <span className="sharp">#</span>} <span className="name">{room.name}</span>
+              </div>
+              <div className="svgs">
+                <EditSVG id={room._id} />{" "}
+                {/* set redux editingCatId as id */}
+                <TrashSVG id={room._id} />
+              </div>
+            </li>
+          ))
+        }
+      </ul></nav>
+  );
 };
 
 export default RoomsJSX;

@@ -48,6 +48,7 @@ interface toggleInitialStateValueI {
     displayAdd: boolean;
     displaySettings: boolean;
     editingCatId: string | null;
+    toggleRooms: boolean;
 }
 
 interface interfaceInitialStateValueI {

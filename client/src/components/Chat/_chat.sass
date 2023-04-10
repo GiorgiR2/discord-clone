@@ -61,12 +61,53 @@ svg
             height: 24px
             filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(82deg) brightness(110%) contrast(101%)
             margin-top: 3px
-            margin-right: 15px
+            margin-right: 8px
             cursor: pointer
 
           .user
             margin-left: 15px
             font-size: 1.2em
+
+        .addRoom
+          width: 100%
+          height: 30px
+          display: flex
+          justify-content: space-between
+          margin-top: -2px
+
+          .arrow, h4, b
+            cursor: pointer
+          
+          .rotate
+            transform: rotate(-90deg)
+
+          .left
+            display: flex
+
+            &:hover,
+            &:active
+              h4
+                color: #bdc3c7
+              
+              .arrow
+                filter: invert(76%) sepia(2%) saturate(509%) hue-rotate(161deg) brightness(102%) contrast(95%)
+
+            .arrow
+              margin-top: 10px
+              height: 20px
+
+            h4
+              font-size: 0.8em
+              margin-top: 12px
+          
+          b
+            margin-top: 8px
+            margin-right: 10px
+            font-size: 1.5em
+
+            &:hover,
+            &:active
+              color: #bdc3c7
 
         .plus
           margin: 7px 7px 0 7px
@@ -91,59 +132,6 @@ svg
             cursor: pointer
             color: #000000
             transition-duration: .2s
-
-        nav ul
-            list-style: none
-            padding-left: 6px
-
-            .activePlace
-              border-bottom: 3px solid #ecf0f1
-
-            li
-                font: 20px Lato, Arial, Sans-Serif
-                margin-top: .2em
-                margin-right: .3em
-                height: 30px
-                padding-left: .4em
-                padding-top: 3px
-                padding-bottom: 5px
-
-                display: flex
-                justify-content: space-between
-
-                div
-                  display: flex
-
-                  .speaker
-                    height: 22px
-                  
-                  .sharp
-                    font-size: 1.2rem
-                    margin-left: 4px
-                  
-                  .name
-                    position: relative
-                    margin-left: 8px
-
-                .svgs
-                  display: flex
-
-                  img
-                    opacity: 0
-                    width: 25px
-                    height: 25px
-                    cursor: pointer
-
-            li:hover,
-            li:active
-                background-color: #95a5a6//#bdc3c7//#8f9397
-                border-radius: 5px
-
-                a
-                  color: $fg-color
-
-                svg, img
-                  opacity: 1
 
     .messages
       display: flex
