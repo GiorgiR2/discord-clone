@@ -16,6 +16,8 @@ const initialStateValue: interfaceInitialStateValueI = {
   voiceMode: false,
   frequentlyUsedEmojis: ["👍", "😀", "😘", "😍", "😆", "😜", "😅", "😂", "😱"],
   otherEmojis: ["😁", "🤣", "🙂", "🙃", "😉", "🥲", "🤑", "🥵", "🥶", "😎", "🤓", "😨", "💩", "👎", "✊"],
+  focusMessageId: null,
+  reactedBy: [],
 };
 
 export const userSlice = createSlice({
@@ -200,6 +202,15 @@ export const userSlice = createSlice({
       }
       state.value.rooms = newRooms1;
     },
+
+    setReactedBy: (state, action) => {
+      state.value.focusMessageId = action.payload.messageId;
+      state.value.reactedBy = action.payload.users;
+    },
+    cleanReactedBy: (state) => {
+      state.value.focusMessageId = null;
+      state.value.reactedBy = [];
+    },
   },
 });
 
@@ -231,6 +242,9 @@ export const {
   rememberDraggingRoom,
   // changePosition,
   modifyPosition,
+
+  setReactedBy,
+  cleanReactedBy,
 
   clearAll,
 } = userSlice.actions;
