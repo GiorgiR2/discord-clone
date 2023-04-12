@@ -65,6 +65,8 @@ interface interfaceInitialStateValueI {
     voiceMode: boolean;
     frequentlyUsedEmojis: emojiT[];
     otherEmojis: emojiT[];
+    focusMessageId: string | null;
+    reactedBy: string[];
 }
 
 interface sendFileDataI {
