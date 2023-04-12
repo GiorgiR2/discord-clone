@@ -114,30 +114,45 @@
             .visible
                 visibility: visible
 
-        .emojis
-            display: flex
+        .emojisDiv
+            // display: flex
             position: relative
             left: 50px
             top: -8px
 
-            background-color: #ecf0f1
-            width: fit-content
-            border-radius: 5px
-            margin: 0
-            padding: 2px 5px 2px 5px
+            .hidden
+                display: none
 
-            .emoji
+            .emojis,
+            .reactedBy
+                border-radius: 5px
+                margin: 0
+                width: fit-content
+
+            .emojis
                 display: flex
-                margin-right: 5px
+                background-color: #ecf0f1
+                padding: 2px 5px 2px 5px
+
+                .emoji
+                    display: flex
+                    margin-right: 5px
+
+                    span
+                        font-size: 14px
+
+                    .smile
+                        //pass
+
+                    .num
+                        color: #000
+            
+            .reactedBy
+                background-color: rgba(0, 0, 0, 50%)
+                padding: 4px 7px 4px 7px
 
                 span
-                    font-size: 14px
-
-                .smile
-                    //pass
-
-                .num
-                    color: #000
+                    font-size: 0.7rem
         
         .hidden
             display: none

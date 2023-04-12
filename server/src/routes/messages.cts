@@ -79,5 +79,22 @@ const handleD = async (req: Request, res: Response) => {
 };
 router.route("/file/:id").get(handleD).post(handleD);
 
+router.route("/emojis/:messageId/:emoji").get((req: Request, res: Response) => {
+  const messageId = req.params.messageId;
+  const emoji = req.params.emoji;
+  // console.log(`received req; id: ${messageId}; emoji: ${emoji}`);
+
+  Message.findById(messageId)
+  .then(message => {
+    let emojis = message?.emojis;
+    emojis?.forEach(el => {
+      if (el.emoji == emoji){
+        res.send({ users: el.users });
+        // console.log("response sent", el.users);
+      }
+    })
+  });
+});
+
 module.exports = router;
 // export default router;

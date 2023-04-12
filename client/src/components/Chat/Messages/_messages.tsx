@@ -7,7 +7,7 @@ import FormData from "form-data";
 import { messageI } from "../../../types/types";
 import { RootState } from "../../..";
 
-import { editMessage, enterFocusMode, exitEditMode, exitFocusMode } from "../../../features/interfaces";
+import { cleanReactedBy, editMessage, enterFocusMode, exitEditMode, exitFocusMode } from "../../../features/interfaces";
 import { setContextMenu } from "../../../features/toggle";
 
 import EmojiDiv from "./_emojiDiv";
@@ -21,6 +21,7 @@ import packageJson from "../../../../package.json";
 
 import "./_messages.sass";
 import scrollToBottom from "../../js/scrollToBottom";
+import getNames from "./_getNames";
 
 const sendSVG: string = require("../../../assets/send-24px.svg").default;
 const fileSVG: string = require("../../../assets/fileIcon.svg").default;
@@ -168,13 +169,23 @@ const Messages = () => {
                             </div>
                         </div>
 
-                        <div className={`emojis ${el.emojis.length === 0 ? "hidden" : null}`}>
-                            {el.emojis.map(emojiData => (
-                                <div className="emoji">
-                                    <span className="smile">{emojiData.emoji}</span>
-                                    <span className="num">{emojiData.num}</span>
-                                </div>
-                            ))}
+                        <div className={`emojisDiv ${el.emojis.length === 0 ? "hidden" : null}`}>
+                            <div className="emojis">
+                                {el.emojis.map(emojiData => (
+                                    <div className="emoji" onMouseOver={() => getNames(dispatch, emojiData.emoji, el._id)} onMouseLeave={() => dispatch(cleanReactedBy())}>
+                                        <span className="smile">{emojiData.emoji}</span>
+                                        <span className="num">{emojiData.num}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className={`reactedBy ${reduxData.focusMessageId === el._id ? "" : "hidden"}`}>
+                                {reduxData.reactedBy.map(user => (
+                                    <>
+                                    <span>{user}</span>
+                                    <br />
+                                    </>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 ))}
