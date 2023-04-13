@@ -17,7 +17,7 @@ const getNames = (dispatch: any, emoji: emojiT, _messageId: string): void => {
     
     setTimeout(() => {
         dispatch(setReactedBy({ messageId: null, users: [] }));
-    }, 1500);
+    }, 2000);
 }
 
 export default getNames;
