@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/discord-clone/static/css/main.c831de32.css",
+    "main.css": "/discord-clone/static/css/main.046f7330.css",
     "main.js": "/discord-clone/static/js/main.46cc260f.js",
     "static/media/settings.svg": "/discord-clone/static/media/settings.4c48a697a88efd608145a62c4003014f.svg",
     "static/media/eye.svg": "/discord-clone/static/media/eye.250b58d5a8d53ce275f2515b5b202346.svg",
@@ -25,11 +25,11 @@
     "static/media/fullscreen_black_24dp.svg": "/discord-clone/static/media/fullscreen_black_24dp.e21f85bf178e4ced41adbc72870f0165.svg",
     "static/media/bottom_arrow.svg": "/discord-clone/static/media/bottom_arrow.639c4c5bf302ca7f6b737ae8a617f17a.svg",
     "static/media/egress.svg": "/discord-clone/static/media/egress.27b5dbfeb3d0aa9d25649e01cb87f60e.svg",
-    "main.c831de32.css.map": "/discord-clone/static/css/main.c831de32.css.map",
+    "main.046f7330.css.map": "/discord-clone/static/css/main.046f7330.css.map",
     "main.46cc260f.js.map": "/discord-clone/static/js/main.46cc260f.js.map"
   },
   "entrypoints": [
-    "static/css/main.c831de32.css",
+    "static/css/main.046f7330.css",
     "static/js/main.46cc260f.js"
   ]
 }
