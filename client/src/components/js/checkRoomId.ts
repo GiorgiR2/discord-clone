@@ -1,9 +1,4 @@
-import {
-  setVoiceMode,
-  setRoomName,
-  setRoomId,
-} from "../../features/interfaces";
-
+import { setVoiceMode, setRoomName, setRoomId } from "../../features/interfaces";
 import axios from "axios";
 
 const checkRoomId = (dispatch: any, apiLink: string, roomId: string, hashId: string, history: any) => {

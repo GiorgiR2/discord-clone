@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearAll, addUserName } from "../../features/interfaces";
 import { togglePopupAdd, toggleLeft, toggleRight, closeLeft, closeRight, toggleSettings, toggleRooms } from "../../features/toggle";
 
-import { checkRoomId } from "../js/checkData";
+import { checkRoomId } from "../js/checkRoomId";
 
 import Panel from "./sidePanel/sidePanel";
 import DeleteDiv from "./deleteDiv/deleteDiv";
@@ -145,6 +145,16 @@ const Chat: React.FC = () => {
       title="log out"
     />
   )
+  const loadMessages = () => {
+    setTimeout(() => {
+      if (reduxData.currentUser !== "" && reduxData.currentRoom !== "") {
+        socks.main(reduxData, dispatch);
+      }
+      else {
+        loadMessages();
+      }
+    }, 500);
+  }
 
   const dispatch: AppDispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -157,19 +167,11 @@ const Chat: React.FC = () => {
   useEffect(() => {
     checkRoomId(dispatch, apiLink, roomId, hashId, history);
     getBasicData({ history, roomId, hashId, dispatch });
+
   }, []);
 
   useEffect(() => {
-    if (reduxData.currentUser !== "") {
-      socks.main(reduxData, dispatch);
-    }
-    else {
-      setTimeout(() => {
-        if (reduxData.currentUser !== "") {
-          socks.main(reduxData, dispatch);
-        }
-      }, 1000);
-    }
+    loadMessages();
   }, [reduxData.currentUser]);
 
   useEffect(() => {
@@ -194,9 +196,9 @@ const Chat: React.FC = () => {
 
   return (
     <div className="chat">
-      {toggleRedux.displayEdit ? <PopupEditRoom /> : null}
-      {toggleRedux.displayAdd ? <PopupAddRoom /> : null}
-      {toggleRedux.displaySettings ? <PopupSettings /> : null}
+      {toggleRedux.displayEdit && <PopupEditRoom />}
+      {toggleRedux.displayAdd && <PopupAddRoom />}
+      {toggleRedux.displaySettings && <PopupSettings />}
 
       <Rooms />
 
@@ -214,13 +216,13 @@ const Chat: React.FC = () => {
 
       <StatusBar />
 
-      {toggleRedux.contextMenu.show ? (
+      {toggleRedux.contextMenu.show &&
         <DeleteDiv
           x={toggleRedux.contextMenu.x}
           y={toggleRedux.contextMenu.y}
           id={toggleRedux.contextMenu.id}
         />
-      ) : null}
+      }
     </div>
   );
 };
