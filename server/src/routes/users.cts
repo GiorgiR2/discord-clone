@@ -24,23 +24,21 @@ router.get("/", (req, res) => {
 });
 
 router.post("/api/users/register", async (req: Request, res: Response) => {
-  let username: string = req.body.username;
-  let hashedPassword: string = req.body.hashedPassword;
-  let ip = getIp(req);
+  const { username, hashedPassword } = req.body;
+  const ip = getIp(req);
 
   let response = await registerUser(username, hashedPassword, ip) //, password0, password1);
   res.send({ data: response });
 });
 
 router.post("/api/users/login", async (req: Request, res: Response) => {
-  let ip = getIp(req);
+  const ip = getIp(req);
 
-  let username: string = await req.body.username;
-  let password: string = await req.body.password;
+  const { username, password } = await req.body;
 
   let data = await checkLogin(username, password);
 
-  if (data.status === "done") {
+  if (data.success) {
     await addIp(username, ip);
     await res.send(data);
   } else {
@@ -48,22 +46,11 @@ router.post("/api/users/login", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/api/users/status", async (req: Request, res: Response) => {
-  return;
-  // const ip = getIp(req);
-  // const data = await checkIp(ip); //  { status: "0" } or "1"(with other params)
-  // res.send(data);
-});
-
-router.post("/api/users/hashId", async (req: Request, res: Response) => {
+router.get("/api/users/:hashId", async (req: Request, res: Response) => {
   try {
-    let name = await usersModel
-      .find({
-        hashId: req.body.hashId,
-      })
-      .exec();
+    const { hashId } = req.params;
 
-    const data = await checkData(req.body.hashId);
+    const data = await checkData(hashId);
     await res.send(data);
     // console.log("user hash successfully authenticated:", data, req.body.hash);
   } catch {
@@ -71,20 +58,19 @@ router.post("/api/users/hashId", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/api/users/usernameByHashId", async (req: Request, res: Response) => {
+router.get("/api/users/usernameByHashId/:hashId", async (req: Request, res: Response) => {
   // console.log("/api/users/usernameByHashId:", req.body.hashId);
-  let user = await usersModel.find({ hashId: req.body.hashId }).exec();
+  const { hashId } = req.params;
+  let user = await usersModel.find({ hashId }).exec();
   console.log("sent!!!!!!!!", user[0].username);
   await res.send({ username: user[0].username });
 });
 
 router.post("/api/users/changePassword", async (req: Request, res: Response) => {
-  let username = req.body.username;
-  let oldPassword = req.body.oldPassword;
-  let newPassword = req.body.newPassword;
+  const { username, oldPassword, newPassword } = req.body;
 
   const filter = { username: username };
-  let user = await usersModel.findOne(filter);
+  const user = await usersModel.findOne(filter);
   if (user?.password === oldPassword && user !== null) {
     user.password = newPassword;
     res.send({ status: "done" });
@@ -96,13 +82,15 @@ router.post("/api/users/changePassword", async (req: Request, res: Response) => 
 });
 
 router.delete("/api/users/deleteAccount", async (req: Request, res: Response) => {
-  console.log("deleting account:", req.headers.Authorization);
-  console.log("username:", req.body.username);
+  const Authorization = req.headers.Authorization;
+  const { username } = req.body;
+  console.log("deleting account:", Authorization);
+  console.log("username:", username);
 
-  usersModel.findOneAndDelete({ username: req.body.username }).exec();
+  usersModel.findOneAndDelete({ username }).exec();
 
   let newDeletedUserModel = new deletedUserModel({
-    username: req.body.username,
+    username,
     ip: getIp(req),
   });
   saveModel(newDeletedUserModel);
@@ -128,8 +116,9 @@ router.post("/api/users/addProfilePicture", upload.single("image"), async (req: 
   await res.send({ status: "done" });
 });
 
-router.get("/api/users/checkImageAvailability/:userName", (req: Request, res: Response) => {
-  usersModel.findOne({ username: req.params.userName })
+router.get("/api/users/checkImageAvailability/:username", (req: Request, res: Response) => {
+  const { username } = req.params;
+  usersModel.findOne({ username })
     .then(user => {
       if (user?.imageDir !== null) {
         console.log("exist", user?.imageDir);
@@ -143,10 +132,11 @@ router.get("/api/users/checkImageAvailability/:userName", (req: Request, res: Re
 });
 
 const handleDownload = async (req: Request, res: Response) => {
-  const user: any = await usersModel.findOne({ username: req.params.userName });
+  const { username } = req.params;
+  const user: any = await usersModel.findOne({ username });
   await res.download(user.imageDir, "profileImage.png");
 };
-router.route("/api/users/profilePicture/:userName").get(handleDownload).post(handleDownload);
+router.route("/api/users/profilePicture/:username").get(handleDownload).post(handleDownload);
 
 module.exports = router;
 // export default router;

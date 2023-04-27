@@ -3,7 +3,7 @@ import saveModel from "./saveModel.cjs";
 
 import mongoose from "mongoose";
 
-import { voiceI, loadCatsI } from "../types/types.cjs";
+import { voiceI, loadRoomsI } from "../types/types.cjs";
 
 // const addCats = (name: string, voiceBool: boolean): void => {
 //   let position = RoomsModel.findAll().length + 1;
@@ -18,7 +18,7 @@ import { voiceI, loadCatsI } from "../types/types.cjs";
 //   saveModel(newCat);
 // };
 
-const loadCats = async (): Promise<loadCatsI[]> => {
+const loadRooms = async (): Promise<loadRoomsI[]> => {
   // addCats(`room 1`, 1);
   // addCats(`room 2`, 2);
   // addCats(`room 3`, 3);
@@ -30,7 +30,7 @@ const loadCats = async (): Promise<loadCatsI[]> => {
   // addCats(`voice 2`, 9);
   // addCats(`voice 3`, 10);
 
-  let rooms: Promise<loadCatsI[]> = RoomsModel.find().sort({ position: 1 }).exec();
+  let rooms: Promise<loadRoomsI[]> = RoomsModel.find().sort({ position: 1 }).exec();
   return rooms;
 };
 
@@ -48,8 +48,4 @@ const getVoiceRooms = async (): Promise<voiceI> => {
   return voices;
 };
 
-// module.exports = {
-//   loadCats,
-//   getVoiceRooms,
-// };
-export { loadCats, getVoiceRooms };
+export { loadRooms, getVoiceRooms };

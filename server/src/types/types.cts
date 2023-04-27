@@ -57,29 +57,22 @@ interface messageI {
   edited: boolean;
 }
 
-interface loadCatsI {
+interface loadRoomsI {
   _id: string;
   name?: string;
   position?: number;
   voice?: boolean;
 }
 
-interface checkIpI {
-  status: "0" | "1";
-  username?: string;
-  categories?: loadCatsI[];
-  authentication?: string;
-}
-
 interface checkDataI {
-  status: "0" | "success";
+  success: boolean;
   username?: string;
-  categories?: any;
+  rooms?: loadRoomsI[];
   authentication?: string;
 }
 
 interface checkLoginI {
-  status: "done" | "try again";
+  success: boolean;
   roomId?: string;
   hashId?: string | undefined;
 }
@@ -94,4 +87,4 @@ interface popOutI {
   username: string
 };
 
-export { connectedUsersT, voiceI, usersInVoiceI, addToMongooseDataI, roomI, messageI, loadCatsI, checkIpI, checkDataI, checkLoginI, popOutI };
+export { connectedUsersT, voiceI, usersInVoiceI, addToMongooseDataI, roomI, messageI, loadRoomsI, checkDataI, checkLoginI, popOutI };

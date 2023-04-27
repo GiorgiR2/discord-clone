@@ -32,8 +32,7 @@ router.post("/api/roomId", async (req: Request, res: Response) => {
 });
 
 router.post("/api/editCategory", async (req: Request, res: Response) => {
-  const catId = req.body.catId;
-  const newCatName = req.body.newCatName;
+  const { catId, newCatName } = req.body;
 
   // console.log("catId:", catId);
   // console.log("newCatName:", newCatName);
@@ -74,9 +73,7 @@ router.post("/api/addCategory", async (req: Request, res: Response) => {
 });
 
 router.post("/api/changeRoomPosition", async (req: Request, res: Response) => {
-  let roomId = req.body.roomId;
-  let draggingRoomIndex = req.body.draggingRoomIndex;
-  let finalIndex = req.body.finalIndex;
+  const { roomId, draggingRoomIndex, finalIndex } = req.body;
 
   if (finalIndex === draggingRoomIndex) {
     return;

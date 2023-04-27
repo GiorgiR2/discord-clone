@@ -23,14 +23,14 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
   } else if (hashId !== undefined) {
     console.log("hashId:", hashId);
     axios
-      .post(`${apiLink}/api/users/hashId`, { hashId: hashId })
+      .get(`${apiLink}/api/users/${hashId}`)
       .then((res) => {
-        if (res.data.status === "success") {
+        if (res.data.success) {
           // if (frame !== "chat") history.push(`/chat/${roomId}/${hashId}`);
-          let username = res.data.username;
-          dispatch(setAuthentication(res.data.authentication));
-          dispatch(addUserName({ username: username }));
-          dispatch(addRooms({ rooms: res.data.categories }));
+          const { username, authentication, rooms } = res.data;
+          dispatch(setAuthentication(authentication));
+          dispatch(addUserName({ username }));
+          dispatch(addRooms({ rooms }));
         } else {
           // console.log("status:", res.data.status);
           localStorage.removeItem("hashId");

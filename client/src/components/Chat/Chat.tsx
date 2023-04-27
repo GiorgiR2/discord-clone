@@ -165,9 +165,9 @@ const Chat: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
+    document.title = "chat";
     checkRoomId(dispatch, apiLink, roomId, hashId, history);
     getBasicData({ history, roomId, hashId, dispatch });
-
   }, []);
 
   useEffect(() => {
@@ -177,7 +177,7 @@ const Chat: React.FC = () => {
   useEffect(() => {
     if (reduxData.voiceMode && reduxData.currentUser === "") {
       axios
-        .post(`${apiLink}/api/users/usernameByHashId`, { hashId: hashId })
+        .get(`${apiLink}/api/users/usernameByHashId/${hashId}`)
         .then((res) => {
           // console.log("res.data.username:", res.data.username);
           dispatch(addUserName({ username: res.data.username }));

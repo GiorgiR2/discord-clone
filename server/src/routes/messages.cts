@@ -19,12 +19,13 @@ router.get("/", (req: Request, res: Response) => {
     .catch((err: string) => res.status(400).json(`Error: ${err}`));
 });
 
-router.post("/add/:category/:id", () => { });
+// router.post("/add/:category/:id", () => { });
 
 router.delete("/:messageId", (req: Request, res: Response) => {
-  const id = req.params.messageId;
+  const { messageId } = req.params;
+
   Message.remove({
-    _id: id,
+    _id: messageId,
   })
     .exec()
     .then((result: any) => res.status(200).json(result))
@@ -37,12 +38,11 @@ router.delete("/:messageId", (req: Request, res: Response) => {
 });
 
 router.patch("/:messageId", (req: Request, res: Response) => {
-  const id = req.params.messageId;
-  const message = req.body.message;
+  const { messageId, message } = req.params;
 
   Message.update(
     {
-      _id: id,
+      _id: messageId,
     },
     {
       $set: {

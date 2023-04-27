@@ -1,10 +1,7 @@
 import { useEffect } from "react";
 
 // This hook is taken out of internet
-const useOnClickOutside = (
-  ref: React.RefObject<HTMLDivElement>,
-  handler: (evnet: any) => void
-) => {
+const useOnClickOutside = (ref: React.RefObject<HTMLDivElement>, handler: (evnet: any) => void) => {
   useEffect(
     () => {
       const listener = (event: any) => {

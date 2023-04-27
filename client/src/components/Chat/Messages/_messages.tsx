@@ -102,6 +102,13 @@ const Messages = () => {
         //name = el.fileName
         return name.substr(-4) === ".png" || name.substr(-4) === ".jpg" || name.substr(-5) === ".jpeg";
     }
+    const checkPosition = (event: React.UIEvent<HTMLDivElement, UIEvent>): void => {
+        const chatDivPosition = document.querySelectorAll("#chat-screen")[0].scrollTop;
+        //console.log("scroll position:", chatDivPosition);
+        if(chatDivPosition === 0){
+            console.log("shit load more messages");
+        }
+    }
 
     const dispatch = useDispatch();
     const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -112,7 +119,7 @@ const Messages = () => {
 
     return (
         <>
-            <div id="chat-screen">
+            <div id="chat-screen" onScroll={(event) => checkPosition(event)}>
                 {reduxData.messages.map((el: messageI, messageN: number) => (
                     <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={messageN}>
                         <div

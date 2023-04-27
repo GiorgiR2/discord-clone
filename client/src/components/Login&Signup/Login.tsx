@@ -36,13 +36,14 @@ const Login = () => {
     axios
       .post(`${apiLink}/api/users/login`, data, config)
       .then((res) => {
-        if (res.data.status === "done") {
+        if (res.data.success) {
+          const { hashId, roomId } = res.data;
           if (remember === true) {
-            rememberUser(res.data.hashId);
+            rememberUser(hashId);
           }
 
-          console.log("data:", res.data.roomId, res.data.hashId);
-          history.push(`/chat/${res.data.roomId}/${res.data.hashId}`); // /?id=${res.data.data}
+          console.log("data:", roomId, hashId);
+          history.push(`/chat/${roomId}/${hashId}`); // /?id=${res.data.data}
           window.location.reload();
         } else {
           alert(res.data.status);
@@ -50,8 +51,6 @@ const Login = () => {
       })
       .catch((err) => console.error("error...", err));
   };
-
-  document.title = "login section";
 
   // const username = useRef<any>(null);
   // const password = useRef<any>(null);
@@ -62,6 +61,7 @@ const Login = () => {
   const [remember, setRemember] = useState(false);
 
   useEffect(() => {
+    document.title = "login";
     getBasicData({ history });
   }, []);
 

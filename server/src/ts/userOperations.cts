@@ -1,13 +1,13 @@
 import UserModel from "../models/user.model.cjs";
 
-import { loadCats } from "../ts/catOperations.cjs";
+import { loadRooms } from "../ts/catOperations.cjs";
 import saveModel from "./saveModel.cjs";
 
 import mongoose from "mongoose";
 
 var sha1 = require("sha1");
 
-import { connectedUsersT, checkIpI, checkDataI, checkLoginI } from "../types/types.cjs";
+import { connectedUsersT, checkDataI, checkLoginI } from "../types/types.cjs";
 
 // const checkUser = (username: string) => {
 //   let user = UserModel.find({
@@ -58,68 +58,35 @@ const addIp = async (username: string, ip: string | undefined): Promise<void> =>
     }
   )
     .exec()
-    .then((_: any) => console.log("ip added..."))
-    .catch((err: any) => console.error(err));
-};
-
-const removeIp = async (ip: string | undefined): Promise<string> => {
-  await UserModel.updateOne(
-    {
-      ip: ip,
-    },
-    {
-      $set: {
-        ip: "",
-      },
-    }
-  );
-  return "done";
-};
-
-const checkIp = async (ip: string): Promise<checkIpI> => {
-  console.log("checking ip...", ip);
-  const doc = await UserModel.find({
-    ip: ip,
-  }).exec();
-
-  if (doc.length !== 0) {
-    let cats = await loadCats();
-
-    return {
-      status: "1",
-      username: doc[0].username,
-      categories: cats,
-      authentication: doc[0]._id.toString(),
-    };
-  } else return { status: "0" };
+    .then(_ => console.log("ip added..."))
+    .catch(err => console.error(err));
 };
 
 const checkData = async (hashId: string): Promise<checkDataI> => {
-  // console.log("checking id...", hashId);
   const doc = await UserModel.find({
     hashId: hashId,
   }).exec();
 
   if (doc.length !== 0) {
-    let cats = await loadCats();
+    const rooms = await loadRooms();
 
     return {
-      status: "success",
+      success: true,
       username: doc[0].username,
-      categories: cats,
+      rooms,
       authentication: doc[0]._id.toString(),
     };
-  } else return { status: "0" };
+  } else return {
+      success: false
+  };
 };
 
 const checkLogin = async (username: string, password: string): Promise<checkLoginI> => {
-  let doc = await UserModel.find({
-    username: username,
-  }).exec();
+  let doc = await UserModel.find({ username }).exec();
 
   // console.log("\n checking \n");
   if (doc[0] == undefined) {
-    return { status: "try again" };
+    return { success: false };
   } else {
     let pswrd = String(doc[0].password);
     //console.log(pswrd === password);
@@ -127,12 +94,12 @@ const checkLogin = async (username: string, password: string): Promise<checkLogi
       let hash = doc[0].hashId;
       // console.log("hashId:", doc[0]);
       return {
-        status: "done",
+        success: true,
         roomId: "61ed960432479c682956838e",
         hashId: hash,
       };
     } else {
-      return { status: "try again" };
+      return { success: false };
     }
   }
 };
@@ -154,14 +121,4 @@ const usersStatus = async (): Promise<connectedUsersT> => {
   return users;
 };
 
-// module.exports = {
-//   checkUser,
-//   registerUser,
-//   addIp,
-//   checkLogin,
-//   removeIp,
-//   checkIp,
-//   checkData,
-//   usersStatus,
-// };
-export { registerUser, addIp, checkLogin, removeIp, checkIp, checkData, usersStatus };
+export { registerUser, addIp, checkLogin, checkData, usersStatus };

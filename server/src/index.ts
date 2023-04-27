@@ -79,16 +79,12 @@ const main = (connectedUsers: connectedUsersT) => {
     );
 
     socket.on("message", async (data: messageIS) => {
-      let authentication = data.authentication;
-      let user = data.username;
-      let message = data.message;
-      let datetime = data.datetime;
-      let room = data.room;
+      const { authentication, username, message, datetime, room } = data;
 
       let _id = msgOps.addToMongoose({ ...data, isFile: false });
 
       let sdata = {
-        user: user,
+        user: username,
         message: message,
         date: datetime,
         isFile: false,
@@ -120,15 +116,8 @@ const main = (connectedUsers: connectedUsersT) => {
     });
 
     socket.on("file", async (data: fileI) => {
-      // let authentication = data.authentication;
-      // let user = data.user;
-      // let datetime = data.datetime;
-      // let roomId = data.roomId;
-
-      let _id = data._id;
-      let room = data.room;
-      // let size = data.size;
-      // let filename = data.filename;
+      //const authentication, user, datetime, roomId, size, filename;
+      const { _id, room } = data;
 
       await MessageModel.findById(_id).then(
         (doc: any) => {
@@ -183,9 +172,8 @@ const main = (connectedUsers: connectedUsersT) => {
         // console.log("no username !!!!!!!!!!!");
         return;
       }
-      let room: string = data.room;
-      let roomId: string = data.roomId;
-      let username: string = data.username;
+      const { room, roomId, username } = data;
+
       let payload = {
         id: socket.id,
         username: username,
