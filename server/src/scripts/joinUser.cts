@@ -2,7 +2,7 @@ import { connectedUsersT } from "../types/types.cjs";
 
 import MessageModel, { messageSchemaI } from "../models/message.model.cjs";
 
-const join = (socket: any, connectedUsers: connectedUsersT, username: string, _room: string) => {
+const join = (socket: any, connectedUsers: connectedUsersT, username: string, room: string) => {
     if (connectedUsers[username] === undefined) {
         connectedUsers[username] = {
             status: "online",
@@ -22,16 +22,12 @@ const join = (socket: any, connectedUsers: connectedUsersT, username: string, _r
     console.log(connectedUsers);
     socket.emit("status", connectedUsers);
 
-    MessageModel.find({
-        room: _room,
-    })
-        .sort("number")
-        .exec()
-        .then((doc: messageSchemaI[]) => {
-            socket.emit("messagesData", doc);
-        });
+    MessageModel.find({ room })
+    .sort("number")
+    .exec()
+    .then((doc: messageSchemaI[]) => socket.emit("messagesData", doc));
 
-    socket.join(_room);
+    socket.join(room);
 }
 
 export { join };

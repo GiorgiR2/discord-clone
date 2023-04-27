@@ -1,7 +1,7 @@
 
 interface joinI {
     username: string;
-    room: string;
+    roomId: string;
 }
 
 interface messageIS {

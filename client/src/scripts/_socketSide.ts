@@ -4,20 +4,20 @@ import getTime from "./getTime";
 import packageJson from "../../package.json";
 
 import { setOnline, setOffline, addMessage, removeMessage, attachEmoji } from "../features/interfaces";
-import { messageI, statusI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateValueI } from "../types/types";
-import scrollToBottom from "../components/js/scrollToBottom";
+import { messageI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateValueI } from "../types/types";
 
-const main = (reduxData: any, dispatch: any) => {
+const main = (roomId: string, username: string, dispatch: any) => {
   if (socket.disconnected){
     // @ts-expect-error
     socket = io.connect(domain);
   }
 
-  socket.emit("join", {
-    room: reduxData.currentRoom,
-    username: reduxData.currentUser,
-  });
-  console.log("sent join", reduxData.currentRoom, reduxData.currentUser);
+  // socket.emit("join", {
+  //   room: reduxData.currentRoom,
+  //   username: reduxData.currentUser,
+  // });
+  socket.emit("join", { roomId, username });
+  console.log("sent join", roomId, username);
 
   type dataIMSG = messageI & { originalName: string };
   socket.on("M_S_O", (data: dataIMSG) => {
@@ -41,9 +41,9 @@ const main = (reduxData: any, dispatch: any) => {
 
   socket.on("messagesData", (data: dataIMSG[]) => {
     // type msgT = Omit<messageI, "focusMode">;
-    if(reduxData.messages.length >= 1){
-      return;
-    }
+    // if(reduxData.messages.length >= 1){
+    //   return;
+    // }
 
     let msgList: messageI[] = data.map((el: dataIMSG) => {
       return {
@@ -147,13 +147,4 @@ const domain = packageJson.proxy;
 // @ts-expect-error
 var socket = io.connect(domain);
 
-export {
-  socket,
-  main,
-  sendMessage,
-  sendFileData,
-  sendDeleteStatus,
-  editMessage,
-  disconnect,
-  attackEmoji,
-};
+export { socket, main, sendMessage, sendFileData, sendDeleteStatus, editMessage, disconnect, attackEmoji };

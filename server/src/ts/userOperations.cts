@@ -1,4 +1,5 @@
 import UserModel from "../models/user.model.cjs";
+import RoomModel from "../models/rooms.model.cjs";
 
 import { loadRooms } from "../ts/catOperations.cjs";
 import saveModel from "./saveModel.cjs";
@@ -41,7 +42,7 @@ const registerUser = async (username: string, hashedPassword: string, ip: string
 
     saveModel(user);
     return "done";
-  } else{
+  } else {
     return "username already exists";
   }
 };
@@ -77,9 +78,23 @@ const checkData = async (hashId: string): Promise<checkDataI> => {
       authentication: doc[0]._id.toString(),
     };
   } else return {
-      success: false
+    success: false
   };
 };
+
+const findLowestPositionId = (): any =>
+  new Promise((resolve, reject) => {
+  // return "61ed960432479c682956802b";
+  RoomModel.find({})
+    .sort({ position: 1 })
+    .limit(1)
+    .exec()
+    .then((res: any) => {
+      if (res.length !== 0) {
+        resolve({ roomId: res[0]._id });
+      }
+    });
+  });
 
 const checkLogin = async (username: string, password: string): Promise<checkLoginI> => {
   let doc = await UserModel.find({ username }).exec();
@@ -89,14 +104,13 @@ const checkLogin = async (username: string, password: string): Promise<checkLogi
     return { success: false };
   } else {
     let pswrd = String(doc[0].password);
-    //console.log(pswrd === password);
     if (password === pswrd) {
-      let hash = doc[0].hashId;
-      // console.log("hashId:", doc[0]);
+      let hashId = doc[0].hashId;
+      let { roomId } = await findLowestPositionId();
       return {
         success: true,
-        roomId: "61ed960432479c682956838e",
-        hashId: hash,
+        roomId: roomId,
+        hashId,
       };
     } else {
       return { success: false };

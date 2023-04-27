@@ -145,16 +145,16 @@ const Chat: React.FC = () => {
       title="log out"
     />
   )
-  const loadMessages = () => {
-    setTimeout(() => {
-      if (reduxData.currentUser !== "" && reduxData.currentRoom !== "") {
-        socks.main(reduxData, dispatch);
-      }
-      else {
-        loadMessages();
-      }
-    }, 500);
-  }
+  // const loadMessages = () => {
+  //   setTimeout(() => {
+  //     if (reduxData.currentUser !== "" && reduxData.currentRoom !== "") {
+  //       socks.main(reduxData, dispatch);
+  //     }
+  //     else {
+  //       loadMessages();
+  //     }
+  //   }, 500);
+  // }
 
   const dispatch: AppDispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -170,9 +170,9 @@ const Chat: React.FC = () => {
     getBasicData({ history, roomId, hashId, dispatch });
   }, []);
 
-  useEffect(() => {
-    loadMessages();
-  }, [reduxData.currentUser]);
+  // useEffect(() => {
+  //   loadMessages();
+  // }, [reduxData.currentUser]);
 
   useEffect(() => {
     if (reduxData.voiceMode && reduxData.currentUser === "") {

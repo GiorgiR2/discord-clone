@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import axios from "axios";
 import encrypt from "../js/encrypt";

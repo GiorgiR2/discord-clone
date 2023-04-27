@@ -54,7 +54,7 @@ router.get("/api/users/:hashId", async (req: Request, res: Response) => {
     await res.send(data);
     // console.log("user hash successfully authenticated:", data, req.body.hash);
   } catch {
-    await res.send({ roomName: "IncorrectHash" });
+    await res.send({ success: false });
   }
 });
 

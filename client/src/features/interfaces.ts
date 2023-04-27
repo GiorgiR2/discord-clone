@@ -80,6 +80,9 @@ export const userSlice = createSlice({
       }
     },
     addMessage: (state, action: { payload: { messageList: messageI[] } }) => {
+      if (state.value.messages.length >= 1 && action.payload.messageList.length > 1) {
+        return;
+      }
       action.payload.messageList.forEach((message: messageI) => {
         state.value.messages.push(message);
       });
@@ -141,26 +144,26 @@ export const userSlice = createSlice({
 
     attachEmoji: (state, action: attachEmojiRX) => {
       state.value.messages = state.value.messages.map((message) => {
-        if(message._id === action.payload._id){
+        if (message._id === action.payload._id) {
           let found = false;
           let newEmojis = message.emojis.map(emojiData => {
-            if (emojiData.emoji === action.payload.emoji){
+            if (emojiData.emoji === action.payload.emoji) {
               emojiData.num += 1;
               found = true;
               return emojiData;
             }
             return emojiData;
           });
-          if (found === false){
-            message.emojis.push({emoji: action.payload.emoji, num: 1});
+          if (found === false) {
+            message.emojis.push({ emoji: action.payload.emoji, num: 1 });
           }
-          else{
+          else {
             message.emojis = newEmojis;
           }
 
           return message;
         }
-        else{
+        else {
           return message;
         }
       });

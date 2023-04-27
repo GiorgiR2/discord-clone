@@ -1,6 +1,8 @@
 import axios from "axios";
 import { History } from "history";
 
+import * as socks from "../scripts/_socketSide";
+
 import { addUserName, setAuthentication, addRooms } from "../features/interfaces";
 
 import packageJson from "../../package.json";
@@ -13,6 +15,7 @@ interface getBasicDataI {
   hashId?: string | null | undefined;
   dispatch?: any;
   frame?: "none" | "chat";
+  roomName?: string;
 }
 
 const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): void => {
@@ -25,12 +28,14 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
     axios
       .get(`${apiLink}/api/users/${hashId}`)
       .then((res) => {
-        if (res.data.success) {
+        if (res.data.success && roomId) {
           // if (frame !== "chat") history.push(`/chat/${roomId}/${hashId}`);
           const { username, authentication, rooms } = res.data;
           dispatch(setAuthentication(authentication));
           dispatch(addUserName({ username }));
           dispatch(addRooms({ rooms }));
+
+          socks.main(roomId, username, dispatch);
         } else {
           // console.log("status:", res.data.status);
           localStorage.removeItem("hashId");

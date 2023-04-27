@@ -7,16 +7,10 @@ import { usersStatus } from "./ts/userOperations.cjs";
 import * as msgOps from "./ts/msgOperations.cjs";
 
 import MessageModel from "./models/message.model.cjs";
+import RoomModel from "./models/rooms.model.cjs";
 
 import { connectedUsersT, popOutI, usersInVoiceI } from "./types/types.cjs";
-import {
-  attachEmojiI,
-  deleteMessageI,
-  editMessageI,
-  fileI,
-  joinI,
-  messageIS,
-} from "./types/sockets.js";
+import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } from "./types/sockets.js";
 
 import "./mongooseAPI.cjs";
 import dotenv from "dotenv";
@@ -57,12 +51,16 @@ const main = (connectedUsers: connectedUsersT) => {
     let room: string;
     console.log("new connection", socket.id);
 
-    socket.on("join", (data: joinI) => {
+    socket.on("join", async (data: joinI) => {
       console.log("join", data);
-      username = data.username;
-      room = data.room;
-
-      join(socket, connectedUsers, username, room);
+      const { roomId, username } = data;
+      let roomM = await RoomModel.findOne({ _id: roomId }).exec();
+      console.log("room found:", roomM);
+      if (roomM !== null) {
+        room = roomM.name;
+        join(socket, connectedUsers, username, room);
+        console.log("join");
+      }
     });
 
     socket.on("disconnect", () => {
@@ -72,10 +70,10 @@ const main = (connectedUsers: connectedUsersT) => {
     });
 
     socket.on("popAccount", (data: popOutI) => {
-        console.log("deleting user", data.username);
-        delete connectedUsers[data.username];
-        console.log("user:", data.username);
-      }
+      console.log("deleting user", data.username);
+      delete connectedUsers[data.username];
+      console.log("user:", data.username);
+    }
     );
 
     socket.on("message", async (data: messageIS) => {

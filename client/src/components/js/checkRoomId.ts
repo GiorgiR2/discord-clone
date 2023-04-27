@@ -8,12 +8,14 @@ const checkRoomId = (dispatch: any, apiLink: string, roomId: string, hashId: str
   axios
     .post(`${apiLink}/api/roomId`, { id: roomId })
     .then((res) => {
-      if (res.data.roomName !== "try_again") {
-        dispatch(setRoomName({ name: res.data.roomName }));
+      const { roomName } = res.data;
+      if (roomName !== "try_again") {
+        dispatch(setRoomName({ name: roomName }));
         dispatch(setRoomId({ roomId: roomId }));
         if (res.data.voiceMode) {
           dispatch(setVoiceMode({ bool: true }));
         }
+
       } else {
         history.push(`/chat/61ed960432479c682956802b/${hashId}`); // roomId = "61ed960432479c682956802b";
         dispatch(setRoomName({ name: "room 1" }));
@@ -22,6 +24,7 @@ const checkRoomId = (dispatch: any, apiLink: string, roomId: string, hashId: str
       }
     })
     .catch((err) => console.error(err));
+
 };
 
 export { checkRoomId };
