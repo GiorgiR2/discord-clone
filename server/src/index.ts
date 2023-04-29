@@ -14,7 +14,7 @@ import RoomModel from "./models/rooms.model.cjs";
 import { connectedUsersT, popOutI, usersInVoiceI } from "./types/types.cjs";
 import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } from "./types/sockets.js";
 
-import "./mongooseAPI.cjs";
+import "./config/db.cjs";
 import dotenv from "dotenv";
 import { disconnectUser, emitDisconnect, popOut } from "./scripts/disconnectUser.cjs";
 import { joinUser, sendInitMessages } from "./scripts/joinUser.cjs";
@@ -58,12 +58,10 @@ const main = (connectedUsers: connectedUsersT) => {
       let roomM = await RoomModel.findOne({ _id: roomId }).exec();
       if (!roomM) {
         const { _name, _roomId } = await findLowestPositionRoom();
-        // console.log("room not found:", _name);
         room = _name;
         roomId = _roomId;
       }
       else {
-        // console.log("room found");
         room = roomM.name;
       }
 
@@ -78,11 +76,6 @@ const main = (connectedUsers: connectedUsersT) => {
 
       username = _username;
       joinUser(socket, connectedUsers, username, room);
-      // Object.keys(connectedUsers).forEach((usr: string) => {
-      //   if(connectedUsers[usr].tabsOpen > 0){
-      //     console.log(connectedUsers[usr]);
-      //   }
-      // });
       console.log(`== joined ${username} ${socket.id}`);
     });
 
