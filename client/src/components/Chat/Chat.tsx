@@ -9,8 +9,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearAll, addUserName } from "../../features/interfaces";
 import { togglePopupAdd, toggleLeft, toggleRight, closeLeft, closeRight, toggleSettings, toggleRooms } from "../../features/toggle";
 
-import { checkRoomId } from "../js/checkRoomId";
-
 import Panel from "./sidePanel/sidePanel";
 import DeleteDiv from "./deleteDiv/deleteDiv";
 
@@ -43,17 +41,6 @@ const logout: string = require("../../assets/chat/logout.svg").default;
 const apiLink = packageJson.proxy;
 
 const logOut = (history: History, dispatch: AppDispatch) => {
-  // axios
-  //   .post(`${apiLink}/api/users/logout`, { junk: "" })
-  //   .then((res) => {
-  //     if (res.data.status === "done") {
-  //       localStorage.removeItem("hashId");
-  //       history.push(`/`);
-  //       window.location.reload();
-  //     }
-  //   })
-  //   .catch((err) => console.error(err));
-
   localStorage.removeItem("hashId");
   history.push(`/`);
   dispatch(clearAll());
@@ -80,9 +67,6 @@ const Chat: React.FC = () => {
           <img src={settingsSVG} title="settings" alt="settings" id="settings" onClick={() => dispatch(toggleSettings())} />
         </div>
 
-        {/* <h1 className="plus" onClick={() => dispatch(togglePopupAdd())}>
-          add new room <b>+</b>
-        </h1> */}
         <div className="addRoom">
           <div className="left" onClick={() => dispatch(toggleRooms())}>
             <img className={`arrow ${toggleRedux.toggleRooms ? "rotate" : ""}`} src={bottomArrow} alt="exit" onClick={() => dispatch(toggleLeft())} />
@@ -145,16 +129,6 @@ const Chat: React.FC = () => {
       title="log out"
     />
   )
-  // const loadMessages = () => {
-  //   setTimeout(() => {
-  //     if (reduxData.currentUser !== "" && reduxData.currentRoom !== "") {
-  //       socks.main(reduxData, dispatch);
-  //     }
-  //     else {
-  //       loadMessages();
-  //     }
-  //   }, 500);
-  // }
 
   const dispatch: AppDispatch = useDispatch();
   const reduxData = useSelector((state: RootState) => state.interfaces.value);
@@ -165,14 +139,10 @@ const Chat: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
+    console.log("shit");
     document.title = "chat";
-    checkRoomId(dispatch, apiLink, roomId, hashId, history);
     getBasicData({ history, roomId, hashId, dispatch });
   }, []);
-
-  // useEffect(() => {
-  //   loadMessages();
-  // }, [reduxData.currentUser]);
 
   useEffect(() => {
     if (reduxData.voiceMode && reduxData.currentUser === "") {

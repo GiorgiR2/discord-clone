@@ -2,8 +2,10 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import bp from "body-parser";
 
 import { usersStatus } from "./ts/userOperations.cjs";
+import { findLowestPositionRoom } from "./ts/roomOperations.cjs";
 import * as msgOps from "./ts/msgOperations.cjs";
 
 import MessageModel from "./models/message.model.cjs";
@@ -15,7 +17,7 @@ import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } f
 import "./mongooseAPI.cjs";
 import dotenv from "dotenv";
 import { disconnectUser, emitDisconnect, popOut } from "./scripts/disconnectUser.cjs";
-import { join } from "./scripts/joinUser.cjs";
+import { joinUser, sendInitMessages } from "./scripts/joinUser.cjs";
 
 const usersRouter = require("./routes/users.cjs");
 const messagesRouter = require("./routes/messages.cjs");
@@ -52,21 +54,49 @@ const main = (connectedUsers: connectedUsersT) => {
     console.log("new connection", socket.id);
 
     socket.on("join", async (data: joinI) => {
-      console.log("join", data);
-      const { roomId, username } = data;
+      let { roomId, _username } = data;
       let roomM = await RoomModel.findOne({ _id: roomId }).exec();
-      console.log("room found:", roomM);
-      if (roomM !== null) {
-        room = roomM.name;
-        join(socket, connectedUsers, username, room);
-        console.log("join");
+      if (!roomM) {
+        const { _name, _roomId } = await findLowestPositionRoom();
+        // console.log("room not found:", _name);
+        room = _name;
+        roomId = _roomId;
       }
+      else {
+        // console.log("room found");
+        room = roomM.name;
+      }
+
+      if (roomM && roomM.voice) {
+        socket.emit("roomName", { name: room, roomId: roomId, voice: true });
+      }
+      else {
+        const { messages } = await sendInitMessages(room);
+        socket.emit("roomName", { name: room, roomId: roomId, voice: false });
+        socket.emit("messages", messages);
+      }
+
+      username = _username;
+      joinUser(socket, connectedUsers, username, room);
+      // Object.keys(connectedUsers).forEach((usr: string) => {
+      //   if(connectedUsers[usr].tabsOpen > 0){
+      //     console.log(connectedUsers[usr]);
+      //   }
+      // });
+      console.log(`== joined ${username} ${socket.id}`);
     });
 
     socket.on("disconnect", () => {
       disconnectUser(socket, connectedUsers, username);
       emitDisconnect(socket, io, roomIds, usersInVoice);
       popOut(socketIds, usersInVoice, roomIds, socket.id);
+
+      console.log(`== disconnect ${username} ${socket.id}`);
+      Object.keys(connectedUsers).forEach((usr: string) => {
+        if (connectedUsers[usr].tabsOpen > 0) {
+          console.log(connectedUsers[usr]);
+        }
+      });
     });
 
     socket.on("popAccount", (data: popOutI) => {
@@ -89,8 +119,8 @@ const main = (connectedUsers: connectedUsersT) => {
         _id: _id,
         edited: false,
       };
-      socket.emit("M_S_O", sdata);
-      socket.in(room).emit("M_S_O", sdata);
+      socket.emit("message", sdata);
+      socket.in(room).emit("message", sdata);
       // console.log("sent (1)", room, message, "from", username);
     });
 
@@ -119,8 +149,8 @@ const main = (connectedUsers: connectedUsersT) => {
 
       await MessageModel.findById(_id).then(
         (doc: any) => {
-          socket.emit("M_S_O", doc);
-          socket.in(room).emit("M_S_O", doc);
+          socket.emit("message", doc);
+          socket.in(room).emit("message", doc);
           console.log("file sent:", doc._id, doc.originalName);
         }
       );
@@ -261,6 +291,8 @@ const main = (connectedUsers: connectedUsersT) => {
 
   server.listen(PORT, () => console.log(`Server is on PORT: ${PORT}`));
 
+  app.use(bp.json());
+  app.use(bp.urlencoded({ extended: true }));
   app.use(cors(corsOptions));
   app.use(usersRouter);
   app.use(messagesRouter);
@@ -277,7 +309,7 @@ const replaceAll = (str: string, match: string, replacement: string): string => 
 };
 
 (async () => {
-  const connectedUsers: connectedUsersT = await usersStatus();
+  var connectedUsers: connectedUsersT = await usersStatus();
   console.log(connectedUsers);
 
   main(connectedUsers);

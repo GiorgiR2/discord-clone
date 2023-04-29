@@ -1,4 +1,3 @@
-import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom"; // BrowserRouter, Switch
 
 import Login from "./components/Login&Signup/Login";

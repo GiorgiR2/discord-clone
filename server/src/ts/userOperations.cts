@@ -1,7 +1,6 @@
 import UserModel from "../models/user.model.cjs";
-import RoomModel from "../models/rooms.model.cjs";
 
-import { loadRooms } from "../ts/catOperations.cjs";
+import { loadRooms, findLowestPositionRoom } from "./roomOperations.cjs";
 import saveModel from "./saveModel.cjs";
 
 import mongoose from "mongoose";
@@ -9,17 +8,6 @@ import mongoose from "mongoose";
 var sha1 = require("sha1");
 
 import { connectedUsersT, checkDataI, checkLoginI } from "../types/types.cjs";
-
-// const checkUser = (username: string) => {
-//   let user = UserModel.find({
-//     username: username,
-//   })
-//     .then((doc: any) => console.log(doc))
-//     .catch((err: string) => console.error(err));
-
-//   console.log(user);
-//   return {};
-// };
 
 const bufferData = (username: string, password: string): string => {
   let hash = sha1(`${username}${password}`);
@@ -82,34 +70,19 @@ const checkData = async (hashId: string): Promise<checkDataI> => {
   };
 };
 
-const findLowestPositionId = (): any =>
-  new Promise((resolve, reject) => {
-  // return "61ed960432479c682956802b";
-  RoomModel.find({})
-    .sort({ position: 1 })
-    .limit(1)
-    .exec()
-    .then((res: any) => {
-      if (res.length !== 0) {
-        resolve({ roomId: res[0]._id });
-      }
-    });
-  });
-
 const checkLogin = async (username: string, password: string): Promise<checkLoginI> => {
   let doc = await UserModel.find({ username }).exec();
 
-  // console.log("\n checking \n");
   if (doc[0] == undefined) {
     return { success: false };
   } else {
     let pswrd = String(doc[0].password);
     if (password === pswrd) {
       let hashId = doc[0].hashId;
-      let { roomId } = await findLowestPositionId();
+      let { _roomId } = await findLowestPositionRoom();
       return {
         success: true,
-        roomId: roomId,
+        roomId: _roomId,
         hashId,
       };
     } else {
@@ -128,6 +101,7 @@ const usersStatus = async (): Promise<connectedUsersT> => {
         users[el.username] = {
           status: "offline",
           tabsOpen: 0,
+          socketIds: []
         };
       });
     });

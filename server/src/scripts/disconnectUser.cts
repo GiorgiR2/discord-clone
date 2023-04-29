@@ -1,16 +1,26 @@
 import { connectedUsersT, usersInVoiceI } from "../types/types.cjs";
 
 const disconnectUser = (socket: any, connectedUsers: connectedUsersT, username: string): void => {
-    if (connectedUsers[username] !== undefined) {
-        connectedUsers[username].tabsOpen -= 1;
+    const id = socket.id;
+    let user = connectedUsers[username];
+    if (user !== undefined) {
+        connectedUsers[username].tabsOpen--;
+        connectedUsers[username].socketIds = connectedUsers[username].socketIds.filter(_id => _id !== id);
         if (connectedUsers[username].tabsOpen <= 0) {
-            socket.broadcast.emit("offline", {
-                username: username,
-            });
+            socket.broadcast.emit("offline", { username });
             connectedUsers[username].status = "offline";
         }
     }
-    console.log("disconnect", username, socket.id);
+    else {
+        Object.keys(connectedUsers).forEach((userN: string) => {
+            user = connectedUsers[userN];
+            if (user.socketIds.includes(`${id}`)){
+                connectedUsers[userN].socketIds = user.socketIds.filter(el => el !== id);
+                connectedUsers[userN].tabsOpen--;
+                return;
+            }
+        });
+    }
 };
 
 const emitDisconnect = (socket: any, io: any, roomIds: string[], usersInVoice: usersInVoiceI) => {
@@ -42,8 +52,4 @@ const popOut = (socketIds: string[], usersInVoice: usersInVoiceI, roomIds: strin
     });
 }
 
-export {
-    disconnectUser,
-    emitDisconnect,
-    popOut,
-};
+export { disconnectUser, emitDisconnect, popOut };

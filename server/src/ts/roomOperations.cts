@@ -1,7 +1,4 @@
-import RoomsModel from "../models/rooms.model.cjs";
-import saveModel from "./saveModel.cjs";
-
-import mongoose from "mongoose";
+import RoomModel from "../models/rooms.model.cjs";
 
 import { voiceI, loadRoomsI } from "../types/types.cjs";
 
@@ -30,14 +27,14 @@ const loadRooms = async (): Promise<loadRoomsI[]> => {
   // addCats(`voice 2`, 9);
   // addCats(`voice 3`, 10);
 
-  let rooms: Promise<loadRoomsI[]> = RoomsModel.find().sort({ position: 1 }).exec();
+  let rooms: Promise<loadRoomsI[]> = RoomModel.find().sort({ position: 1 }).exec();
   return rooms;
 };
 
 const getVoiceRooms = async (): Promise<voiceI> => {
   let voices: voiceI = {};
 
-  await RoomsModel.find({ voice: true })
+  await RoomModel.find({ voice: true })
     .exec()
     .then((doc: any) => {
       doc.map((el: any) => {
@@ -48,4 +45,17 @@ const getVoiceRooms = async (): Promise<voiceI> => {
   return voices;
 };
 
-export { loadRooms, getVoiceRooms };
+const findLowestPositionRoom = (): Promise<{ _roomId: string, _name: string }> =>
+  new Promise((resolve, reject) => {
+    RoomModel.find({})
+      .sort({ position: 1 })
+      .limit(1)
+      .exec()
+      .then((res: any) => {
+        if (res.length !== 0) {
+          resolve({ _roomId: res[0]._id, _name: res[0].name });
+        }
+      });
+  });
+
+export { loadRooms, getVoiceRooms, findLowestPositionRoom };

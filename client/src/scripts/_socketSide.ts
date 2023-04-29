@@ -3,8 +3,10 @@ import io from "socket.io-client";
 import getTime from "./getTime";
 import packageJson from "../../package.json";
 
-import { setOnline, setOffline, addMessage, removeMessage, attachEmoji } from "../features/interfaces";
+import { setOnline, setOffline, addMessage, removeMessage, attachEmoji, setRoomName, setRoomId, setVoiceMode } from "../features/interfaces";
 import { messageI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateValueI } from "../types/types";
+
+type dataIMSG = messageI & { originalName: string };
 
 const main = (roomId: string, username: string, dispatch: any) => {
   if (socket.disconnected){
@@ -12,15 +14,16 @@ const main = (roomId: string, username: string, dispatch: any) => {
     socket = io.connect(domain);
   }
 
-  // socket.emit("join", {
-  //   room: reduxData.currentRoom,
-  //   username: reduxData.currentUser,
-  // });
-  socket.emit("join", { roomId, username });
+  socket.emit("join", { roomId, _username: username });
   console.log("sent join", roomId, username);
 
-  type dataIMSG = messageI & { originalName: string };
-  socket.on("M_S_O", (data: dataIMSG) => {
+  socket.on("roomName", (data: { name: string, roomId: string, voice: boolean }) => {
+    dispatch(setRoomId({ roomId: data.roomId }));
+    dispatch(setVoiceMode({ bool: data.voice }));
+    dispatch(setRoomName({ name: data.name }));
+  });
+
+  socket.on("message", (data: dataIMSG) => {
     let msgList: messageI[] = [
       {
         user: data.user,
@@ -39,7 +42,7 @@ const main = (roomId: string, username: string, dispatch: any) => {
     dispatch(addMessage({ messageList: msgList }));
   });
 
-  socket.on("messagesData", (data: dataIMSG[]) => {
+  socket.on("messages", (data: dataIMSG[]) => {
     // type msgT = Omit<messageI, "focusMode">;
     // if(reduxData.messages.length >= 1){
     //   return;

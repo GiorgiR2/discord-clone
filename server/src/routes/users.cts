@@ -14,9 +14,6 @@ import deletedUserModel from "../models/deletedUser.model.cjs";
 import getIp from "../scripts/getIp.cjs";
 import saveModel from "../ts/saveModel.cjs";
 
-router.use(bp.json());
-router.use(bp.urlencoded({ extended: true }));
-
 router.get("/", (req, res) => {
   res.status(200).json({
     message: "Handling GET requests to /users...",

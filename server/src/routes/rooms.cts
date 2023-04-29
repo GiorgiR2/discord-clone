@@ -1,11 +1,9 @@
 import express, { Request, Response, Router } from "express";
-import bp from "body-parser";
-import mongoose, { HydratedDocument } from "mongoose";
-
-import { roomI } from "../types/types.cjs";
+import mongoose from "mongoose";
 
 import RoomsModel, { roomsSchemaI } from "../models/rooms.model.cjs";
 import saveModel from "../ts/saveModel.cjs";
+import { findLowestPositionRoom } from "../ts/roomOperations.cjs";
 
 const router: Router = express.Router();
 
@@ -15,20 +13,27 @@ router.get("/", (req: Request, res: Response) => {
   });
 });
 
-router.post("/api/roomId", async (req: Request, res: Response) => {
-  try {
-    let name = await RoomsModel.find({
-      _id: req.body.id,
-    }).exec();
+router.get("/api/firstRoomId/", async (req: Request, res: Response) => {
+  const { _roomId } = await findLowestPositionRoom();
+  await res.send({ newRoomId: _roomId });
+});
 
-    await res.send({
-      roomName: name[0].name,
-      voiceMode: name[0].voice,
-    });
-    console.log("sent", name[0].name);
-  } catch {
-    await res.send({ roomName: "try_again" });
+router.get("/api/roomId/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const room = await RoomsModel.findOne({ _id: id }).exec();
+  const { _roomId } = await findLowestPositionRoom();
+
+  if (!room){
+    await res.send({ sucess: false, newRoomId: _roomId });
+    return;
   }
+
+  await res.send({
+    sucess: true,
+    name: room.name,
+    voice: room.voice,
+  });
+  console.log("sent nameById:", room.name);
 });
 
 router.post("/api/editCategory", async (req: Request, res: Response) => {
@@ -81,48 +86,46 @@ router.post("/api/changeRoomPosition", async (req: Request, res: Response) => {
 
   let filter = { _id: roomId };
   let update = { position: 1001 };
-  console.log(
-    `draggingRoomIndex: ${draggingRoomIndex}; finalIndex: ${finalIndex};`
-  );
+  console.log(`draggingRoomIndex: ${draggingRoomIndex}; finalIndex: ${finalIndex};`);
   await RoomsModel.findOneAndUpdate(filter, update).exec();
 
   RoomsModel.find().sort({ position: 1 }).exec()
-  .then(doc => {
-    if (finalIndex > draggingRoomIndex) {
-      doc.forEach((room: roomsSchemaI, n: number) => {
-        if (
-          room.position > draggingRoomIndex &&
-          room.position <= finalIndex + 1
-        ) {
-          // filter = { _id: room._id };
-          // update = { position: room.position - 1 };
-          // Categories.findOneAndUpdate(filter, update).exec();
-          RoomsModel.findOneAndUpdate(
-            { _id: room._id },
-            { position: room.position - 1 }
-          ).exec();
-        }
-      });
-    } else {
-      doc.forEach((room: roomsSchemaI, n: number): void => {
-        if (
-          room.position >= finalIndex &&
-          room.position < draggingRoomIndex + 1
-        ) {
-          RoomsModel.findOneAndUpdate(
-            { _id: room._id },
-            { position: room.position + 1 }
-          ).exec();
-        }
-      });
-    }
-    RoomsModel.findOneAndUpdate(
-      { _id: roomId },
-      { position: finalIndex + 1 }
-    ).exec();
+    .then(doc => {
+      if (finalIndex > draggingRoomIndex) {
+        doc.forEach((room: roomsSchemaI, n: number) => {
+          if (
+            room.position > draggingRoomIndex &&
+            room.position <= finalIndex + 1
+          ) {
+            // filter = { _id: room._id };
+            // update = { position: room.position - 1 };
+            // Categories.findOneAndUpdate(filter, update).exec();
+            RoomsModel.findOneAndUpdate(
+              { _id: room._id },
+              { position: room.position - 1 }
+            ).exec();
+          }
+        });
+      } else {
+        doc.forEach((room: roomsSchemaI, n: number): void => {
+          if (
+            room.position >= finalIndex &&
+            room.position < draggingRoomIndex + 1
+          ) {
+            RoomsModel.findOneAndUpdate(
+              { _id: room._id },
+              { position: room.position + 1 }
+            ).exec();
+          }
+        });
+      }
+      RoomsModel.findOneAndUpdate(
+        { _id: roomId },
+        { position: finalIndex + 1 }
+      ).exec();
 
-    res.send({ status: "done" });
-  });
+      res.send({ status: "done" });
+    });
 });
 
 router.post("/api/deleteCategory", async (req: Request, res: Response) => {
@@ -135,16 +138,16 @@ router.post("/api/deleteCategory", async (req: Request, res: Response) => {
 
   // renumber rooms (positions)
   RoomsModel.find().sort({ position: 1 }).exec()
-  .then(rooms => {
-    rooms.forEach((room: roomsSchemaI, n: number) => {
-      if (room.position > position) {
-        RoomsModel.findOneAndUpdate(
-          { _id: room._id },
-          { position: room.position - 1 }
-        ).exec();
-      }
+    .then(rooms => {
+      rooms.forEach((room: roomsSchemaI, n: number) => {
+        if (room.position > position) {
+          RoomsModel.findOneAndUpdate(
+            { _id: room._id },
+            { position: room.position - 1 }
+          ).exec();
+        }
+      });
     });
-  });
 });
 
 module.exports = router;

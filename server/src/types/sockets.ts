@@ -1,6 +1,6 @@
 
 interface joinI {
-    username: string;
+    _username: string;
     roomId: string;
 }
 

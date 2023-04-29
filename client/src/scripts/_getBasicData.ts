@@ -22,6 +22,7 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
   if (hashId === undefined && localStorage.getItem("hashId") !== null) {
     roomId = "61ed960432479c682956802b";
     hashId = localStorage.getItem("hashId");
+    console.log("redirecting 1");
     history.push(`/chat/${roomId}/${hashId}`);
   } else if (hashId !== undefined) {
     console.log("hashId:", hashId);
@@ -29,7 +30,6 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
       .get(`${apiLink}/api/users/${hashId}`)
       .then((res) => {
         if (res.data.success && roomId) {
-          // if (frame !== "chat") history.push(`/chat/${roomId}/${hashId}`);
           const { username, authentication, rooms } = res.data;
           dispatch(setAuthentication(authentication));
           dispatch(addUserName({ username }));
@@ -37,7 +37,7 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
 
           socks.main(roomId, username, dispatch);
         } else {
-          // console.log("status:", res.data.status);
+          console.log("redirecting 2");
           localStorage.removeItem("hashId");
           history.push("");
         }
