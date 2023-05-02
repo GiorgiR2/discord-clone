@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/discord-clone/static/css/main.90428009.css",
-    "main.js": "/discord-clone/static/js/main.cba2ae64.js",
+    "main.css": "/discord-clone/static/css/main.619ba9e0.css",
+    "main.js": "/discord-clone/static/js/main.2d446f0c.js",
     "static/media/settings.svg": "/discord-clone/static/media/settings.4c48a697a88efd608145a62c4003014f.svg",
     "static/media/eye.svg": "/discord-clone/static/media/eye.250b58d5a8d53ce275f2515b5b202346.svg",
     "static/media/lock.svg": "/discord-clone/static/media/lock.c1606cdefe49a10498417d5b27380824.svg",
@@ -12,9 +12,9 @@
     "static/media/user.svg": "/discord-clone/static/media/user.2d6897c1765ae323aebe4b45b0033e7f.svg",
     "static/media/micOff.svg": "/discord-clone/static/media/micOff.8e0b929b4d64ad1916c0e4485c4034f2.svg",
     "static/media/micOn.svg": "/discord-clone/static/media/micOn.6552e10bd99cd5a9ae5f2ddbe9e378cd.svg",
+    "index.html": "/discord-clone/index.html",
     "static/media/user-flat.svg": "/discord-clone/static/media/user-flat.d387b70e79fb87e0325782e3bc950bc6.svg",
     "static/media/emoji.svg": "/discord-clone/static/media/emoji.c9bf1d29fa4c9e76b8c0f2594f94b2f0.svg",
-    "index.html": "/discord-clone/index.html",
     "static/media/plus.svg": "/discord-clone/static/media/plus.2a0b9cae7ed48bd992f4e4f1a51b7341.svg",
     "static/media/camOn.svg": "/discord-clone/static/media/camOn.0fd433aa142aaaa53ca42caca1a37905.svg",
     "static/media/volume_up_black_24dp.svg": "/discord-clone/static/media/volume_up_black_24dp.007d0a7849c0e076cc305c4e06535fdb.svg",
@@ -25,11 +25,11 @@
     "static/media/fullscreen_black_24dp.svg": "/discord-clone/static/media/fullscreen_black_24dp.e21f85bf178e4ced41adbc72870f0165.svg",
     "static/media/bottom_arrow.svg": "/discord-clone/static/media/bottom_arrow.639c4c5bf302ca7f6b737ae8a617f17a.svg",
     "static/media/egress.svg": "/discord-clone/static/media/egress.27b5dbfeb3d0aa9d25649e01cb87f60e.svg",
-    "main.90428009.css.map": "/discord-clone/static/css/main.90428009.css.map",
-    "main.cba2ae64.js.map": "/discord-clone/static/js/main.cba2ae64.js.map"
+    "main.619ba9e0.css.map": "/discord-clone/static/css/main.619ba9e0.css.map",
+    "main.2d446f0c.js.map": "/discord-clone/static/js/main.2d446f0c.js.map"
   },
   "entrypoints": [
-    "static/css/main.90428009.css",
-    "static/js/main.cba2ae64.js"
+    "static/css/main.619ba9e0.css",
+    "static/js/main.2d446f0c.js"
   ]
 }
