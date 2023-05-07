@@ -1,5 +1,5 @@
-import express, { Request, Response, NextFunction, Router } from "express";
-import Message from "../models/message.model.cjs";
+import express, { Request, Response, Router } from "express";
+import MessageModel, { messageSchemaI } from "../models/message.model.cjs";
 
 import { addToMongoose } from "../ts/msgOperations.cjs";
 
@@ -14,17 +14,15 @@ router.use(bp.json());
 router.use(bp.urlencoded({ extended: true }));
 
 router.get("/", (req: Request, res: Response) => {
-  Message.find()
+  MessageModel.find()
     .then((message: any) => res.json(message))
     .catch((err: string) => res.status(400).json(`Error: ${err}`));
 });
 
-// router.post("/add/:category/:id", () => { });
-
 router.delete("/:messageId", (req: Request, res: Response) => {
   const { messageId } = req.params;
 
-  Message.remove({
+  MessageModel.remove({
     _id: messageId,
   })
     .exec()
@@ -37,33 +35,21 @@ router.delete("/:messageId", (req: Request, res: Response) => {
     });
 });
 
-router.patch("/:messageId", (req: Request, res: Response) => {
-  const { messageId, message } = req.params;
-
-  Message.update(
-    {
-      _id: messageId,
-    },
-    {
-      $set: {
-        message: message,
-      },
-    }
-  )
-    .exec();
-});
-
 router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
-  const room = req.body.room;
+  const { room, roomId, user, fileName, datetime, size } = req.body;
+
+  // @ts-ignore
+  const path = req.file.path;
+
   const realFileData = {
     isFile: true,
-    username: req.body.user,
-    originalName: req.body.fileName, // @ts-ignore
-    path: req.file.path,
-    room: room,
-    roomId: req.body.roomId,
-    datetime: req.body.datetime,
-    size: req.body.size,
+    username: user,
+    originalName: fileName,
+    path,
+    room,
+    roomId,
+    datetime,
+    size,
   };
 
   const _id = await addToMongoose(realFileData);
@@ -72,7 +58,7 @@ router.post("/upload", upload.single("file"), async (req: Request, res: Response
 });
 
 const handleD = async (req: Request, res: Response) => {
-  const file: any = await Message.findById(req.params.id);
+  const file: any = await MessageModel.findById(req.params.id);
   await res.download(file.path, file.originalName);
   // file.downloadCount++;
   // await file.save();
@@ -80,20 +66,33 @@ const handleD = async (req: Request, res: Response) => {
 router.route("/file/:id").get(handleD).post(handleD);
 
 router.route("/emojis/:messageId/:emoji").get((req: Request, res: Response) => {
-  const messageId = req.params.messageId;
-  const emoji = req.params.emoji;
+  const { messageId, emoji } = req.params;
   // console.log(`received req; id: ${messageId}; emoji: ${emoji}`);
 
-  Message.findById(messageId)
-  .then(message => {
-    let emojis = message?.emojis;
-    emojis?.forEach(el => {
-      if (el.emoji == emoji){
-        res.send({ users: el.users });
-        // console.log("response sent", el.users);
-      }
-    })
-  });
+  MessageModel.findById(messageId)
+    .then(message => {
+      let emojis = message?.emojis;
+      emojis?.forEach(el => {
+        if (el.emoji == emoji) {
+          res.send({ users: el.users });
+          // console.log("response sent", el.users);
+        }
+      })
+    });
+});
+
+router.route("/moreMessages/:room/:timesReceived").get((req: Request, res: Response) => {
+  const { room, timesReceived } = req.params;
+  const skipN = 15+5*parseInt(timesReceived);
+
+  MessageModel.find({ room })
+    .sort({ number: -1 })
+    .limit(5)
+    .skip(skipN)
+    .exec()
+    .then((doc: messageSchemaI[]) => {
+      res.send({ messages: doc });
+    });
 });
 
 module.exports = router;

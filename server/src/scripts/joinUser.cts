@@ -7,16 +7,13 @@ const joinUser = (socket: any, connectedUsers: connectedUsersT, username: string
     const id = socket.id;
     if (user === undefined) {
         connectedUsers[username] = { status: "online", tabsOpen: 1, socketIds: [id] };
-        console.log("running undefined");
     } else if (user.tabsOpen === 0) {
-        console.log("running tabOpen=0");
         connectedUsers[username].status = "online";
         connectedUsers[username].tabsOpen = 1;
         connectedUsers[username].socketIds.push(id);
 
         socket.broadcast.emit("online", { username });
     } else if (!user.socketIds.includes(id)) {
-        console.log("running !includes");
         connectedUsers[username].tabsOpen++;
         connectedUsers[username].socketIds.push(id);
     }
@@ -39,9 +36,10 @@ const joinUser = (socket: any, connectedUsers: connectedUsersT, username: string
 const sendInitMessages = (room: string): Promise<{ messages: messageSchemaI[] }> =>
     new Promise((resolve, reject) => {
         MessageModel.find({ room })
-            .sort("number")
+            .sort({ number: -1 })
+            .limit(15)
             .exec()
-            .then((doc: messageSchemaI[]) => resolve({ messages: doc }));
+            .then((doc: messageSchemaI[]) => resolve({ messages: doc.reverse() }));
     });
 
 export { joinUser, sendInitMessages };

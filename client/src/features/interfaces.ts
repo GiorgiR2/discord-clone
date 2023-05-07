@@ -13,6 +13,7 @@ const initialStateValue: interfaceInitialStateValueI = {
   online: [],
   offline: [],
   messages: [],
+  moreMessagesLoaded: 0,
   voiceMode: false,
   frequentlyUsedEmojis: ["👍", "😀", "😘", "😍", "😆", "😜", "😅", "😂", "😱"],
   otherEmojis: ["😁", "🤣", "🙂", "🙃", "😉", "🥲", "🤑", "🥵", "🥶", "😎", "🤓", "😨", "💩", "👎", "✊"],
@@ -214,6 +215,17 @@ export const userSlice = createSlice({
       state.value.focusMessageId = null;
       state.value.reactedBy = [];
     },
+
+    incrementMessagesLoaded: (state) => {
+      state.value.moreMessagesLoaded++;
+    },
+    addMessagesToTop: (state, action) => {
+      let newMessages = action.payload.messages;
+      //newMessages.reverse();
+      newMessages.forEach((message: messageI) => {
+        state.value.messages.unshift(message);
+      })
+    },
   },
 });
 
@@ -250,6 +262,9 @@ export const {
   cleanReactedBy,
 
   clearAll,
+
+  incrementMessagesLoaded,
+  addMessagesToTop,
 } = userSlice.actions;
 
 export default userSlice.reducer;

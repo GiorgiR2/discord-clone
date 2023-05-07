@@ -1,13 +1,13 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router";
 
 import axios from "axios";
 import FormData from "form-data";
 
-import { messageI } from "../../../types/types";
+import { messageI, emojiDataT } from "../../../types/types";
 import { RootState } from "../../..";
 
-import { cleanReactedBy, editMessage, enterFocusMode, exitEditMode, exitFocusMode } from "../../../features/interfaces";
+import { addMessagesToTop, cleanReactedBy, editMessage, enterFocusMode, exitEditMode, exitFocusMode, incrementMessagesLoaded } from "../../../features/interfaces";
 import { setContextMenu } from "../../../features/toggle";
 
 import EmojiDiv from "./_emojiDiv";
@@ -22,6 +22,8 @@ import packageJson from "../../../../package.json";
 import "./_messages.sass";
 import scrollToBottom from "../../js/scrollToBottom";
 import getNames from "./_getNames";
+
+import loadingGIF from "../../../assets/chat/loading.gif";
 
 const sendSVG: string = require("../../../assets/send-24px.svg").default;
 const fileSVG: string = require("../../../assets/fileIcon.svg").default;
@@ -99,19 +101,37 @@ const Messages = () => {
         }
     }
     const imageBool = (name: string): boolean => {
-        //name = el.fileName
-        return name.substr(-4) === ".png" || name.substr(-4) === ".jpg" || name.substr(-5) === ".jpeg";
+        let kind: string = name.substr(-4);
+        return kind === ".png" || kind === ".jpg" || kind === "jpeg";
+    }
+    const videoBool = (name: string): boolean => {
+        let kind: string = name.substring(-4);
+        return kind === ".mp4" || kind === ".mpv";
     }
     const checkPosition = (event: React.UIEvent<HTMLDivElement, UIEvent>): void => {
         const chatDivPosition = document.querySelectorAll("#chat-screen")[0].scrollTop;
         //console.log("scroll position:", chatDivPosition);
-        if(chatDivPosition === 0){
-            console.log("shit load more messages");
+        if (chatDivPosition === 0) {
+            setLoading(true);
+
+            axios.get(`${apiLink}/moreMessages/${reduxData.currentRoom}/${reduxData.moreMessagesLoaded}`)
+                .then(res => {
+                    setTimeout(() => {
+                        if (res.data.messages.length > 0) {
+                            dispatch(incrementMessagesLoaded());
+                            dispatch(addMessagesToTop({ messages: res.data.messages }));
+                        }
+                        setLoading(false);
+                    }, 700);
+                })
+                .catch(err => console.error(err));
         }
     }
 
     const dispatch = useDispatch();
     const reduxData = useSelector((state: RootState) => state.interfaces.value);
+
+    const [loading, setLoading] = useState(false);
 
     let { roomId, } = useParams<{ roomId: string; hashId: string }>();
 
@@ -120,6 +140,7 @@ const Messages = () => {
     return (
         <>
             <div id="chat-screen" onScroll={(event) => checkPosition(event)}>
+                {loading && <img src={loadingGIF} id="loadingGif" />}
                 {reduxData.messages.map((el: messageI, messageN: number) => (
                     <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={messageN}>
                         <div
@@ -138,9 +159,11 @@ const Messages = () => {
                                     {el.isFile ? (
                                         <div className="fileDiv">
                                             {imageBool(el.fileName) ?
-                                                <img src={`${apiLink}/file/${el.message}`} className="imagePreview" alt="file" onLoad={() => {
-                                                    scrollToBottom();
-                                                }}
+                                                <img
+                                                    src={`${apiLink}/file/${el.message}`}
+                                                    className="imagePreview"
+                                                    alt="file"
+                                                    onLoad={() => scrollToBottom()}
                                                 />
                                                 :
                                                 <img src={fileSVG} className="fileSVG" alt="file" />
@@ -178,19 +201,23 @@ const Messages = () => {
 
                         <div className={`emojisDiv ${el.emojis.length === 0 ? "hidden" : null}`}>
                             <div className="emojis">
-                                {el.emojis.map(emojiData => (
-                                    <div className="emoji" onMouseOver={() => getNames(dispatch, emojiData.emoji, el._id)} onMouseLeave={() => dispatch(cleanReactedBy())}>
+                                {el.emojis.map((emojiData: emojiDataT, num: number) => (
+                                    <div
+                                        key={num}
+                                        className="emoji"
+                                        onMouseOver={() => getNames(dispatch, emojiData.emoji, el._id)}
+                                        onMouseLeave={() => dispatch(cleanReactedBy())}>
                                         <span className="smile">{emojiData.emoji}</span>
                                         <span className="num">{emojiData.num}</span>
                                     </div>
                                 ))}
                             </div>
                             <div className={`reactedBy ${reduxData.focusMessageId === el._id ? "" : "hidden"}`}>
-                                {reduxData.reactedBy.map(user => (
-                                    <>
-                                    <span>{user}</span>
-                                    <br />
-                                    </>
+                                {reduxData.reactedBy.map((user, userN: number) => (
+                                    <div key={userN}>
+                                        <span>{user}</span>
+                                        <br />
+                                    </div>
                                 ))}
                             </div>
                         </div>

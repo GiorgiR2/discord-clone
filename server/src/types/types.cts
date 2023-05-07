@@ -1,20 +1,12 @@
 import { Types } from "mongoose";
 
 interface connectedUsersI {
-  // username: string;
   status: "online" | "offline";
   tabsOpen: number;
   socketIds: string[];
 };
 
 type connectedUsersT = Record<string, connectedUsersI>;
-
-interface voiceII {
-  [key: string]: {
-    socketId: string;
-    roomId: string;
-  };
-} 
 
 interface voiceI {
   [key: string]: [] | [string, string];

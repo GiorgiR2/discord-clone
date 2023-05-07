@@ -5,6 +5,7 @@ interface roomI {
     voice: boolean;
 }
 
+type emojiDataT = Omit<attachEmojiI, "room" | "_id">;
 interface messageI {
     user: string;
     message: string;
@@ -15,7 +16,7 @@ interface messageI {
     editMode: boolean;
     focusMode: boolean;
     edited: boolean;
-    emojis: Omit<attachEmojiI, "room" | "_id">[];
+    emojis: emojiDataT[];
 }
 
 interface statusI {
@@ -62,6 +63,7 @@ interface interfaceInitialStateValueI {
     online: string[];
     offline: string[];
     messages: messageI[];
+    moreMessagesLoaded: number;
     voiceMode: boolean;
     frequentlyUsedEmojis: emojiT[];
     otherEmojis: emojiT[];
@@ -127,4 +129,4 @@ type peerConnectionsT = [string, RTCPeerConnection];
 
 export type { roomI, messageI, optionsI, statusI, voiceInitialStateValueI, toggleInitialStateValueI, interfaceInitialStateValueI,
               sendFileDataI, frameI, peerConnectionsT, userDataI, modeI, editMessageI, emojiT, attachEmojiI,
-              attachEmojiRX, emojiDivI };
+              attachEmojiRX, emojiDivI, emojiDataT };
