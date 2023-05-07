@@ -3,12 +3,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentStatus, setMediaData, setScreenSharing } from "../../../features/voice";
 
-import {
-  socket,
-  toggleVideo,
-  toggleAudio,
-  shareScreen,
-} from "./_webRTCfunctions";
+import { socket, toggleVideo, toggleAudio, shareScreen } from "./_webRTCfunctions";
 
 import { useHistory, useParams } from "react-router-dom";
 
@@ -26,11 +21,6 @@ const ScreenShare: string = require("../../../assets/voice/screenShare.svg").def
 const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
 const FullScreen: string = require("../../../assets/fullscreen_black_24dp.svg").default;
 const EndCall: string = require("../../../assets/voice/phone-call.svg").default;
-
-// const egress = (history: History, roomId: string, hashId: string) => {
-//   history.push(`/chat/61ed960432479c682956838e/${hashId}`);
-//   window.location.reload();
-// };
 
 const launchIntoFullscreen = (element: any): void => {
   if (element.requestFullscreen) {

@@ -9,7 +9,7 @@ import { messageI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateVal
 type dataIMSG = messageI & { originalName: string };
 
 const main = (roomId: string, username: string, dispatch: any) => {
-  if (socket.disconnected){
+  if (socket.disconnected) {
     // @ts-expect-error
     socket = io.connect(domain);
   }
@@ -24,32 +24,25 @@ const main = (roomId: string, username: string, dispatch: any) => {
   });
 
   socket.on("message", (data: dataIMSG) => {
-    let msgList: messageI[] = [
-      {
-        user: data.user,
-        message: data.isFile ? data._id : data.message,
-        date: data.date,
-        isFile: data.isFile,
-        fileName: data.isFile ? data.originalName : "",
-        _id: data._id,
-        focusMode: false,
-        editMode: false,
-        edited: data.edited,
-        emojis: data.emojis === undefined ? [] : data.emojis,
-      },
-    ];
+    let msgList: messageI = {
+      user: data.user,
+      message: data.isFile ? data._id : data.message,
+      date: data.date,
+      isFile: data.isFile,
+      fileName: data.isFile ? data.originalName : "",
+      _id: data._id,
+      focusMode: false,
+      editMode: false,
+      edited: data.edited,
+      emojis: data.emojis === undefined ? [] : data.emojis,
+    };
 
-    dispatch(addMessage({ messageList: msgList }));
+    dispatch(addMessage({ messageList: [msgList] }));
   });
 
   socket.on("messages", (data: dataIMSG[]) => {
-    // type msgT = Omit<messageI, "focusMode">;
-    // if(reduxData.messages.length >= 1){
-    //   return;
-    // }
-
-    let msgList: messageI[] = data.map((el: dataIMSG) => {
-      return {
+    let msgList: messageI[] = data.map((el: dataIMSG) => (
+      {
         user: el.user,
         message: el.isFile ? el._id : el.message,
         date: el.date,
@@ -60,8 +53,8 @@ const main = (roomId: string, username: string, dispatch: any) => {
         editMode: false,
         edited: el.edited,
         emojis: el.emojis === undefined ? [] : el.emojis,
-      };
-    });
+      }
+    ));
     dispatch(addMessage({ messageList: msgList })); // message/messages
   });
 
@@ -80,15 +73,12 @@ const main = (roomId: string, username: string, dispatch: any) => {
   });
 
   socket.on("status", (data: any) => {
-    // data.forEach((el: statusI) => {
-    //   if (el.status === "online") dispatch(setOnline({ name: el.username }));
-    //   else dispatch(setOffline({ name: el.username }));
-    // });
-    
     for (const [username, value] of Object.entries(data)) {
       // @ts-ignore
-      if (value.status === "online") dispatch(setOnline({ name: username }));
-      else dispatch(setOffline({ name: username }));
+      if (value.status === "online")
+        dispatch(setOnline({ name: username }));
+      else
+        dispatch(setOffline({ name: username }));
     }
   });
 
@@ -127,17 +117,17 @@ const sendFileData = ({ reduxData, id, size, filename }: sendFileDataI) => {
 };
 
 const sendMessage = (reduxData: interfaceInitialStateValueI, roomId: string, message: string) => {
-    let datetime = getTime();
-    let sdata = {
-      authentication: reduxData.authentication,
-      username: reduxData.currentUser,
-      message: message,
-      datetime: datetime,
-      room: reduxData.currentRoom,
-      roomId: roomId,
-    };
+  let datetime = getTime();
+  let sdata = {
+    authentication: reduxData.authentication,
+    username: reduxData.currentUser,
+    message: message,
+    datetime: datetime,
+    room: reduxData.currentRoom,
+    roomId: roomId,
+  };
 
-    socket.emit("message", sdata);
+  socket.emit("message", sdata);
 };
 
 const attackEmoji = (messageId: string, emoji: emojiT, room: string, user: string) => {

@@ -41,7 +41,7 @@ const PopupSettings = () => {
                         setPassword1("");
                         dispatch(toggleSettings());
                     }
-                    else if (res.data.status === "wrong password"){
+                    else if (res.data.status === "wrong password") {
                         alert("wrong password");
                     }
                 })
@@ -65,7 +65,6 @@ const PopupSettings = () => {
         })
             .then(res => {
                 if (res.data.status === "done") {
-                    // popout
                     socket.emit("popAccount", { authentication: reduxData.authentication, username: reduxData.currentUser });
 
                     alert("user succesfully deleted...");
@@ -88,7 +87,7 @@ const PopupSettings = () => {
             axios
                 .post(`${apiLink}/api/users/addProfilePicture`, formData, config)
                 .then(res => console.log(res.status))
-                .catch((err) => console.log(""));
+                .catch((err) => console.error(err));
         };
 
         if (event.target.files && event.target.files[0]) {
@@ -102,15 +101,14 @@ const PopupSettings = () => {
     }
     const loadProfilePicture = () => {
         axios.get(`${apiLink}/api/users/checkImageAvailability/${reduxData.currentUser}`)
-        .then(res => {
-            console.log("data receive:", res.data);
-            if(res.data.status === "exists"){
-                let imgLink = `${apiLink}/api/users/profilePicture/${reduxData.currentUser}`;
-                console.log("link:", imgLink);
-                setProfilePicture(imgLink);
-            }
-        })
-        .catch(err => console.error(err));
+            .then(res => {
+                if (res.data.status === "exists") {
+                    let imgLink = `${apiLink}/api/users/profilePicture/${reduxData.currentUser}`;
+                    console.log("link:", imgLink);
+                    setProfilePicture(imgLink);
+                }
+            })
+            .catch(err => console.error(err));
     }
 
     const history = useHistory();
@@ -152,7 +150,7 @@ const PopupSettings = () => {
 
                 <div className="profile">
                     <div className="left">
-                        <img src={profilePicture !== null ? profilePicture : userSVG} alt="user" className="icon" />
+                        <img src={profilePicture || userSVG} alt="user" className="icon" />
                         <h5 className="userName">{reduxData.currentUser}</h5>
                     </div>
 
@@ -191,7 +189,6 @@ const PopupSettings = () => {
                     <h5 className="title">ACCOUNT REMOVAL</h5>
                     <h5 className="delete" onClick={() => deleteAccount()}>Delete Account</h5>
                 </div>
-                {/* <h5 className="cancel" onClick={() => dispatch(toggleSettings())}>CLOSE</h5> */}
             </div>
         </div>
     );

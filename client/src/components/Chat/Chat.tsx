@@ -139,7 +139,6 @@ const Chat: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    console.log("shit");
     document.title = "chat";
     getBasicData({ history, roomId, hashId, dispatch });
   }, []);
