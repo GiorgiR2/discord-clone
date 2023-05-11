@@ -47,20 +47,21 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
     }
     closeContextMenu();
   };
-  const deleteMSG = (id: string | null) => {
+  const deleteMSG = (_id: string | null) => {
     //Todo: remove message from redux states && send delete message using sockets
-    console.log("delete:", id);
-    let messageUser;
-    reduxData.messages.forEach((msg) =>
-      msg._id === id ? (messageUser = msg.user) : null
-    );
-    if (reduxData.currentUser !== messageUser) {
-      alert("You do not have privileges to delete that message...");
-    } else {
-      dispatch(removeMessage({ _id: id as string }));
-      sendDeleteStatus(id);
-    }
+    sendDeleteStatus(reduxData, _id);
     closeContextMenu();
+    // dispatch(removeMessage({ _id: _id as string }));
+    // let messageUser;
+    // reduxData.messages.forEach((msg) =>
+    //   msg._id === id ? (messageUser = msg.user) : null
+    // );
+    // if (reduxData.currentUser !== messageUser) {
+    //   alert("You do not have privileges to delete that message...");
+    // } else {
+    //   dispatch(removeMessage({ _id: id as string }));
+    //   sendDeleteStatus(reduxData, id);
+    // }
   };
 
   const dispatch = useDispatch();

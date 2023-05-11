@@ -18,23 +18,25 @@ const main = (roomId: string, username: string, dispatch: any) => {
   console.log("sent join", roomId, username);
 
   socket.on("roomName", (data: { name: string, roomId: string, voice: boolean }) => {
-    dispatch(setRoomId({ roomId: data.roomId }));
-    dispatch(setVoiceMode({ bool: data.voice }));
-    dispatch(setRoomName({ name: data.name }));
+    const { roomId, voice, name } = data;
+    dispatch(setRoomId({ roomId }));
+    dispatch(setVoiceMode({ bool: voice }));
+    dispatch(setRoomName({ name }));
   });
 
   socket.on("message", (data: dataIMSG) => {
+    const { user, isFile, _id, message, date, originalName, edited, emojis } = data;
     let msgList: messageI = {
-      user: data.user,
-      message: data.isFile ? data._id : data.message,
-      date: data.date,
-      isFile: data.isFile,
-      fileName: data.isFile ? data.originalName : "",
-      _id: data._id,
+      user,
+      message: isFile ? _id : message,
+      date,
+      isFile,
+      fileName: isFile ? originalName : "",
+      _id,
       focusMode: false,
       editMode: false,
-      edited: data.edited,
-      emojis: data.emojis === undefined ? [] : data.emojis,
+      edited,
+      emojis: emojis === undefined ? [] : emojis,
     };
 
     dispatch(addMessage({ messageList: [msgList] }));
@@ -58,18 +60,26 @@ const main = (roomId: string, username: string, dispatch: any) => {
     dispatch(addMessage({ messageList: msgList })); // message/messages
   });
 
-  socket.on("messageDeleted", (data: any) => {
-    dispatch(removeMessage({ _id: data.id }));
+  socket.on("messageDeleted", (data: { success: boolean, _id?: string, status?: string }) => {
+    const { _id, success, status } = data;
+    if(success && _id){
+      dispatch(removeMessage({ _id }));
+    }
+    else if(!success && status){
+      alert(status);
+    }
   });
 
   socket.on("online", (data: any) => {
-    console.log("online:", data);
-    dispatch(setOnline({ name: data.username }));
+    const { username } = data;
+    console.log("online:", username);
+    dispatch(setOnline({ name: username }));
   });
 
   socket.on("offline", (data: any) => {
-    console.log("offline:", data.username);
-    dispatch(setOffline({ name: data.username }));
+    const { username } = data;
+    console.log("offline:", username);
+    dispatch(setOffline({ name: username }));
   });
 
   socket.on("status", (data: any) => {
@@ -83,8 +93,9 @@ const main = (roomId: string, username: string, dispatch: any) => {
   });
 
   socket.on("newEmoji", (data: attachEmojiI) => {
-    console.log("received:", data.emoji, data.num, data._id);
-    dispatch(attachEmoji({ _id: data._id, emoji: data.emoji, num: data.num }));
+    const { _id, emoji, num } = data;
+    console.log("received:", emoji, num, _id);
+    dispatch(attachEmoji({ _id, emoji, num }));
   });
 };
 
@@ -99,17 +110,23 @@ const editMessage = (messageHTML: string, id: string) => {
   socket.emit("editMessage", { messageHTML: messageHTML, _id: id });
 };
 
-const sendDeleteStatus = (id: string | null) => {
-  socket.emit("deleteMessage", { _id: id });
+const sendDeleteStatus = (reduxData: interfaceInitialStateValueI, _id: string | null) => {
+  console.log("delete", reduxData.authentication,  reduxData.currentUser);
+  socket.emit("deleteMessage", { 
+    messageId: _id,
+    username: reduxData.currentUser,
+    hash: reduxData.authentication,
+  });
 };
 
-const sendFileData = ({ reduxData, id, size, filename }: sendFileDataI) => {
+const sendFileData = ({ reduxData, _id, size, filename }: sendFileDataI) => {
+  const { currentRoom, authentication } = reduxData;
   const data = {
-    _id: id,
-    room: reduxData.currentRoom,
-    size: size,
-    authentication: reduxData.authentication,
-    filename: filename,
+    _id,
+    room: currentRoom,
+    size,
+    authentication,
+    filename,
   };
 
   socket.emit("file", data);
@@ -117,21 +134,22 @@ const sendFileData = ({ reduxData, id, size, filename }: sendFileDataI) => {
 };
 
 const sendMessage = (reduxData: interfaceInitialStateValueI, roomId: string, message: string) => {
+  const { authentication, currentUser, currentRoom } = reduxData;
   let datetime = getTime();
   let sdata = {
-    authentication: reduxData.authentication,
-    username: reduxData.currentUser,
-    message: message,
-    datetime: datetime,
-    room: reduxData.currentRoom,
-    roomId: roomId,
+    authentication,
+    message,
+    datetime,
+    roomId,
+    room: currentRoom,
+    username: currentUser,
   };
 
   socket.emit("message", sdata);
 };
 
-const attackEmoji = (messageId: string, emoji: emojiT, room: string, user: string) => {
-  socket.emit("attachEmoji", { _id: messageId, emoji: emoji, room: room, _user: user });
+const attackEmoji = (_id: string, emoji: emojiT, room: string, user: string) => {
+  socket.emit("attachEmoji", { _id, emoji, room, user });
 }
 
 const disconnect = () => socket.disconnect();

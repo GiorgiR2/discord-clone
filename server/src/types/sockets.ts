@@ -17,7 +17,7 @@ interface messageIS {
 }
 
 interface deleteMessageI {
-    _id: string;
+    messageId: string;
     room: string;
 }
 
@@ -43,7 +43,7 @@ type emojiT = "👍" | "😀" | "😘" | "😍" | "😆" | "😜" | "😅" | "�
 interface attachEmojiI {
     emoji: emojiT;
     _id: string; // messageId
-    _user: string;
+    user: string;
     room: string;
 }
 

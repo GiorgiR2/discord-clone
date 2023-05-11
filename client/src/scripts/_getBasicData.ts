@@ -30,7 +30,7 @@ const getBasicData = ({ history, roomId, hashId, dispatch }: getBasicDataI): voi
       .then((res) => {
         if (res.data.success && roomId) {
           const { username, authentication, rooms } = res.data;
-          dispatch(setAuthentication(authentication));
+          dispatch(setAuthentication({ authentication}));
           dispatch(addUserName({ username }));
           dispatch(addRooms({ rooms }));
 

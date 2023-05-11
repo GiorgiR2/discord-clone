@@ -56,7 +56,7 @@ const Messages = () => {
         const sendFileData = (_id: string) => {
             socks.sendFileData({
                 reduxData,
-                id: _id,
+                _id,
                 size: file.size,
                 filename: file.name,
             });

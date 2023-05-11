@@ -8,10 +8,11 @@ import { usersStatus } from "./ts/userOperations.cjs";
 import { findLowestPositionRoom } from "./ts/roomOperations.cjs";
 import * as msgOps from "./ts/msgOperations.cjs";
 
-import MessageModel from "./models/message.model.cjs";
+import MessageModel, { messageSchemaI } from "./models/message.model.cjs";
 import RoomModel from "./models/rooms.model.cjs";
+import UserModel, { userSchemaI } from "./models/user.model.cjs";
 
-import { connectedUsersT, popOutI, usersInVoiceI } from "./types/types.cjs";
+import { authenticationI, connectedUsersT, popOutI, usersInVoiceI } from "./types/types.cjs";
 import { attachEmojiI, deleteMessageI, editMessageI, fileI, joinI, messageIS } from "./types/sockets.js";
 
 import "./config/db.cjs";
@@ -105,11 +106,11 @@ const main = (connectedUsers: connectedUsersT) => {
       let _id = msgOps.addToMongoose({ ...data, isFile: false });
 
       let sdata = {
+        _id,
+        message,
         user: username,
-        message: message,
         date: datetime,
         isFile: false,
-        _id: _id,
         edited: false,
       };
       socket.emit("message", sdata);
@@ -117,13 +118,23 @@ const main = (connectedUsers: connectedUsersT) => {
       // console.log("sent (1)", room, message, "from", username);
     });
 
-    socket.on("deleteMessage", async (data: deleteMessageI): Promise<void> => {
-      MessageModel.find({ _id: data._id }).remove().exec();
-      socket.in(data.room).emit("messageDeleted", { _id: data._id });
+    socket.on("deleteMessage", async (data: deleteMessageI & authenticationI): Promise<void> => {
+      const { messageId, username, hash } = data;
+      const message: any = await MessageModel.findOne({ _id: messageId });
+      const user: any = await UserModel.findOne({ username });
+      if ((message.user === username && user.hashId === hash) || (user.hashId === hash && user.status === "Admin")){
+        message.remove();
+        socket.in(data.room).emit("messageDeleted", {success: true, _id: messageId });
+        socket.emit("messageDeleted", { success: true, _id: messageId });
+      }
+      else {
+        socket.emit("messageDeleted", { success: false, status: "You do not have privileges to delete that message..."  });
+      }
     });
 
     socket.on("editMessage", async (data: editMessageI) => {
-      let filter = { _id: data._id };
+      const { _id } = data;
+      let filter = { _id };
       let msg = data.messageHTML
         .replace("</div><div>", "<br>")
         .replace("<div>", "")
@@ -150,19 +161,20 @@ const main = (connectedUsers: connectedUsersT) => {
     });
 
     socket.on("attachEmoji", async (data: attachEmojiI) => {
-      console.log("server received emoji:", data.emoji, data._id, data._user);
-      let message: any = await MessageModel.findOne({ _id: data._id });
+      const { _id, emoji, user } = data;
+      console.log("server received emoji:", emoji, _id, user);
+      let message: any = await MessageModel.findOne({ _id });
 
       let found = false;
       let suspend = false;
       let num = 1;
-      message.emojis.forEach((emoji: any) => {
-        if (emoji.emoji === data.emoji) {
-          if (emoji.users.includes(data._user) === false) {
-            emoji.num += 1;
-            emoji.users.push(data._user);
+      message.emojis.forEach((_emoji: any) => {
+        if (_emoji.emoji === emoji) {
+          if (_emoji.users.includes(user) === false) {
+            _emoji.num += 1;
+            _emoji.users.push(user);
             found = true;
-            num = emoji.num;
+            num = _emoji.num;
           } else {
             suspend = true;
           }
@@ -171,14 +183,10 @@ const main = (connectedUsers: connectedUsersT) => {
       if (suspend) {
         return;
       } else if (found === false) {
-        message.emojis.push({ emoji: data.emoji, num: 1, users: [data._user] });
+        message.emojis.push({ emoji, num: 1, users: [user] });
       }
 
-      let jData = {
-        emoji: data.emoji,
-        num: num,
-        _id: data._id,
-      };
+      let jData = { emoji, num, _id };
       socket.emit("newEmoji", jData);
       socket.in(data.room).emit("newEmoji", jData);
       await message.save();

@@ -14,47 +14,34 @@ const bufferData = (username: string, password: string): string => {
   return hash;
 };
 
-const registerUser = async (username: string, hashedPassword: string, ip: string | undefined): Promise<"done" | "username already exists"> => {
-  const doc = await UserModel.find({
-    username: username,
-  });
+const registerUser = async (username: string, hashedPassword: string, ip: string | undefined): Promise<"done" | "username already exist"> => {
+  const doc = await UserModel.find({ username });
 
   if (doc.length === 0) {
     let user = new UserModel({
       _id: new mongoose.Types.ObjectId(),
-      username: username,
+      username,
       password: hashedPassword,
       hashId: bufferData(username, hashedPassword),
-      ip: ip,
+      ip,
     });
 
     saveModel(user);
     return "done";
   } else {
-    return "username already exists";
+    return "username already exist";
   }
 };
 
 const addIp = async (username: string, ip: string | undefined): Promise<void> => {
-  await UserModel.updateOne(
-    {
-      username: username,
-    },
-    {
-      $set: {
-        ip: ip,
-      },
-    }
-  )
+  await UserModel.updateOne({ username }, { $set: { ip } })
     .exec()
     .then(_ => console.log("ip added..."))
     .catch(err => console.error(err));
 };
 
 const checkData = async (hashId: string): Promise<checkDataI> => {
-  const doc = await UserModel.find({
-    hashId: hashId,
-  }).exec();
+  const doc = await UserModel.find({ hashId }).exec();
 
   if (doc.length !== 0) {
     const rooms = await loadRooms();
@@ -62,8 +49,8 @@ const checkData = async (hashId: string): Promise<checkDataI> => {
     return {
       success: true,
       username: doc[0].username,
+      authentication: doc[0].hashId,
       rooms,
-      authentication: doc[0]._id.toString(),
     };
   } else return {
     success: false
@@ -78,8 +65,8 @@ const checkLogin = async (username: string, password: string): Promise<checkLogi
   } else {
     let pswrd = String(doc[0].password);
     if (password === pswrd) {
-      let hashId = doc[0].hashId;
-      let { _roomId } = await findLowestPositionRoom();
+      const hashId = doc[0].hashId;
+      const { _roomId } = await findLowestPositionRoom();
       return {
         success: true,
         roomId: _roomId,

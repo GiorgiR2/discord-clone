@@ -7,7 +7,7 @@ const initialStateValue: interfaceInitialStateValueI = {
   currentUser: "",
   currentRoom: "",
   currentRoomId: "",
-  rooms: [], // all mongoose rooms {_id: string, name: string, position: int, voice: boolean}
+  rooms: [],
   draggingRoomId: null,
   draggingRoomIndex: -1,
   online: [],
