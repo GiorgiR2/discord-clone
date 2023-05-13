@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import scrollToBottom from "../components/js/scrollToBottom";
+import scrollToBottom from "../utils/scrollToBottom";
 import { attachEmojiRX, editMessageI, interfaceInitialStateValueI, messageI, modeI } from "../types/types";
 
 const initialStateValue: interfaceInitialStateValueI = {

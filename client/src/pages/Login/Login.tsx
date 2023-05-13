@@ -3,12 +3,12 @@ import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
 
 import axios from "axios";
 
-import encrypt from "../js/encrypt";
+import encrypt from "../../utils/encrypt";
 import { getBasicData } from "../../scripts/_getBasicData";
 
 import "./_style.sass";
 import packageJson from "../../../package.json";
-import InputComponent from "./inputComponent/inputComponent";
+import InputComponent from "../../components/inputComponent/inputComponent";
 
 const userSVG: string = require("../../assets/login/user.svg").default;
 

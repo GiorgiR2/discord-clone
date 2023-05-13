@@ -1,7 +1,7 @@
 import axios from "axios";
 import { History } from "history";
 
-import * as socks from "../scripts/_socketSide";
+import * as socks from "./_socketSide";
 
 import { addUserName, setAuthentication, addRooms } from "../features/interfaces";
 

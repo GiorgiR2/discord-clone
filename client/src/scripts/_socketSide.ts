@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-import getTime from "./getTime";
+import getTime from "../utils/getTime";
 import packageJson from "../../package.json";
 
 import { setOnline, setOffline, addMessage, removeMessage, attachEmoji, setRoomName, setRoomId, setVoiceMode } from "../features/interfaces";

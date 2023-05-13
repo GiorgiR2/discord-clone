@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useOnClickOutside } from "../customHooks/useOnClickOutside";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 
 import { useParams, useHistory } from "react-router-dom";
 

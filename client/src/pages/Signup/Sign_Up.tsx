@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import axios from "axios";
-import encrypt from "../js/encrypt";
-import { checkStatus } from "../js/passwordStrength";
+import encrypt from "../../utils/encrypt";
+import { checkStatus } from "../../utils/passwordStrength";
 
-import InputComponent from "./inputComponent/inputComponent";
+import InputComponent from "../../components/inputComponent/inputComponent";
 
 import { getBasicData } from "../../scripts/_getBasicData";
 import packageJson from "../../../package.json";
 
-import "./_style.sass";
+import "../Login/_style.sass";
 
 const userSVG: string = require("../../assets/login/user.svg").default;
 

@@ -1,19 +1,19 @@
-import "./deleteDiv.sass";
-
 import React, { useRef } from "react";
-import { useOnClickOutside } from "../../customHooks/useOnClickOutside";
+import { useOnClickOutside } from "../../../hooks/useOnClickOutside";
 
 import { useDispatch, useSelector } from "react-redux";
 import { closeContext } from "../../../features/toggle";
-import { removeMessage, enterEditMode, exitFocusMode, enterFocusMode } from "../../../features/interfaces";
+import { enterEditMode, exitFocusMode, enterFocusMode } from "../../../features/interfaces";
 
 import { sendDeleteStatus } from "../../../scripts/_socketSide";
 
 import { RootState } from "../../..";
 import { messageI } from "../../../types/types";
 
-const Edit: string = require("../../../styles/SVGs/edit.svg").default;
-const Trash: string = require("../../../styles/SVGs/trash.svg").default;
+import "./deleteDiv.sass";
+
+const EditSVG: string = require("../../../assets/chat/options/edit.svg").default;
+const TrashSVG: string = require("../../../assets/chat/options/trash.svg").default;
 
 interface DeleteDivI {
   x: number;
@@ -81,11 +81,11 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
         <ul>
           <li id="edit" onClick={() => editMSG(id)}>
             <h3 className="edit">Edit Message</h3>
-            <img src={Edit} alt="edit" />
+            <img src={EditSVG} alt="edit" />
           </li>
           <li id="delete" onClick={() => deleteMSG(id)}>
             <h3 className="delete">Delete Message</h3>
-            <img className="trash" src={Trash} alt="trash" />
+            <img className="trash" src={TrashSVG} alt="trash" />
           </li>
         </ul>
       </nav>

@@ -1,8 +1,8 @@
 import { HashRouter as Router, Switch, Route } from "react-router-dom"; // BrowserRouter, Switch
 
-import Login from "./components/Login&Signup/Login";
-import SignUp from "./components/Login&Signup/Sign_Up";
-import Chat from "./components/Chat/Chat";
+import Login from "./pages/Login/Login";
+import SignUp from "./pages/Signup/Sign_Up";
+import Chat from "./pages/Chat/Chat";
 
 import "./styles/_main.sass";
 

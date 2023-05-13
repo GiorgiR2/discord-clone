@@ -96,4 +96,13 @@ const usersStatus = async (): Promise<connectedUsersT> => {
   return users;
 };
 
-export { registerUser, addIp, checkLogin, checkData, usersStatus };
+const getUserHash = async (username: string): Promise<{ userHash: string, userStatus: string }> =>
+  new Promise((resolve, reject) => {
+    UserModel.findOne({ username })
+    .then(user => {
+      resolve({ userHash: user!.hashId, userStatus: user!.status });
+    })
+    // reject({ userHash: null });
+  });
+
+export { registerUser, addIp, checkLogin, checkData, usersStatus, getUserHash };

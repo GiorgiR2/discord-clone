@@ -2,9 +2,9 @@
 import { useState } from "react";
 import "./_inputComponent.sass";
 
-const userSVG: string = require("../../../assets/login/user.svg").default;
-const lockSVG: string = require("../../../assets/login/lock.svg").default;
-const eyeSVG: string = require("../../../assets/login/eye.svg").default;
+const userSVG: string = require("../../assets/login/user.svg").default;
+const lockSVG: string = require("../../assets/login/lock.svg").default;
+const eyeSVG: string = require("../../assets/login/eye.svg").default;
 
 interface InputComponentI {
   input: any;

@@ -34,22 +34,20 @@ const PopupAddRoom: React.FC = () => {
       }
     }
   };
-  const sendAddCommand = (name: any) => {
+  const sendAddCommand = (name: string) => {
     if (name !== "") {
-      // alert("function not available...");
       axios
-        .post(`${apiLink}/api/addCategory`, { name: name, voice: voiceChat() })
+        .post(`${apiLink}/api/addRoom`, { name, voice: voiceChat() })
         .then((res) => {
-          if (res.data.status === "done") {
-            let id = res.data._id;
-
+          const { success, _id } = res.data;
+          if (success) {
             dispatch(togglePopupAdd());
             dispatch(
               addRoom({
-                room: { name: name, voice: voiceChat(), _id: id },
+                room: { name, voice: voiceChat(), _id },
               })
             );
-          } else if (res.data.status === "try_again") {
+          } else if (success === false) {
             dispatch(togglePopupAdd());
             alert("try again...");
           }

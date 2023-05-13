@@ -18,9 +18,10 @@ const CamOff: string = require("../../../assets/voice/camOff.svg").default;
 const CamOn: string = require("../../../assets/voice/camOn.svg").default;
 const ScreenShare: string = require("../../../assets/voice/screenShare.svg").default;
 
-const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
-const FullScreen: string = require("../../../assets/fullscreen_black_24dp.svg").default;
+const FullScreen: string = require("../../../assets/voice/fullscreen_black_24dp.svg").default;
 const EndCall: string = require("../../../assets/voice/phone-call.svg").default;
+
+const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
 
 const launchIntoFullscreen = (element: any): void => {
   if (element.requestFullscreen) {
@@ -40,7 +41,6 @@ const Frame = ({ user, status, from }: frameI) => {
   // const videoRef = useRef();
   return (
     <div className="frame">
-      {/* style={{height: 150, width: 100}} */}
       <video
         className="video"
         id={from}
@@ -48,7 +48,7 @@ const Frame = ({ user, status, from }: frameI) => {
         playsInLine
         isFullscreen={true}
       />
-      {/*controls*/}
+
       <h5 className="statusLabel">{status}</h5>
       <div className="bottom">
         <h5 className="name">{user}</h5>

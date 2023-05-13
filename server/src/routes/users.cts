@@ -70,10 +70,10 @@ router.post("/api/users/changePassword", async (req: Request, res: Response) => 
   const user = await usersModel.findOne(filter);
   if (user?.password === oldPassword && user !== null) {
     user.password = newPassword;
-    res.send({ status: "done" });
+    res.send({ success: true });
   }
   else {
-    res.send({ status: "wrong password" });
+    res.send({ success: false });
   }
   await user!.save();
 });
@@ -92,7 +92,7 @@ router.delete("/api/users/deleteAccount", async (req: Request, res: Response) =>
   });
   saveModel(newDeletedUserModel);
 
-  res.send({ status: "done" });
+  res.send({ success: true });
 });
 
 router.post("/api/users/addProfilePicture", upload.single("image"), async (req: Request, res: Response) => {
@@ -119,11 +119,11 @@ router.get("/api/users/checkImageAvailability/:username", (req: Request, res: Re
     .then(user => {
       if (user?.imageDir !== null) {
         console.log("exist", user?.imageDir);
-        res.send({ status: "exists" });
+        res.send({ success: true });
       }
       else {
         console.log("exist", user.imageDir);
-        res.send({ status: "do not exist" });
+        res.send({ success: false });
       }
     });
 });

@@ -19,7 +19,7 @@ export const userSlice = createSlice({
   },
   reducers: {
     addEditingCatId: (state, action) => {
-      state.value.editingCatId = action.payload.id;
+      state.value.editingCatId = action.payload._id;
     },
     togglePopupEdit: (state) => {
       state.value.displayEdit = !state.value.displayEdit;

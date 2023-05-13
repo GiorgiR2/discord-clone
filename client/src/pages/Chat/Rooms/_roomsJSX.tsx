@@ -4,15 +4,17 @@ import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import axios from "axios";
-import packageJson from "../../../../package.json";
+
+import Trash from "./trash";
+import Edit from "./edit";
 
 import { rememberDraggingRoom, modifyPosition } from "../../../features/interfaces";
 
-import { EditSVG, TrashSVG } from "../../../styles/SVGs/_SVGs";
 import { roomI } from "../../../types/types";
 import { RootState } from "../../..";
 
 import "./_roomsJSX.sass";
+import packageJson from "../../../../package.json";
 
 const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
 
@@ -22,13 +24,12 @@ const RoomsJSX = (): JSX.Element => {
   const onDragStart = (event: React.DragEvent<HTMLLIElement>, id: string, index: number): void => {
     //step 1: redux - add _id as active with its position number
     // console.log("drag started, id:", id);
-    dispatch(rememberDraggingRoom({ id: id, index: index }));
+    dispatch(rememberDraggingRoom({ id, index }));
   };
   const onDragEnter = (event: React.DragEvent<HTMLLIElement>, n: number) => {
     // Todo: add underline on current position
     // console.log("drag enter, index:", n);
     setIndex(n);
-    // dispatch(changePosition({ index: n }));
   };
   const onDragEnd = (event: React.DragEvent<HTMLLIElement>) => {
     //step 2: redux - finally modify list of rooms and send a command to the back-end for changing mongodb data
@@ -40,8 +41,8 @@ const RoomsJSX = (): JSX.Element => {
         finalIndex: index,
       })
       .then((res) => {
-        if (res.data.status === "done") {
-          dispatch(modifyPosition({ index: index }));
+        if (res.data.success) {
+          dispatch(modifyPosition({ index }));
           setIndex(-1);
         }
       })
@@ -81,9 +82,9 @@ const RoomsJSX = (): JSX.Element => {
                   <img className="speaker" src={Speaker} alt="speaker" /> : <span className="sharp">#</span>} <span className="name">{room.name}</span>
               </div>
               <div className="svgs">
-                <EditSVG id={room._id} />{" "}
+                <Edit _id={room._id} />{" "}
                 {/* set redux editingCatId as id */}
-                <TrashSVG id={room._id} />
+                <Trash _id={room._id} />
               </div>
             </li>
           ))

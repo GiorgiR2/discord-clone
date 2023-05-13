@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import bp from "body-parser";
 
-import { usersStatus } from "./ts/userOperations.cjs";
+import { getUserHash, usersStatus } from "./ts/userOperations.cjs";
 import { findLowestPositionRoom } from "./ts/roomOperations.cjs";
 import * as msgOps from "./ts/msgOperations.cjs";
 
@@ -121,8 +121,8 @@ const main = (connectedUsers: connectedUsersT) => {
     socket.on("deleteMessage", async (data: deleteMessageI & authenticationI): Promise<void> => {
       const { messageId, username, hash } = data;
       const message: any = await MessageModel.findOne({ _id: messageId });
-      const user: any = await UserModel.findOne({ username });
-      if ((message.user === username && user.hashId === hash) || (user.hashId === hash && user.status === "Admin")){
+      const { userHash, userStatus } = await getUserHash(username);
+      if ((message.user === username && userHash === hash) || (userHash === hash && userStatus === "Admin")){
         message.remove();
         socket.in(data.room).emit("messageDeleted", {success: true, _id: messageId });
         socket.emit("messageDeleted", { success: true, _id: messageId });

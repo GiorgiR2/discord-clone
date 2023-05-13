@@ -6,11 +6,11 @@ import { RootState } from "../../..";
 import axios from "axios";
 import packageJson from "../../../../package.json";
 
-import encrypt from "../../js/encrypt";
+import encrypt from "../../../utils/encrypt";
 
 import { toggleSettings } from "../../../features/toggle";
-import { checkStatus } from "../../js/passwordStrength";
-import InputComponent from "../../Login&Signup/inputComponent/inputComponent";
+import { checkStatus } from "../../../utils/passwordStrength";
+import InputComponent from "../../../components/inputComponent/inputComponent";
 
 import "./_popup.sass";
 import "./_settings.sass";
@@ -34,14 +34,14 @@ const PopupSettings = () => {
                 newPassword: hashedNewPassword
             })
                 .then(res => {
-                    if (res.data.status === "done") {
+                    if (res.data.success) {
                         alert("password succesfully changed...");
                         setCurrentPassword("");
                         setPassword0("");
                         setPassword1("");
                         dispatch(toggleSettings());
                     }
-                    else if (res.data.status === "wrong password") {
+                    else if (res.data.success === false) {
                         alert("wrong password");
                     }
                 })
@@ -64,7 +64,7 @@ const PopupSettings = () => {
             }
         })
             .then(res => {
-                if (res.data.status === "done") {
+                if (res.data.success) {
                     socket.emit("popAccount", { authentication: reduxData.authentication, username: reduxData.currentUser });
 
                     alert("user succesfully deleted...");
@@ -102,9 +102,8 @@ const PopupSettings = () => {
     const loadProfilePicture = () => {
         axios.get(`${apiLink}/api/users/checkImageAvailability/${reduxData.currentUser}`)
             .then(res => {
-                if (res.data.status === "exists") {
+                if (res.data.success) {
                     let imgLink = `${apiLink}/api/users/profilePicture/${reduxData.currentUser}`;
-                    console.log("link:", imgLink);
                     setProfilePicture(imgLink);
                 }
             })

@@ -17,18 +17,15 @@ const apiLink = packageJson.proxy;
 
 const PopupEditRoom: React.FC = () => {
   const sendEditCommand = (newName: string | undefined | null) => {
-    let elementId = toggleData.editingCatId;
+    const _id = toggleData.editingCatId;
     if (newName !== "") {
       axios
-        .post(`${apiLink}/api/editCategory`, {
-          catId: elementId,
-          newCatName: newName,
-        })
+        .post(`${apiLink}/api/editRoom`, { _id, newName })
         .then((res) => {
-          if (res.data.status === "done") {
+          if (res.data.success) {
             dispatch(togglePopupEdit());
             let newJson = reduxData.rooms.map((cat: roomI) => {
-              if (cat._id === elementId) {
+              if (cat._id === _id) {
                 return {
                   name: newName,
                   position: cat.position,
@@ -39,7 +36,7 @@ const PopupEditRoom: React.FC = () => {
             });
 
             dispatch(addRooms({ rooms: newJson }));
-          } else if (res.data.status === "try_again") {
+          } else if (!res.data.success) {
             alert("try again...");
           }
         })
@@ -56,6 +53,7 @@ const PopupEditRoom: React.FC = () => {
   const [voice, setVoice] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log("id", toggleData.editingCatId)
     reduxData.rooms.forEach((el: roomI) => {
       if (el._id === toggleData.editingCatId) {
         setDefValue(el.name);

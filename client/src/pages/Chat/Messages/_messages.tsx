@@ -14,13 +14,13 @@ import EmojiDiv from "./_emojiDiv";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import getTime from "../../../scripts/getTime";
+import getTime from "../../../utils/getTime";
 import * as socks from "../../../scripts/_socketSide";
 
 import packageJson from "../../../../package.json";
 
 import "./_messages.sass";
-import scrollToBottom from "../../js/scrollToBottom";
+import scrollToBottom from "../../../utils/scrollToBottom";
 import getNames from "./_getNames";
 
 import loadingGIF from "../../../assets/chat/loading.gif";
