@@ -295,8 +295,8 @@ const main = (connectedUsers: connectedUsersT) => {
   app.use(bp.json());
   app.use(bp.urlencoded({ extended: true }));
   app.use(cors(corsOptions));
-  app.use(usersRouter);
   app.use(messagesRouter);
+  app.use(usersRouter);
   app.use(roomsRouter);
 };
 

@@ -36,6 +36,8 @@ const RoomsJSX = (): JSX.Element => {
     // console.log("drag ended");
     axios
       .post(`${apiLink}/api/changeRoomPosition`, {
+        authentication: reduxData.authentication,
+        username: reduxData.currentUser,
         roomId: reduxData.draggingRoomId,
         draggingRoomIndex: reduxData.draggingRoomIndex,
         finalIndex: index,

@@ -7,12 +7,13 @@ const upload = multer({ dest: "profile_pictures" });
 
 const router: Router = express.Router();
 
-import { registerUser, checkLogin, checkData, addIp } from "../ts/userOperations.cjs";
+import { registerUser, checkLogin, checkData, addIp, getUserHash } from "../ts/userOperations.cjs";
 
 import usersModel from "../models/user.model.cjs";
 import deletedUserModel from "../models/deletedUser.model.cjs";
 import getIp from "../scripts/getIp.cjs";
 import saveModel from "../ts/saveModel.cjs";
+import { isAuth } from "./middleware/authentication.cjs";
 
 router.get("/", (req, res) => {
   res.status(200).json({
@@ -24,22 +25,22 @@ router.post("/api/users/register", async (req: Request, res: Response) => {
   const { username, hashedPassword } = req.body;
   const ip = getIp(req);
 
-  let response = await registerUser(username, hashedPassword, ip) //, password0, password1);
-  res.send({ data: response });
+  const {success, data} = await registerUser(username, hashedPassword, ip) //, password0, password1);
+  res.send({ success, data });
 });
 
 router.post("/api/users/login", async (req: Request, res: Response) => {
   const ip = getIp(req);
 
-  const { username, password } = await req.body;
+  const { username, hashedPassword } = await req.body;
 
-  let data = await checkLogin(username, password);
+  const data = await checkLogin(username, hashedPassword);
 
   if (data.success) {
     await addIp(username, ip);
     await res.send(data);
   } else {
-    res.send({ status: "try again, wrong username and/or password" });
+    res.send({ success: false, status: "412 Precondition Failed" });
   }
 });
 
@@ -49,21 +50,18 @@ router.get("/api/users/:hashId", async (req: Request, res: Response) => {
 
     const data = await checkData(hashId);
     await res.send(data);
-    // console.log("user hash successfully authenticated:", data, req.body.hash);
   } catch {
     await res.send({ success: false });
   }
 });
 
 router.get("/api/users/usernameByHashId/:hashId", async (req: Request, res: Response) => {
-  // console.log("/api/users/usernameByHashId:", req.body.hashId);
   const { hashId } = req.params;
-  let user = await usersModel.find({ hashId }).exec();
-  console.log("sent!!!!!!!!", user[0].username);
+  const user = await usersModel.find({ hashId }).exec();
   await res.send({ username: user[0].username });
 });
 
-router.post("/api/users/changePassword", async (req: Request, res: Response) => {
+router.post("/api/users/changePassword", isAuth, async (req: Request, res: Response) => {
   const { username, oldPassword, newPassword } = req.body;
 
   const filter = { username: username };
@@ -78,11 +76,9 @@ router.post("/api/users/changePassword", async (req: Request, res: Response) => 
   await user!.save();
 });
 
-router.delete("/api/users/deleteAccount", async (req: Request, res: Response) => {
-  const Authorization = req.headers.Authorization;
-  const { username } = req.body;
-  console.log("deleting account:", Authorization);
-  console.log("username:", username);
+router.post("/api/users/deleteAccount", isAuth, async (req: Request, res: Response) => {
+  const { authentication, username } = req.body;
+  console.log(`deleting account: ${authentication}; username: ${username}`);
 
   usersModel.findOneAndDelete({ username }).exec();
 
@@ -136,4 +132,3 @@ const handleDownload = async (req: Request, res: Response) => {
 router.route("/api/users/profilePicture/:username").get(handleDownload).post(handleDownload);
 
 module.exports = router;
-// export default router;

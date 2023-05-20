@@ -20,7 +20,12 @@ const PopupEditRoom: React.FC = () => {
     const _id = toggleData.editingCatId;
     if (newName !== "") {
       axios
-        .post(`${apiLink}/api/editRoom`, { _id, newName })
+        .post(`${apiLink}/api/editRoom`, {
+          authentication: reduxData.authentication,
+          username: reduxData.currentUser,
+          _id,
+          newName
+        })
         .then((res) => {
           if (res.data.success) {
             dispatch(togglePopupEdit());

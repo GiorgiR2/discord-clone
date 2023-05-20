@@ -55,13 +55,9 @@ const PopupSettings = () => {
         }
     }
     const deleteAccount = (): void => {
-        axios.delete(`${apiLink}/api/users/deleteAccount`, {
-            headers: {
-                Authorization: reduxData.authentication
-            },
-            data: {
-                username: reduxData.currentUser
-            }
+        axios.post(`${apiLink}/api/users/deleteAccount`, {
+            authentication: reduxData.authentication,
+            username: reduxData.currentUser
         })
             .then(res => {
                 if (res.data.success) {

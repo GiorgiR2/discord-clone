@@ -1,42 +1,39 @@
-import UserModel from "../models/user.model.cjs";
-
 import { loadRooms, findLowestPositionRoom } from "./roomOperations.cjs";
+import UserModel from "../models/user.model.cjs";
 import saveModel from "./saveModel.cjs";
 
 import mongoose from "mongoose";
 
-var sha1 = require("sha1");
-
 import { connectedUsersT, checkDataI, checkLoginI } from "../types/types.cjs";
 
-const bufferData = (username: string, password: string): string => {
-  let hash = sha1(`${username}${password}`);
-  return hash;
-};
+const sha1 = require("sha1");
 
-const registerUser = async (username: string, hashedPassword: string, ip: string | undefined): Promise<"done" | "username already exist"> => {
-  const doc = await UserModel.find({ username });
+const bufferData = (username: string, password: string): string => sha1(`${username}${password}`);
 
-  if (doc.length === 0) {
-    let user = new UserModel({
+const registerUser = async (username: string, hashedPassword: string, ip: string | undefined): Promise<{ success: boolean, data?: "username exist" }> => {
+  const users = await UserModel.find({ username });
+
+  if (users.length === 0) {
+    const user = new UserModel({
       _id: new mongoose.Types.ObjectId(),
       username,
       password: hashedPassword,
       hashId: bufferData(username, hashedPassword),
       ip,
+      status: "user",
     });
 
     saveModel(user);
-    return "done";
+    return { success: true };
   } else {
-    return "username already exist";
+    return { success: false, data: "username exist" };
   }
 };
 
 const addIp = async (username: string, ip: string | undefined): Promise<void> => {
-  await UserModel.updateOne({ username }, { $set: { ip } })
+  await UserModel.findOneAndUpdate({ username }, { ip })
     .exec()
-    .then(_ => console.log("ip added..."))
+    .then(_ => console.log(`ip ${ip} added...`))
     .catch(err => console.error(err));
 };
 
@@ -50,7 +47,7 @@ const checkData = async (hashId: string): Promise<checkDataI> => {
       success: true,
       username: doc[0].username,
       authentication: doc[0].hashId,
-      rooms,
+      rooms
     };
   } else return {
     success: false
@@ -58,19 +55,19 @@ const checkData = async (hashId: string): Promise<checkDataI> => {
 };
 
 const checkLogin = async (username: string, password: string): Promise<checkLoginI> => {
-  let doc = await UserModel.find({ username }).exec();
+  const user = await UserModel.findOne({ username }).exec();
 
-  if (doc[0] == undefined) {
+  if (user == undefined) {
     return { success: false };
   } else {
-    let pswrd = String(doc[0].password);
+    let pswrd = String(user.password);
     if (password === pswrd) {
-      const hashId = doc[0].hashId;
+      const hashId = user.hashId;
       const { _roomId } = await findLowestPositionRoom();
       return {
         success: true,
         roomId: _roomId,
-        hashId,
+        hashId
       };
     } else {
       return { success: false };
@@ -100,7 +97,7 @@ const getUserHash = async (username: string): Promise<{ userHash: string, userSt
   new Promise((resolve, reject) => {
     UserModel.findOne({ username })
     .then(user => {
-      resolve({ userHash: user!.hashId, userStatus: user!.status });
+      resolve({ userHash: user!.hashId, userStatus: user!.status as string });
     })
     // reject({ userHash: null });
   });

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import axios from "axios";
 import packageJson from "../../../../package.json";
@@ -9,6 +9,7 @@ import { togglePopupAdd } from "../../../features/toggle";
 
 import "./_popup.sass";
 import { optionsI } from "../../../types/types";
+import { RootState } from "../../..";
 
 const Speaker: string = require("../../../assets/volume_up_black_24dp.svg").default;
 
@@ -37,7 +38,11 @@ const PopupAddRoom: React.FC = () => {
   const sendAddCommand = (name: string) => {
     if (name !== "") {
       axios
-        .post(`${apiLink}/api/addRoom`, { name, voice: voiceChat() })
+        .post(`${apiLink}/api/addRoom`, {
+          authentication: reduxData.authentication,
+          username: reduxData.currentUser,
+          name,
+          voice: voiceChat() })
         .then((res) => {
           const { success, _id } = res.data;
           if (success) {
@@ -56,6 +61,8 @@ const PopupAddRoom: React.FC = () => {
     }
   };
   const newNameRef = useRef(null);
+
+  const reduxData = useSelector((state: RootState) => state.interfaces.value);
   const dispatch = useDispatch();
 
   const [options, setOptions] = useState<optionsI>({ chat: true, voice: false });

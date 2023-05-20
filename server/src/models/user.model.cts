@@ -6,7 +6,7 @@ interface userSchemaI extends mongoose.Document {
   username: string;
   password: string;
   imageDir: null | string;
-  status: "user" | "admin";
+  status: "user" | "Admin";
   ip: string;
   hashId: string;
 }

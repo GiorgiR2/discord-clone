@@ -21,43 +21,34 @@ interface dataI {
   hashedPassword: string;
 }
 
-// const salt = bcrypt.genSaltSync(10)
-
 const SignUp = () => {
   const sendData = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     if (password0 !== password1){
-      alert("passwords do not match");
+      alert("Passwords do not match");
       return;
     }
 
     const hashedPassword = encrypt(password0);
-    // console.log("hashedPassword:", hashedPassword);
-    
-    const data: dataI = {
-      username: username, //username.current.value,
-      hashedPassword: hashedPassword,
-    };
+    const data: dataI = { username, hashedPassword };
 
     axios
       .post(`${apiLink}/api/users/register`, data)
       .then((res) => {
         console.log("res", res.data);
-        if (res.data.data === "done") {
-          // username.current.value = "";
+        if (res.data.success) {
           setUsername("");
           setPassword0("");
           setPassword1("");
-          alert("registration was successful");
-          // history.push("/?status=done");
-          // window.location.reload();
-        } else alert(res.data.data);
+          alert("Registration was successful");
+        } else {
+          alert(`Registration failed: ${res.data.data}`);
+        }
       })
       .catch((err) => console.log(err));
   };
 
-  // const username = useRef<any>(null);
   const [username, setUsername] = useState<string>("");
   const [password0, setPassword0] = useState<string>("");
   const [password1, setPassword1] = useState<string>("");
@@ -66,7 +57,6 @@ const SignUp = () => {
   const [match, setMatch] = useState<"" | "passwords must match" | "match">("");
 
   const history = useHistory();
-  // let { signup } = useParams();
 
   useEffect(() => {
     document.title = "sign up";

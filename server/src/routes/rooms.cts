@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import RoomsModel, { roomsSchemaI } from "../models/rooms.model.cjs";
 import saveModel from "../ts/saveModel.cjs";
 import { findLowestPositionRoom } from "../ts/roomOperations.cjs";
-import { getUserHash } from "../ts/userOperations.cjs";
+import { isAdmin, isAuth } from "./middleware/authentication.cjs";
 
 const router: Router = express.Router();
 
@@ -37,14 +37,14 @@ router.get("/api/roomId/:id", async (req: Request, res: Response) => {
   console.log("sent nameById:", room.name);
 });
 
-router.post("/api/editRoom", async (req: Request, res: Response) => {
+router.post("/api/editRoom", isAuth, async (req: Request, res: Response) => {
   const { _id, newName } = req.body;
 
   RoomsModel.findOneAndUpdate({ _id }, { name: newName }).exec();
   res.send({ success: true });
 });
 
-router.post("/api/addRoom", async (req: Request, res: Response) => {
+router.post("/api/addRoom", isAuth, async (req: Request, res: Response) => {
   const { name, voice } = req.body;
   RoomsModel.count({}, async (err: any, count: number) => {
     let newRoomModel = new RoomsModel({
@@ -63,7 +63,7 @@ router.post("/api/addRoom", async (req: Request, res: Response) => {
   });
 });
 
-router.post("/api/changeRoomPosition", async (req: Request, res: Response) => {
+router.post("/api/changeRoomPosition", isAuth, async (req: Request, res: Response) => {
   const { roomId, draggingRoomIndex, finalIndex } = req.body;
 
   if (finalIndex === draggingRoomIndex) {
@@ -95,14 +95,12 @@ router.post("/api/changeRoomPosition", async (req: Request, res: Response) => {
   res.send({ success: true });
 });
 
-router.post("/api/deleteRoom", async (req: Request, res: Response) => {
-  const { authentication, username, _id } = req.body;
+router.post("/api/deleteRoom", isAdmin, async (req: Request, res: Response) => {
+  const { _id } = req.body;
 
   const doc = await RoomsModel.findOne({ _id });
 
-  const { userHash, userStatus } = await getUserHash(username);
-  if (doc === null || userHash !== authentication || userStatus !== "Admin") {
-    res.send({ success: false, status: "You need Admin privileges to delete a room..." });
+  if (doc === null) {
     return;
   }
 

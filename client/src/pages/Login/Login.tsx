@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, Link } from "react-router-dom"; // { Link, Redirect }
+import { useHistory, Link } from "react-router-dom";
 
 import axios from "axios";
 
@@ -24,14 +24,11 @@ const Login = () => {
     console.log(`remember hashId: ${hashId}`);
     localStorage.setItem("hashId", hashId);
   };
-  const sendLoginData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, user: string, password: string) => {
+  const sendLoginData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, username: string, password: string) => {
     e.preventDefault();
 
     const hashedPassword = encrypt(password);
-    let data = {
-      username: user,
-      password: hashedPassword,
-    };
+    const data = { username, hashedPassword };
 
     axios
       .post(`${apiLink}/api/users/login`, data, config)
@@ -43,17 +40,15 @@ const Login = () => {
           }
 
           console.log("data:", roomId, hashId);
-          history.push(`/chat/${roomId}/${hashId}`); // /?id=${res.data.data}
+          history.push(`/chat/${roomId}/${hashId}`);
           window.location.reload();
         } else {
-          alert(res.data.status);
+          alert("Login information is incorrect");
         }
       })
-      .catch((err) => console.error("error...", err));
+      .catch((err) => console.error(err));
   };
 
-  // const username = useRef<any>(null);
-  // const password = useRef<any>(null);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const history = useHistory();

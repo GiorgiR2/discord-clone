@@ -28,7 +28,7 @@ const Trash = ({ _id }: idI): JSX.Element => {
           dispatch(addRooms({ rooms: newj }));
         }
         else{
-          alert(res.data.status);
+          alert("You need admin privileges to delete rooms");
         }
       })
       .catch((err) => console.error(err));
