@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import getTime from "../utils/getTime";
 import packageJson from "../../package.json";
 
-import { setOnline, setOffline, addMessage, removeMessage, attachEmoji, setRoomName, setRoomId, setVoiceMode } from "../features/interfaces";
+import { setOnline, setOffline, addMessage, removeMessage, attachEmoji, setRoomName, setRoomId, setVoiceMode, incrementNewMessagesLoaded, decrementNewMessagesLoaded } from "../features/interfaces";
 import { messageI, sendFileDataI, emojiT, attachEmojiI, interfaceInitialStateValueI } from "../types/types";
 
 type dataIMSG = messageI & { originalName: string };
@@ -39,6 +39,7 @@ const main = (roomId: string, username: string, dispatch: any) => {
       emojis: emojis === undefined ? [] : emojis,
     };
 
+    dispatch(incrementNewMessagesLoaded());
     dispatch(addMessage({ messageList: [msgList] }));
   });
 
@@ -64,6 +65,7 @@ const main = (roomId: string, username: string, dispatch: any) => {
     const { _id, success, status } = data;
     if(success && _id){
       dispatch(removeMessage({ _id }));
+      dispatch(decrementNewMessagesLoaded());
     }
     else if(!success && status){
       alert(status);

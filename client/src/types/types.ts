@@ -63,7 +63,8 @@ interface interfaceInitialStateValueI {
     online: string[];
     offline: string[];
     messages: messageI[];
-    moreMessagesLoaded: number;
+    oldMessagesLoaded: number;
+    newMessagesLoaded: number;
     voiceMode: boolean;
     frequentlyUsedEmojis: emojiT[];
     otherEmojis: emojiT[];

@@ -13,7 +13,8 @@ const initialStateValue: interfaceInitialStateValueI = {
   online: [],
   offline: [],
   messages: [],
-  moreMessagesLoaded: 0,
+  oldMessagesLoaded: 0, // 5x
+  newMessagesLoaded: 0,
   voiceMode: false,
   frequentlyUsedEmojis: ["👍", "😀", "😘", "😍", "😆", "😜", "😅", "😂", "😱"],
   otherEmojis: ["😁", "🤣", "🙂", "🙃", "😉", "🥲", "🤑", "🥵", "🥶", "😎", "🤓", "😨", "💩", "👎", "✊"],
@@ -216,8 +217,14 @@ export const userSlice = createSlice({
       state.value.reactedBy = [];
     },
 
-    incrementMessagesLoaded: (state) => {
-      state.value.moreMessagesLoaded++;
+    incrementOldMessagesLoaded: (state) => {
+      state.value.oldMessagesLoaded++;
+    },
+    incrementNewMessagesLoaded: (state) => {
+      state.value.newMessagesLoaded++;
+    },
+    decrementNewMessagesLoaded: (state) => {
+      state.value.newMessagesLoaded--;
     },
     addMessagesToTop: (state, action) => {
       let newMessages = action.payload.messages;
@@ -263,7 +270,9 @@ export const {
 
   clearAll,
 
-  incrementMessagesLoaded,
+  incrementOldMessagesLoaded,
+  incrementNewMessagesLoaded,
+  decrementNewMessagesLoaded,
   addMessagesToTop,
 } = userSlice.actions;
 

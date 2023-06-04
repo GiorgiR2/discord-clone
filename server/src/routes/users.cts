@@ -25,7 +25,7 @@ router.post("/api/users/register", async (req: Request, res: Response) => {
   const { username, hashedPassword } = req.body;
   const ip = getIp(req);
 
-  const {success, data} = await registerUser(username, hashedPassword, ip) //, password0, password1);
+  const {success, data} = await registerUser(username, hashedPassword, ip);
   res.send({ success, data });
 });
 

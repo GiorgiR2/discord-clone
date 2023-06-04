@@ -81,9 +81,9 @@ router.route("/emojis/:messageId/:emoji").get((req: Request, res: Response) => {
     });
 });
 
-router.route("/moreMessages/:room/:timesReceived").get((req: Request, res: Response) => {
-  const { room, timesReceived } = req.params;
-  const skipN = 15+5*parseInt(timesReceived);
+router.route("/moreMessages/:room/:oldMessagesReceived/:newMessagesReceived").get((req: Request, res: Response) => {
+  const { room, oldMessagesReceived, newMessagesReceived } = req.params;
+  const skipN = 15 + 5*parseInt(oldMessagesReceived) + parseInt(newMessagesReceived);
 
   MessageModel.find({ room })
     .sort({ number: -1 })
@@ -96,4 +96,3 @@ router.route("/moreMessages/:room/:timesReceived").get((req: Request, res: Respo
 });
 
 module.exports = router;
-// export default router;

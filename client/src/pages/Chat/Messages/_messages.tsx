@@ -7,7 +7,7 @@ import FormData from "form-data";
 import { messageI, emojiDataT } from "../../../types/types";
 import { RootState } from "../../..";
 
-import { addMessagesToTop, cleanReactedBy, editMessage, enterFocusMode, exitEditMode, exitFocusMode, incrementMessagesLoaded } from "../../../features/interfaces";
+import { addMessagesToTop, cleanReactedBy, editMessage, enterFocusMode, exitEditMode, exitFocusMode, incrementOldMessagesLoaded } from "../../../features/interfaces";
 import { setContextMenu } from "../../../features/toggle";
 
 import EmojiDiv from "./_emojiDiv";
@@ -114,11 +114,11 @@ const Messages = () => {
         if (chatDivPosition === 0) {
             setLoading(true);
 
-            axios.get(`${apiLink}/moreMessages/${reduxData.currentRoom}/${reduxData.moreMessagesLoaded}`)
+            axios.get(`${apiLink}/moreMessages/${reduxData.currentRoom}/${reduxData.oldMessagesLoaded}/${reduxData.newMessagesLoaded}`)
                 .then(res => {
                     setTimeout(() => {
                         if (res.data.messages.length > 0) {
-                            dispatch(incrementMessagesLoaded());
+                            dispatch(incrementOldMessagesLoaded());
                             dispatch(addMessagesToTop({ messages: res.data.messages }));
                         }
                         setLoading(false);
