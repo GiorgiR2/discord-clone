@@ -108,10 +108,10 @@ const Messages = () => {
         let kind: string = name.substring(-4);
         return kind === ".mp4" || kind === ".mpv";
     }
-    const checkPosition = (event: React.UIEvent<HTMLDivElement, UIEvent>): void => {
+    const checkPosition = (event: any): void => {
         const chatDivPosition = document.querySelectorAll("#chat-screen")[0].scrollTop;
         //console.log("scroll position:", chatDivPosition);
-        if (chatDivPosition === 0) {
+        if (chatDivPosition === 0 && !loading) {
             setLoading(true);
 
             axios.get(`${apiLink}/moreMessages/${reduxData.currentRoom}/${reduxData.oldMessagesLoaded}/${reduxData.newMessagesLoaded}`)
