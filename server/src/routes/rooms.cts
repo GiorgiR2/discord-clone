@@ -50,7 +50,7 @@ router.post("/api/addRoom", isAuth, async (req: Request, res: Response) => {
     let newRoomModel = new RoomsModel({
       _id: new mongoose.Types.ObjectId(),
       name,
-      position: count + 1,
+      position: count,
       voice,
     });
 
