@@ -75,11 +75,19 @@
                     .fileDiv
                         display: flex
 
-                        .imagePreview
+                        .imagePreview,
+                        .videoPreview
                             width: fit-content
                             height: fit-content
-                            max-width: 90%
 
+                        .imagePreview
+                            max-width: 90%
+                            max-height: 400px
+
+                        .videoPreview
+                            max-width: 90%
+                            max-height: 400px
+                            margin-right: 10px
 
                         .fileSVG
                             height: 42px
@@ -88,10 +96,6 @@
                         .name
                             margin-left: 2px
                             margin-top: 20px
-
-                // div, p
-                //   width: 100%
-                //   word-break: break-word
 
                 a
                     cursor: pointer

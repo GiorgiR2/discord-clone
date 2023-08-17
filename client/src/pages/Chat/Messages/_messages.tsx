@@ -32,6 +32,75 @@ const plusSVG: string = require("../../../assets/chat/plus.svg").default;
 
 const apiLink = packageJson.proxy;
 
+type formatT = "mp4" | "mpv" | "mkv";
+interface videoBoolI {
+    isVideo: boolean;
+    format?: formatT;
+}
+
+const imageBool = (fileName: string): boolean => {
+    const format: string = fileName.substr(-4);
+    return format === ".png" || format === ".jpg" || format === "jpeg";
+}
+const videoBool = (fileName: string): videoBoolI => {
+    const format: string = fileName.substr(-3);
+    const isVideo = (format === "mp4" || format === "mpv" || format === "mkv");
+
+    if (isVideo)
+        return { isVideo, format };
+    else
+        return { isVideo };
+}
+const DisplayFile = ({ fileName, message }: { fileName: string, message: string }) => {
+    const isImage = imageBool(fileName);
+    const { isVideo, format } = videoBool(fileName);
+
+    return (
+        <div className="fileDiv">
+            {isImage &&
+                <img
+                    src={`${apiLink}/file/${message}`}
+                    className="imagePreview"
+                    alt="image"
+                    onLoad={() => scrollToBottom()}
+                />
+            }
+            {isVideo &&
+                <video
+                    className="videoPreview"
+                    onLoad={() => scrollToBottom()}
+                    controls
+                >
+                    {/* <source src={`${apiLink}/file/${message}`} type={`video/${format}`} /> */}
+                    <source src={`${apiLink}/file/${message}`} type={`video/mp4`} />
+                </video>
+            }
+            {(isImage || isVideo) &&
+                <a
+                    href={`${apiLink}/file/${message}`}
+                    rel="noreferrer"
+                    target="_blank"
+                    className="name"
+                > save as </a>
+            }
+
+            {(!isImage && !isVideo) &&
+                <>
+                    <img src={fileSVG} className="fileSVG" alt="file" />
+                    <a
+                        href={`${apiLink}/file/${message}`}
+                        rel="noreferrer"
+                        target="_blank"
+                        className="name"
+                    >
+                        {fileName}
+                    </a>
+                </>
+            }
+        </div>
+    );
+}
+
 const Messages = () => {
     const handleContextMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
         e.preventDefault();
@@ -100,14 +169,6 @@ const Messages = () => {
             }, 10);
         }
     }
-    const imageBool = (name: string): boolean => {
-        let kind: string = name.substr(-4);
-        return kind === ".png" || kind === ".jpg" || kind === "jpeg";
-    }
-    const videoBool = (name: string): boolean => {
-        let kind: string = name.substring(-4);
-        return kind === ".mp4" || kind === ".mpv";
-    }
     const checkPosition = (event: any): void => {
         const chatDivPosition = document.querySelectorAll("#chat-screen")[0].scrollTop;
         //console.log("scroll position:", chatDivPosition);
@@ -156,28 +217,7 @@ const Messages = () => {
                                     </div>
                                 </div>
                                 <div className="message">
-                                    {el.isFile ? (
-                                        <div className="fileDiv">
-                                            {imageBool(el.fileName) ?
-                                                <img
-                                                    src={`${apiLink}/file/${el.message}`}
-                                                    className="imagePreview"
-                                                    alt="file"
-                                                    onLoad={() => scrollToBottom()}
-                                                />
-                                                :
-                                                <img src={fileSVG} className="fileSVG" alt="file" />
-                                            }
-                                            <a
-                                                href={`${apiLink}/file/${el.message}`}
-                                                rel="noreferrer"
-                                                target="_blank"
-                                                className="name"
-                                            >
-                                                {imageBool(el.fileName) ? "save as" : el.fileName}
-                                            </a>
-                                        </div>
-                                    ) : (
+                                    {el.isFile ? <DisplayFile fileName={el.fileName} message={el.message} /> :
                                         <p
                                             onBlur={(event) => handleOnBlur(event, el._id)}
                                             contentEditable={el.editMode}
@@ -189,7 +229,7 @@ const Messages = () => {
                                                 </>
                                             ))}
                                         </p>
-                                    )}
+                                    }
                                 </div>
                             </div>
 
