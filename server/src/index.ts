@@ -150,14 +150,7 @@ const main = (connectedUsers: connectedUsersT) => {
     socket.on("file", async (data: fileI) => {
       //const authentication, user, datetime, roomId, size, filename;
       const { _id, room } = data;
-
-      await MessageModel.findById(_id).then(
-        (doc: any) => {
-          socket.emit("message", doc);
-          socket.in(room).emit("message", doc);
-          console.log("file sent:", doc._id, doc.originalName);
-        }
-      );
+      msgOps.sendFileData(_id, room, socket);
     });
 
     socket.on("attachEmoji", async (data: attachEmojiI) => {

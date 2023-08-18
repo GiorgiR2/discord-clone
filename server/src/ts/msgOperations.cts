@@ -10,15 +10,15 @@ let num: number = 0;
 
 // find the maximum number value (the newest message)
 MessageModel.find({})
-.sort({ number: -1 })
-.limit(1)
-.exec()
-.then((res: messageSchemaI[]) => {
-  // console.log("res:", res);
-  if (res.length !== 0){
-    num = res[0].number+1;
-  }
-});
+  .sort({ number: -1 })
+  .limit(1)
+  .exec()
+  .then((res: messageSchemaI[]) => {
+    // console.log("res:", res);
+    if (res.length !== 0) {
+      num = res[0].number + 1;
+    }
+  });
 
 const addToMongoose = (data: addToMongooseDataI): string => {
   let newMessageModel: any;
@@ -59,4 +59,22 @@ const addToMongoose = (data: addToMongooseDataI): string => {
   return newMessageModel._id;
 };
 
-export { addToMongoose };
+const sendFileData = (_id: string, room: string, socket: any) => {
+  MessageModel.findById(_id).then(
+    (doc: any) => {
+      console.log("doc", doc);
+      if (doc !== null) {
+        console.log("file sent:", doc._id, doc.originalName);
+        socket.emit("message", doc);
+        socket.in(room).emit("message", doc);
+      }
+      else{
+        setTimeout(() => {
+          sendFileData(_id, room, socket);
+        }, 100);
+      }
+    }
+  );
+}
+
+export { addToMongoose, sendFileData };
