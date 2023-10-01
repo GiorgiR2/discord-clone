@@ -66,8 +66,8 @@ interface interfaceInitialStateValueI {
     oldMessagesLoaded: number;
     newMessagesLoaded: number;
     voiceMode: boolean;
-    frequentlyUsedEmojis: emojiT[];
-    otherEmojis: emojiT[];
+    // frequentlyUsedEmojis: emojiT[];
+    // otherEmojis: emojiT[];
     focusMessageId: string | null;
     reactedBy: string[];
 }
@@ -95,13 +95,13 @@ interface userDataI {
 
 interface modeI {
     payload: {
-        _id: string;
+        id: string;
     };
 }
 
 interface editMessageI {
     payload: {
-        _id: string;
+        id: string;
         messageHTML: string;
     };
 }
@@ -117,17 +117,14 @@ interface attachEmojiRX {
     payload: Omit<attachEmojiI, "room">;
 }
 
-interface emojiDivI {
-    _id?: string;
-    side: "top" | "bottom";
-    input?: any;
-}
 
-type emojiT = "👍" | "😀" | "😘" | "😍" | "😆" | "😜" | "😅" | "😂" | "😱" | "😁" | "🤣" | "🙂" |
-             "🙃" | "😉" | "🥲" | "🤑" | "🥵" | "🥶" | "😎" | "🤓" | "😨" | "💩" | "👎" | "✊";
+type frequentlyUsedEmojisT = "👍" | "😀" | "😘" | "😍" | "😆" | "😜" | "😅" | "😂" | "😱" 
+type otherEmojisT = "😁" | "🤣" | "🙂" | "🙃" | "😉" | "🥲" | "🤑" | "🥵" | "🥶" | "😎" | "🤓" | "😨" | "💩" | "👎" | "✊";
+type emojiT = frequentlyUsedEmojisT | otherEmojisT;
+
 
 type peerConnectionsT = [string, RTCPeerConnection];
 
 export type { roomI, messageI, optionsI, statusI, voiceInitialStateValueI, toggleInitialStateValueI, interfaceInitialStateValueI,
-              sendFileDataI, frameI, peerConnectionsT, userDataI, modeI, editMessageI, emojiT, attachEmojiI,
-              attachEmojiRX, emojiDivI, emojiDataT };
+              sendFileDataI, frameI, peerConnectionsT, userDataI, modeI, editMessageI, frequentlyUsedEmojisT, otherEmojisT, emojiT, attachEmojiI,
+              attachEmojiRX, emojiDataT };

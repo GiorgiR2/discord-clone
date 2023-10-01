@@ -189,7 +189,7 @@ const Chat: React.FC = () => {
         <DeleteDiv
           x={toggleRedux.contextMenu.x}
           y={toggleRedux.contextMenu.y}
-          id={toggleRedux.contextMenu.id}
+          id={toggleRedux.contextMenu.id as string}
         />
       }
     </div>

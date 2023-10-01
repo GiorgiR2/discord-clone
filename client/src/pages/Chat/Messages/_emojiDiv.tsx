@@ -1,4 +1,4 @@
-import { emojiDivI, emojiT } from "../../../types/types";
+import { emojiT, frequentlyUsedEmojisT, otherEmojisT } from "../../../types/types";
 import { RootState } from "../../..";
 
 import { useSelector } from "react-redux";
@@ -9,29 +9,42 @@ import "./_emojiDiv.sass";
 
 const emojiSVG: string = require("../../../assets/chat/emoji.svg").default;
 
-const EmojiDiv: React.FC<emojiDivI> = ({ _id, side, input }) => {
-    const attachEmoji = (emoji: emojiT, messageId?: string) => {
-        // console.log(`Id: ${messageId}; emoji: ${emoji}`);
-        if(messageId){
-            socks.attackEmoji(messageId, emoji, reduxData.currentRoom, reduxData.currentUser);
-        }
-        else{
-            input.current.value += emoji;
-        }
-    };
+const frequentlyUsedEmojis: frequentlyUsedEmojisT[] = ["👍", "😀", "😘", "😍", "😆", "😜", "😅", "😂", "😱"];
+const otherEmojis: otherEmojisT[] = ["😁", "🤣", "🙂", "🙃", "😉", "🥲", "🤑", "🥵", "🥶", "😎", "🤓", "😨", "💩", "👎", "✊"];
+
+interface emojiDivI {
+    id?: string;
+    side: "top" | "bottom";
+    input?: any;
+    divFullOfMessages?: boolean;
+    messageN?: number;
+}
+
+const attachEmoji = (currentRoom: string, currentUser: string, emoji: emojiT, id?: string, input?: any) => {
+    if (id) {
+        socks.attackEmoji(id, emoji, currentRoom, currentUser);
+    }
+    else {
+        input.current.value += emoji;
+    }
+};
+
+const EmojiDiv = ({ id, divFullOfMessages, side, input, messageN }: emojiDivI) => {
     const reduxData = useSelector((state: RootState) => state.interfaces.value);
-    
-    return(
-        <div className="emojiDiv">
-            <img src={emojiSVG} alt="emoji" className="emoji" id={side} />
-            <div className={`emojiContent ${side}`}>
+    const { currentRoom, currentUser } = reduxData;
+    const show = divFullOfMessages && messageN;
+
+    return (
+        <div key={id} className={`emojiDiv emojiDiv-${side}`}>
+            <img src={emojiSVG} alt="emoji" className={`emoji`} />
+            <div className={`emojiContent ${show && messageN >= reduxData.messages.length-2 ? "last-two" : null}`}>
                 <div className="frequentlyUsed">
                     <h5>Frequently Used</h5>
-                    {reduxData.frequentlyUsedEmojis.map(emoji => <span onClick={() => attachEmoji(emoji, _id)}>{emoji}</span>)}
+                    {frequentlyUsedEmojis.map(emoji => <span onClick={() => attachEmoji(currentRoom, currentUser, emoji, id, input)}>{emoji}</span>)}
                 </div>
                 <div className="other">
                     <h5>Smileys & People</h5>
-                    {reduxData.otherEmojis.map(emoji => <span onClick={() => attachEmoji(emoji, _id)}>{emoji}</span>)}
+                    {otherEmojis.map(emoji => <span onClick={() => attachEmoji(currentRoom, currentUser, emoji, id, input)}>{emoji}</span>)}
                 </div>
             </div>
         </div>

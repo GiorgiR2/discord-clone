@@ -18,16 +18,16 @@ const TrashSVG: string = require("../../../assets/chat/options/trash.svg").defau
 interface DeleteDivI {
   x: number;
   y: number;
-  id: string | null;
+  id: string;
 }
 
-const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
+const DeleteDiv = ({ x, y, id }: DeleteDivI) => {
   const closeContextMenu = (): void => {
     dispatch(closeContext());
-    dispatch(exitFocusMode({ _id: id as string }));
+    dispatch(exitFocusMode({ id }));
   };
 
-  const editMSG = (id: string | null) => {
+  const editMSG = (id: string) => {
     //Todo: send edit message using sockets
     console.log("edit:", id);
     let messageUser, isFile;
@@ -42,26 +42,15 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
     } else if (reduxData.currentUser !== messageUser) {
       alert("You do not have privileges to edit that message...");
     } else {
-      dispatch(enterEditMode({ _id: id as string }));
-      dispatch(enterFocusMode({ _id: id as string }));
+      dispatch(enterEditMode({ id }));
+      dispatch(enterFocusMode({ id }));
     }
     closeContextMenu();
   };
-  const deleteMSG = (_id: string | null) => {
-    //Todo: remove message from redux states && send delete message using sockets
-    sendDeleteStatus(reduxData, _id);
+  const deleteMSG = (id: string) => {
+    // remove message from redux states && send delete message using sockets
+    sendDeleteStatus(reduxData, id);
     closeContextMenu();
-    // dispatch(removeMessage({ _id: _id as string }));
-    // let messageUser;
-    // reduxData.messages.forEach((msg) =>
-    //   msg._id === id ? (messageUser = msg.user) : null
-    // );
-    // if (reduxData.currentUser !== messageUser) {
-    //   alert("You do not have privileges to delete that message...");
-    // } else {
-    //   dispatch(removeMessage({ _id: id as string }));
-    //   sendDeleteStatus(reduxData, id);
-    // }
   };
 
   const dispatch = useDispatch();
@@ -76,7 +65,6 @@ const DeleteDiv: React.FC<DeleteDivI> = ({ x, y, id }) => {
       className="options"
       style={{ top: `${y}px`, left: `${x}px` }}
     >
-      {/*<h4>options</h4>*/}
       <nav>
         <ul>
           <li id="edit" onClick={() => editMSG(id)}>

@@ -64,7 +64,7 @@ const main = (roomId: string, username: string, dispatch: any) => {
   socket.on("messageDeleted", (data: { success: boolean, _id?: string, status?: string }) => {
     const { _id, success, status } = data;
     if(success && _id){
-      dispatch(removeMessage({ _id }));
+      dispatch(removeMessage({ id: _id }));
       dispatch(decrementNewMessagesLoaded());
     }
     else if(!success && status){

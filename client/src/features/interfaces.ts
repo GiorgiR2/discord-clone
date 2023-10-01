@@ -16,8 +16,6 @@ const initialStateValue: interfaceInitialStateValueI = {
   oldMessagesLoaded: 0, // 5x
   newMessagesLoaded: 0,
   voiceMode: false,
-  frequentlyUsedEmojis: ["👍", "😀", "😘", "😍", "😆", "😜", "😅", "😂", "😱"],
-  otherEmojis: ["😁", "🤣", "🙂", "🙃", "😉", "🥲", "🤑", "🥵", "🥶", "😎", "🤓", "😨", "💩", "👎", "✊"],
   focusMessageId: null,
   reactedBy: [],
 };
@@ -95,40 +93,40 @@ export const userSlice = createSlice({
       //   (el) => el[5] !== action.payload._id
       // );
       state.value.messages = state.value.messages.filter(
-        (el) => el._id !== action.payload._id
+        (el) => el._id !== action.payload.id
       );
     },
     enterFocusMode: (state, action: modeI) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message._id === action.payload._id) {
+        if (message._id === action.payload.id) {
           return { ...message, focusMode: true };
         } else return message;
       });
     },
     exitFocusMode: (state, action: modeI) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message._id === action.payload._id) {
+        if (message._id === action.payload.id) {
           return { ...message, focusMode: false };
         } else return message;
       });
     },
     enterEditMode: (state, action: modeI) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message._id === action.payload._id) {
+        if (message._id === action.payload.id) {
           return { ...message, editMode: true };
         } else return message;
       });
     },
     exitEditMode: (state, action: modeI) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message._id === action.payload._id) {
+        if (message._id === action.payload.id) {
           return { ...message, editMode: false };
         } else return message;
       });
     },
     editMessage: (state, action: editMessageI) => {
       state.value.messages = state.value.messages.map((message) => {
-        if (message._id === action.payload._id) {
+        if (message._id === action.payload.id) {
           // do not touch this part
           let msg = action.payload.messageHTML
             .replace("</div><div>", "<br>")

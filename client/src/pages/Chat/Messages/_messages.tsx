@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 
 import axios from "axios";
@@ -106,7 +106,7 @@ const Messages = () => {
         e.preventDefault();
 
         const { pageX, pageY } = e;
-        dispatch(enterFocusMode({ _id: id }));
+        dispatch(enterFocusMode({ id }));
         dispatch(
             setContextMenu({
                 contextMenu: { show: true, x: pageX, y: pageY, id: id },
@@ -116,9 +116,9 @@ const Messages = () => {
     const handleOnBlur = (event: any, id: string) => {
         //Todo: get p content, update that specific line and then send post request
         // console.log("OnBlur");
-        dispatch(editMessage({ messageHTML: event.target.innerHTML, _id: id }));
-        dispatch(exitEditMode({ _id: id }));
-        dispatch(exitFocusMode({ _id: id }));
+        dispatch(editMessage({ messageHTML: event.target.innerHTML, id }));
+        dispatch(exitEditMode({ id }));
+        dispatch(exitFocusMode({ id }));
         socks.editMessage(event.target.innerHTML, id);
     };
     const handleSubmit = (file: any) => {
@@ -171,7 +171,8 @@ const Messages = () => {
     }
     const checkPosition = (event: any): void => {
         const chatDivPosition = document.querySelectorAll("#chat-screen")[0].scrollTop;
-        //console.log("scroll position:", chatDivPosition);
+        // console.log("scroll position:", chatDivPosition);
+        // if scrolled to top load more messages
         if (chatDivPosition === 0 && !loading) {
             setLoading(true);
 
@@ -188,22 +189,35 @@ const Messages = () => {
                 .catch(err => console.error(err));
         }
     }
+    const scrollbarVisible = (): boolean => {
+        const chatDivPosition = document.querySelectorAll("#chat-screen")[0];
+
+        if (chatDivPosition?.scrollHeight) {
+            return chatDivPosition.scrollHeight > chatDivPosition.clientHeight;
+        }
+        return false;
+    }
 
     const dispatch = useDispatch();
     const reduxData = useSelector((state: RootState) => state.interfaces.value);
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [divFullOfMessages, setDivFullOfMessages] = useState<boolean>(false);
 
-    let { roomId, } = useParams<{ roomId: string; hashId: string }>();
+    const { roomId, } = useParams<{ roomId: string; hashId: string }>();
 
     const inputRef = useRef<any>("");
+
+    useEffect(() => {
+        setDivFullOfMessages(scrollbarVisible());
+    }, [reduxData.messages]);
 
     return (
         <>
             <div id="chat-screen" onScroll={(event) => checkPosition(event)}>
                 {loading && <img src={loadingGIF} id="loadingGif" />}
                 {reduxData.messages.map((el: messageI, messageN: number) => (
-                    <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={messageN}>
+                    <div className={`messageDiv ${(el.editMode || el.focusMode) ? "focus" : null}`} key={el._id}>
                         <div
                             className={`message element`}
                             onContextMenu={(event) => handleContextMenu(event, el._id)}
@@ -234,7 +248,7 @@ const Messages = () => {
                             </div>
 
                             <div className={`settings ${el.focusMode ? "visible" : null}`}>
-                                <EmojiDiv _id={el._id} side="bottom" />
+                                <EmojiDiv id={el._id} side="bottom" divFullOfMessages={divFullOfMessages} messageN={messageN} />
                                 <h5 onClick={(event) => handleContextMenu(event, el._id)} className="dots">···</h5>
                             </div>
                         </div>
@@ -252,7 +266,7 @@ const Messages = () => {
                                     </div>
                                 ))}
                             </div>
-                            <div className={`reactedBy ${reduxData.focusMessageId === el._id ? "" : "hidden"}`}>
+                            <div className={`reactedBy ${reduxData.focusMessageId === el._id ? "" : "hidden"} ${divFullOfMessages && messageN >= reduxData.messages.length-2 ? "last-one" : null}`}>
                                 {reduxData.reactedBy.map((user, userN: number) => (
                                     <div key={userN}>
                                         <span>{user}</span>
